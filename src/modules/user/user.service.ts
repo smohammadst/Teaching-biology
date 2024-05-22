@@ -1,8 +1,8 @@
 import { IUser, UserModel } from "./model/user.model";
 import { UserDto } from "./dto/user.dto";
 class UserService {
-
-    private readonly userModel = UserModel<IUser>
+    constructor(private readonly userModel = UserModel<IUser>){}
+    
 
     async create(user: UserDto) {
         const newUser = new this.userModel
