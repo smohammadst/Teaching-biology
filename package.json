@@ -17,6 +17,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.30",
+    "@types/nodemailer": "^6.4.15",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "nodemon": "^3.1.0",
@@ -32,8 +33,10 @@
     "express": "^4.19.2",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
+    "melipayamak": "^1.0.5",
     "mongoose": "^8.2.3",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.13",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   }
