@@ -1,6 +1,6 @@
 export enum TypeEnumComment {
-    course = "course",
-    blog = "blog"
+    course = "courseID",
+    blog = "blogID"
 }
 
 export enum TypeEnumSned {

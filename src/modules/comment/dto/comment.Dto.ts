@@ -1,4 +1,4 @@
-import { IsEmpty, IsEnum, IsMongoId, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsEmpty, IsEnum, IsMongoId, IsNumber, IsString } from "class-validator";
 import { TypeEnumComment, TypeEnumSned } from "../enum/typeComment.enum";
 
 export class CommentDto {
@@ -7,10 +7,7 @@ export class CommentDto {
     userID: string
     @IsEmpty()
     @IsMongoId()
-    blogID: string
-    @IsEmpty()
-    @IsMongoId()
-    courseID: string
+    ID: string
     @IsString()
     title: string
     @IsString()
@@ -26,4 +23,6 @@ export class CommentDto {
     parent: string
     @IsEmpty()
     fullName: string
+    @IsEmail()
+    email: string
 }

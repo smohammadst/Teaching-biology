@@ -8,8 +8,9 @@ interface IComment extends mongoose.Document {
     text: string,
     fullName: string,
     answer?: Array<ObjectId>,
-    star?: Array<number>,
-    status: boolean
+    star?: number,
+    status: boolean,
+    email: string
 }
 
 interface IAnswer extends mongoose.Document {
@@ -28,8 +29,9 @@ const commentSchema = new mongoose.Schema<IComment>({
     text: { type: String, required: true },
     fullName: { type: String },
     answer: { type: [mongoose.Types.ObjectId], ref: "answer" },
-    star: { type: [Number], max: 5 },
-    status: { type: Boolean, default: false }
+    star: { type: Number, max: 5 },
+    status: { type: Boolean, default: false },
+    email: { type: String }
 })
 
 const answerSchema = new mongoose.Schema<IAnswer>({
