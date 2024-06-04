@@ -8,10 +8,6 @@ export enum AuthMessageError {
 }
 
 export enum GlobalMessageError {
-<<<<<<< HEAD
-    ServiceUnavailable = "سرور با مشکل مواجه شده است دوباره تلاش کنید"
-}
-=======
     InternalServerError = "سرور با مشکل مواجه شده است دوباره تلاش کنید",
 }
 
@@ -20,4 +16,3 @@ export enum NotFoundError {
     NotFoundCourse = "ویدیو ی آموزشی مورد نظر یافت نشد",
     NotFoundComment = "کامنت مورد نظر یافت نشد"
 }
->>>>>>> b8722dcbd051716122d3670a41bb8ec241073f2c

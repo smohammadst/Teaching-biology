@@ -1,16 +1,18 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { IComment, CommentModel, AnswerModel, IAnswer } from "./model/comment.model";
 import { CommentDto } from "./dto/comment.Dto";
 import { TypeEnumComment, TypeEnumSned } from "./enum/typeComment.enum";
 import createHttpError from "http-errors";
 import { GlobalMessageError, NotFoundError } from "src/common/enums/message.enum";
+import { BlogModel, IBlog } from "../blog/model/blog.model";
+import { CourseModel, ICourse } from "../course/model/course.model";
 
 export class CommentController {
     constructor(
         private commentRepository = CommentModel<IComment>,
         private answerRepository = AnswerModel<IAnswer>,
-        private blogRepository,
-        private courseRepository
+        private blogRepository = BlogModel<IBlog>,
+        private courseRepository = CourseModel<ICourse>
     ) { }
 
     async createSchemaComment(commentDto: CommentDto): Promise<IComment> {
@@ -62,23 +64,20 @@ export class CommentController {
         return createAnswer
     }
 
-    async addComment(commentDto: CommentDto) {
+    async addComment(commentDto: CommentDto): Promise<object> {
         const { method } = commentDto
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
         const createComment = await this.createSchemaComment(commentDto)
         await existRepository.find.updateOne({ $push: { commentsID: createComment._id } })
         return { status: 201, message: "نظر شما با موفقیت ثبت گردید" }
-
     }
 
-    async addAnswer(commentDto: CommentDto):Promise<object> {
+    async addAnswer(commentDto: CommentDto): Promise<object> {
         const { method } = commentDto
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
         const createAnswer = await this.createSchemaAnswer(commentDto)
         return { status: 201, message: "نظر شما با موفقیت ثبت گردید" }
     }
-
-    async readComment() { }
 
     async removeComment(id: string): Promise<object> {
         const findComment = await this.commentRepository.deleteOne({ _id: id });
@@ -118,9 +117,34 @@ export class CommentController {
         return comment
     }
 
-    async aggregateCommentForAsnswer(id: ObjectId) { }
+    async readCommentForAsnswer(id: string, method: TypeEnumComment): Promise<{ status: number, find: IBlog | ICourse }> {
+        let result: { status: number, find: IBlog | ICourse }
+        switch (method) {
+            case TypeEnumComment.blog:
+                result = await this.populateCommentAndAnswer(this.blogRepository, id)
+                break
+            case TypeEnumComment.course:
+                result = await this.populateCommentAndAnswer(this.courseRepository, id)
+                break
+        }
+        return result
+    }
 
-    TyepRequest(commentDto: CommentDto) {
+    async populateCommentAndAnswer(repository: mongoose.DocumentSetOptions, id: string): Promise<{ status: number, find: IBlog | ICourse }> {
+        let find = await repository.findOne({ _id: id, status: true }).populate(
+            {
+                path: "comments",
+                select: ["title", "text", "fullName", "star"]
+            }
+        ).populate({
+            path: "comments.answer",
+            select: ["title", "text", "fullName"]
+        })
+        if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
+        return { status: 200, find }
+    }
+
+    TyepRequest(commentDto: CommentDto): Promise<object> {
         const { snedType } = commentDto;
         switch (snedType) {
             case TypeEnumSned.comment:
@@ -130,15 +154,17 @@ export class CommentController {
         }
     }
 
-    async findBlogOrCourse(id: string, methode: TypeEnumComment): Promise<object> {
-        let find: []
+    async findBlogOrCourse(id: string, methode: TypeEnumComment): Promise<{
+        type: string, find: IBlog | ICourse
+    }> {
+        let find: ICourse | IBlog
         switch (methode) {
             case TypeEnumComment.blog:
                 find = await this.blogRepository.findOne({ _id: id })
                 if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
                 return { type: "blog", find }
             case TypeEnumComment.course:
-                find = this.courseRepository.findOne({ _id: id })
+                find = await this.courseRepository.findOne({ _id: id })
                 if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundCourse)
                 return { type: "course", find }
         }

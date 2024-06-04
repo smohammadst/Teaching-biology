@@ -5,7 +5,7 @@ import { IUser, UserModel } from '../user/model/user.model';
 import createHttpError from 'http-errors';
 import { randomInt } from 'crypto';
 import { AuthMessageError, GlobalMessageError } from 'src/common/enums/message.enum';
-import Jwt, { JwtPayload } from "jsonwebtoken";
+import Jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { sendEmail } from 'src/common/functions/sendEmail';
 import { sendSMS } from 'src/common/functions/sendSmsPhone';
