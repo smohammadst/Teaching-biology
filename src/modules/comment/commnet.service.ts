@@ -7,7 +7,7 @@ import { GlobalMessageError, NotFoundError } from "src/common/enums/message.enum
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
 
-export class CommentController {
+class CommentService {
     constructor(
         private commentRepository = CommentModel<IComment>,
         private answerRepository = AnswerModel<IAnswer>,
@@ -88,7 +88,7 @@ export class CommentController {
         }
         return { status: 200, message: 'کامنت با موفقیت حذف گردید' }
     }
-    async avrageStar(id: string): Promise<number> {
+    async avrageStar(): Promise<number> {
         const comments = await this.commentRepository.find({ status: true })
         const countComment = comments.length
         let sumStar = 0
@@ -144,13 +144,13 @@ export class CommentController {
         return { status: 200, find }
     }
 
-    TyepRequest(commentDto: CommentDto): Promise<object> {
+    async TyepRequest(commentDto: CommentDto): Promise<object> {
         const { snedType } = commentDto;
         switch (snedType) {
             case TypeEnumSned.comment:
-                return this.addComment(commentDto)
+                return await this.addComment(commentDto)
             case TypeEnumSned.answer:
-                return this.addAnswer(commentDto)
+                return await this.addAnswer(commentDto)
         }
     }
 
@@ -169,4 +169,10 @@ export class CommentController {
                 return { type: "course", find }
         }
     }
-}   
+}
+
+const CommentServices = new CommentService()
+
+export {
+    CommentServices
+}
