@@ -7,7 +7,7 @@ import { GlobalMessageError, NotFoundError } from "src/common/enums/message.enum
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
 
-class CommentService {
+export class CommentService {
     constructor(
         private commentRepository = CommentModel<IComment>,
         private answerRepository = AnswerModel<IAnswer>,
@@ -169,10 +169,15 @@ class CommentService {
                 return { type: "course", find }
         }
     }
-}
 
-const CommentServices = new CommentService()
-
-export {
-    CommentServices
+    async readAllCommentsAndAnswerByAdmin() {
+        const allComment = await this.commentRepository.find({ status: false })
+            .populate({
+                path: "answer",
+                model: "answer",
+                match: { status: false }
+            }).exec()
+        if (allComment) return { status: 404, message: "هیچ کامنتی یافت نشد" }
+        return { status: 200, allComment }
+    }
 }

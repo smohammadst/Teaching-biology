@@ -1,44 +1,56 @@
 import { CommentDto } from './dto/comment.Dto';
 import { NextFunction, Request, Response } from "express";
-import { CommentServices } from "./commnet.service";
+import { CommentService } from "./commnet.service";
 import mongoose from 'mongoose';
 import createHttpError from 'http-errors';
 
 class CommentController {
-    async createCommentAndAnswer(req: Request, res: Response, next: NextFunction) {
+    constructor(
+        private commentService = new CommentService()
+    ){}
+    async createCommentAndAnswer(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const commentDto: CommentDto = req.body
-            const result = await CommentServices.TyepRequest(commentDto);
+            const result = await this.commentService.TyepRequest(commentDto);
             return res.status(201).json(result)
         } catch (error) {
             next(error)
         }
     }
-    async deleteComment(req: Request, res: Response, next: NextFunction) {
+    async deleteComment(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { id } = req.params
             if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
-            const result = await CommentServices.removeComment(id);
+            const result = await this.commentService.removeComment(id);
             return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
     }
 
-    async changeStatus(req: Request, res: Response, next: NextFunction) {
+    async changeStatus(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { id } = req.params
             if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
-            const resulte = await CommentServices.changeStatus(id)
-            return res.status(200).json(resulte)
+            const result = await this.commentService.changeStatus(id)
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
     }
+
+    async readAllComments(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        try {
+            const result = await this.commentService.readAllCommentsAndAnswerByAdmin();
+            return res.status(200).json(result)
+        } catch (err) {
+            next(err)
+        }
+    }
 }
 
-const CommentControllers = new CommentController()
 
-export{
-    CommentControllers
+
+export {
+    CommentController
 }

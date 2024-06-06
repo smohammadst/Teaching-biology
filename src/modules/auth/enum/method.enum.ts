@@ -1,4 +1,5 @@
 export enum AuthEnumMethod {
     email = "email",
-    phone = "phone"
+    phone = "phone",
+    id = "id"
 }

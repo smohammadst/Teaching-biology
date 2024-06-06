@@ -1,4 +1,9 @@
-import Router from "express"
-const router  = Router()
+import { Router } from "express";
+import { AuthController } from "./auth.controller";
 
-router.get('/')
+const authController = new AuthController()
+
+export default (router: Router) => {
+    router.post("userExistence", authController.userExistence)
+    router.post("changePassword", authController.changePassword)
+};

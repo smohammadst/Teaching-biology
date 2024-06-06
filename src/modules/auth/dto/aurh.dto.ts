@@ -19,6 +19,7 @@ export class ChangePasswordDto {
     @IsString()
     oldPassword: string
     @IsString()
-    @IsMongoId()
-    id: string
+    username: string
+    @IsEnum(AuthEnumMethod)
+    method: AuthEnumMethod
 }

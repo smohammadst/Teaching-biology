@@ -1,15 +1,17 @@
 import { AuthEnumMethod } from './enum/method.enum';
-import { AuthDto } from "./dto/aurh.dto";
+import { AuthDto, ChangePasswordDto } from "./dto/aurh.dto";
 import { AuthEnumType } from "./enum/type.enum";
 import { IUser, UserModel } from '../user/model/user.model';
 import createHttpError from 'http-errors';
 import { randomInt } from 'crypto';
 import { AuthMessageError, GlobalMessageError } from 'src/common/enums/message.enum';
-import Jwt from "jsonwebtoken";
+import Jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { sendEmail } from 'src/common/functions/sendEmail';
 import { sendSMS } from 'src/common/functions/sendSmsPhone';
 import { TTokenPayload } from 'src/common/types/token.type';
+import { isEmail, isMobilePhone, isMongoId, isString } from 'class-validator';
+import { NextFunction, Request } from 'express';
 
 export class AuthService {
     constructor(
@@ -17,7 +19,8 @@ export class AuthService {
     ) { }
 
     async register(method: AuthEnumMethod, username: string, password: string): Promise<boolean> {
-        let user: IUser = await this.userExist(method, username);
+        const validate: string = this.usernameValidation(method, username)
+        let user: IUser = await this.userExist(method, validate);
         if (user) throw createHttpError.Conflict(AuthMessageError.Confirm)
         const code = randomInt(5, 5)
         user = await this.userRepository.create({
@@ -32,7 +35,8 @@ export class AuthService {
     }
 
     async loginPassword(method: AuthEnumMethod, username: string, password: string): Promise<string> {
-        let user: IUser = await this.userExist(method, username)
+        const validate: string = this.usernameValidation(method, username)
+        let user: IUser = await this.userExist(method, validate)
         if (!user) throw createHttpError.NotFound(AuthMessageError.NotFound)
         const comparePassword = this.comparePassword(password, user.password)
         if (!comparePassword) throw createHttpError.Unauthorized(AuthMessageError.UnauthorizedPassword)
@@ -54,7 +58,8 @@ export class AuthService {
     }
 
     async checkOtp(method: AuthEnumMethod, code: number, username: string): Promise<object> {
-        const user = await this.userExist(method, username);
+        const validate: string = this.usernameValidation(method, username)
+        const user = await this.userExist(method, validate);
         if (user.otp.code !== code) throw createHttpError.Unauthorized(AuthMessageError.UnauthorizedCode)
         const date = new Date
         if (+date > user.otp.expiresIn) throw createHttpError.Unauthorized(AuthMessageError.UnauthorizedExpires)
@@ -70,10 +75,15 @@ export class AuthService {
         return token;
     }
 
-    async accessToken(token: string) {
-        const verifyToken = Jwt.verify(token, process.env.SECRET_KEY_TOKEN)
-        if (verifyToken) {
-        }
+    async verifyToken(req: Request, res: Response, next: NextFunction) {
+        if (!req.headers['authorization']) return next(createHttpError.Unauthorized("دوباره تلاش کنید"));
+        const authorization: string = req.headers["authorization"];
+        const token: string = authorization.split(" ")[1];
+        const verifyUser: TTokenPayload = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY) as TTokenPayload;
+        const user: IUser = await this.userRepository.findOne({ _id: verifyUser.userId }, { _id: 1 })
+        if (!user) return createHttpError.Unauthorized("کاربری یافت نشد");
+        req.user = user;
+        return next();
     }
 
     userExistence(authDto: AuthDto) {
@@ -100,14 +110,18 @@ export class AuthService {
             case AuthEnumMethod.phone:
                 user = await this.userRepository.findOne({ phone: username })
                 return user
+            case AuthEnumMethod.id:
+                user = await this.userRepository.findOne({ _id: username })
+                return user
         }
     }
 
-    async changePassword(method: AuthEnumMethod, username: string, oldPassword: string, newPassword: string): Promise<boolean> {
+    async changePassword(changePasswordDto: ChangePasswordDto): Promise<boolean> {
+        const { method, username, oldPassword, newPassword } = changePasswordDto
         const user: IUser = await this.userExist(method, username);
         if (!user) throw createHttpError.NotFound(AuthMessageError.NotFound);
         if (!this.comparePassword(oldPassword, user.password)) throw createHttpError.Conflict(AuthMessageError.Confirm)
-        user.password = newPassword;
+        user.password = this.hashingPassword(newPassword);
         await user.save();
         return true;
     }
@@ -149,6 +163,22 @@ export class AuthService {
         user.otp = otp
         await user.save()
         return code
+    }
+
+    usernameValidation(methode: AuthEnumMethod, username: string) {
+        switch (methode) {
+            case AuthEnumMethod.email:
+                if (isEmail(username)) return username
+                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+            case AuthEnumMethod.phone:
+                if (isMobilePhone(username, "fa-IR")) return username
+                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+            case AuthEnumMethod.id:
+                if (isMongoId(username)) return username
+                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+            default:
+                createHttpError.Unauthorized("username is not correct")
+        }
     }
 
 }
