@@ -29,7 +29,7 @@ export class Server {
                     swaggerDefinition: {
                         openapi: "3.0.0",
                         info: {
-                            title: "سایت طراحی",
+                            title: "سایت آموزشی حرفه ایی",
                             version: "1.0.0",
                             description: "سایت آموزشی زیست دانشگاهی",
                         },

@@ -12,10 +12,11 @@ import { sendSMS } from 'src/common/functions/sendSmsPhone';
 import { TTokenPayload } from 'src/common/types/token.type';
 import { isEmail, isMobilePhone, isMongoId, isString } from 'class-validator';
 import { NextFunction, Request } from 'express';
+import { Model } from 'mongoose';
 
 export class AuthService {
     constructor(
-        private userRepository = UserModel<IUser>
+        private userRepository = Model<IUser>
     ) { }
 
     async register(method: AuthEnumMethod, username: string, password: string): Promise<boolean> {
@@ -169,13 +170,13 @@ export class AuthService {
         switch (methode) {
             case AuthEnumMethod.email:
                 if (isEmail(username)) return username
-                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+                throw createHttpError.BadRequest(GlobalMessageError.BadRequest)
             case AuthEnumMethod.phone:
                 if (isMobilePhone(username, "fa-IR")) return username
-                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+                throw createHttpError.BadRequest(GlobalMessageError.BadRequest)
             case AuthEnumMethod.id:
                 if (isMongoId(username)) return username
-                throw createHttpError.BadRequest("اطلاعت وارد شده صحیح نمیباشد")
+                throw createHttpError.BadRequest(GlobalMessageError.BadRequest)
             default:
                 createHttpError.Unauthorized("username is not correct")
         }

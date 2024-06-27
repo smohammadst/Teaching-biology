@@ -9,6 +9,7 @@ export enum AuthMessageError {
 
 export enum GlobalMessageError {
     InternalServerError = "سرور با مشکل مواجه شده است دوباره تلاش کنید",
+    BadRequest = "اطلاعات وارد شده صحیح نمیباشد"
 }
 
 export enum NotFoundError {

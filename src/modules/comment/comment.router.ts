@@ -12,5 +12,5 @@ export default (router: Router) => {
 
     router.delete("deleteComment", commentController.deleteComment)
 
-    router.get("allComment")
+    router.get("allComment", commentController.readAllComments)
 }

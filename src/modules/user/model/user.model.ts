@@ -11,7 +11,8 @@ interface IUser extends mongoose.Document {
     listLikeBlog?: Array<ObjectId>,
     listLikeCourse?: Array<ObjectId>,
     isvalidateMobile?: boolean,
-    isValidateEmail?: boolean
+    isValidateEmail?: boolean,
+    Role: Array<string>
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -24,8 +25,8 @@ const userSchema = new mongoose.Schema<IUser>({
     bascket: { type: [mongoose.Types.ObjectId] },
     listLikeBlog: { type: [mongoose.Types.ObjectId] },
     listLikeCourse: { type: [mongoose.Types.ObjectId] },
-    isvalidateMobile: { type: Boolean, default: false }
-
+    isvalidateMobile: { type: Boolean, default: false },
+    Role: { type: [String], default: ["USER"] }
 });
 
 const UserModel = mongoose.model<IUser>("user", userSchema)

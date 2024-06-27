@@ -2,14 +2,14 @@ import mongoose, { ObjectId } from "mongoose";
 
 interface IDataSpotPlayer extends mongoose.Document {
     token: string,
-    courseID: ObjectId,
+    courseID: Array<ObjectId>,
     url: string,
     userID: ObjectId,
     idSpotPlayer: string
 }
 const dataSpotPlayerSchema = new mongoose.Schema<IDataSpotPlayer>({
     token: { type: String },
-    courseID: { type: mongoose.Types.ObjectId, ref: "course" },
+    courseID: { type: [mongoose.Types.ObjectId], ref: "course" },
     url: { type: String },
     userID: { type: mongoose.Types.ObjectId, ref: "user" },
     idSpotPlayer: { type: String }
@@ -26,7 +26,7 @@ const spotPlayerSchema = new mongoose.Schema<ISpotPlayer>({
     user: { type: mongoose.Types.ObjectId, default: "" },
     spotPlayer: { type: [mongoose.Types.ObjectId], ref: "dataspotPlayer" },
     idSP: { type: String, default: '' },
-    authority: { type: String, default: '' }
+    authority: { type: String, default: '', unique: true }
 })
 
 const DataSpotPlayerModel = mongoose.model<IDataSpotPlayer>("dataspotPlayer", dataSpotPlayerSchema)
