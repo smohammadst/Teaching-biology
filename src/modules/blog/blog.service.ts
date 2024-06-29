@@ -5,7 +5,7 @@ import { BlogModel, IBlog } from "./model/blog.model";
 
 class BlogService {
     constructor(
-        private blogModel = Model<IBlog>
+        private blogModel = BlogModel<IBlog>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
@@ -34,7 +34,7 @@ class BlogService {
         })
         return { stauts: 200, message: 'با موفقیت اپدیت شد' }
     }
-    async removeBlog(id: string): Promise<object> {
+    async deleteBlog(id: string): Promise<object> {
         await this.findBlog(id)
         let result = await this.blogModel.deleteOne({ _id: id });
         return { stauts: 200, message: 'با موفقیت حذف شد' }

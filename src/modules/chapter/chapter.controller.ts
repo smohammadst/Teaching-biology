@@ -1,36 +1,38 @@
 import { Request, Response, NextFunction } from "express";
-import { CourseDto } from "./dto/course.dto";
-import { CourseServices } from "./course.service";
+import { chapterServices } from "./chapter.service";
+import { ChapterDto } from "./dto/chapter.dto";
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
-class CourseController {
-
+class ChapterController {
     async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const course: CourseDto = req.body
-            const result = await CourseServices.createCourse(course)
+            const chapter: ChapterDto = req.body;
+            const result = await chapterServices.create(chapter)
             return res.status(201).json(result)
         } catch (error) {
             next(error)
         }
     }
+
     async update(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const { id } = req.params;
+            const {id} = req.params;
             if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
-            const course: CourseDto = req.body;
-            const result = await CourseServices.updateCourse(id,course)
+            const chapter: ChapterDto = req.body;
+            const result = await chapterServices.update(id, chapter)
             return res.status(200).json(result)
+
         } catch (error) {
             next(error)
         }
     }
+
     async delete(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const { id } = req.params;
+            const {id} = req.params;
             if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
-            const result = await CourseServices.deleteCourse(id)
+            const result = await chapterServices.delete(id)
             return res.status(200).json(result)
         } catch (error) {
             next(error)
@@ -38,6 +40,6 @@ class CourseController {
     }
 }
 
-export {
-    CourseController
+export{
+    ChapterController
 }

@@ -1,39 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 import { BlogDto } from "./dto/blog.dto";
 import { BlogServices } from "./blog.service";
+import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 class BlogController {
 
-    async create(req:Request, res: Response, next: NextFunction){
+    async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const blog: BlogDto = req.body
-            const createBlog = await BlogServices.createBlog(blog)
-            return res.status(201).json({
-                blogs: createBlog
-            })
+            const result = await BlogServices.createBlog(blog)
+            return res.status(201).json(result)
         } catch (error) {
             next(error)
         }
     }
-    async update(req:Request, res: Response, next: NextFunction){
+    async update(req:Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params;
+            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
             const blog: BlogDto = req.body
-            const updateBlog = await BlogServices.updateBlog(id, blog)
-            return res.status(200).json({
-                blogs: updateBlog
-            })
+            const result = await BlogServices.updateBlog(id, blog)
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
     }
-    async remove(req: Request, res: Response, next: NextFunction){
+    async delete(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params;
-            const removeBlog = await BlogServices.removeBlog(id)
-            return res.status(200).json({
-                blog: removeBlog
-            })
+            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            const result = await BlogServices.deleteBlog(id)
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
