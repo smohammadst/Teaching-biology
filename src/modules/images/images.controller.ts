@@ -27,3 +27,4 @@ class ImageController {
 export {
     ImageController
 }
+

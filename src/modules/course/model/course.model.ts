@@ -35,24 +35,24 @@ const courseSchema = new mongoose.Schema<ICourse>({
     price: {type: Number},
     discount: {type: Number},
     priceAfterDiscount: {type: Number},
-    category: {type: [mongoose.Types.ObjectId]},
+    category: {type: [mongoose.Types.ObjectId], default: [], ref: "category"},
     images:{type: [String]},
     comments: { type: [], ref: "comment" },
-    faq: {type: [FaqModel]},
+    faq: {type: [FaqModel], default: []},
     neededTime: {
         hour: Number,
         minute: Number
     },
-    chapters: {type: [ChapterModel]},
+    chapters: {type: [ChapterModel], default: []},
     sortByNumber:{type: Number},
     language: {type: String},
     prerequisitesText: {type: String},
-    prerequisites: {type: [mongoose.Types.ObjectId]},
+    prerequisites: {type: [mongoose.Types.ObjectId], default: []},
     owner: {
         name: String,
         image: String,
     },
-    related: {type: [mongoose.Types.ObjectId]}
+    related: {type: [mongoose.Types.ObjectId], default: []}
 
 
 })

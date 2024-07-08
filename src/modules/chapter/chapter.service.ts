@@ -24,7 +24,7 @@ class chapterService {
                     chapters: {
                         text: chapter.text,
                         title: chapter.title, 
-                        time: chapter.time
+                        time: chapter.time,
                     }
 
             }})
