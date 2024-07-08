@@ -1,11 +1,11 @@
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsObject, IsString } from "class-validator";
 
 
 export class CourseDto {
     @IsString()
     title:string;
     @IsString()
-    text:string;
+    Description:string;
     @IsString()
     shortText:string;
     @IsNumber()
@@ -13,7 +13,7 @@ export class CourseDto {
     @IsNumber()
     discount: number;
     @IsNumber()
-    finalPrice: number;
+    priceAfterDiscount: number;
     @IsArray()
     category: Array<string>;
     @IsArray()
@@ -21,5 +21,17 @@ export class CourseDto {
     @IsArray()
     comments: Array<string>;
     @IsArray()
-    faq: Array<string>
+    faq: Array<string>;
+    @IsObject()
+    neededTime: object;
+    @IsNumber()
+    sortByNumber: number;
+    @IsString()
+    language: string;
+    @IsString()
+    prerequisitesText: string;
+    @IsArray()
+    prerequisites: Array<string>;
+    @IsObject()
+    owner: object
 }

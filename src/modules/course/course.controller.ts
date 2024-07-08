@@ -8,7 +8,8 @@ class CourseController {
 
     async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const course: CourseDto = req.body
+
+            const course: CourseDto = req.body;
             const result = await CourseServices.createCourse(course)
             return res.status(201).json(result)
         } catch (error) {

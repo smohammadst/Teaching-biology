@@ -7,17 +7,34 @@ class CourseService {
         private courseModel = CourseModel<ICourse>
     ){}
     async createCourse(course: CourseDto): Promise<object>{
+
+        course.images = course.images.map(e => e.slice(33, e.length))
+        if (course.discount > 0 && course.discount != 0) {
+            const add = (course.discount * course.price) / 100;
+            course.priceAfterDiscount = course.price - add;
+            course.priceAfterDiscount = Math.floor( course.priceAfterDiscount / 10000) * 10000 
+        } else {
+            course.priceAfterDiscount = course.price;
+            course.priceAfterDiscount = Math.floor( course.priceAfterDiscount / 10000) * 10000
+        }
         let result = await this.courseModel.create({
+            
             title: course.title,
-            text: course.text,
+            Description: course.Description,
             shortText: course.shortText,
             price: course.price,
             discount: course.discount,
-            finalPrice: course.finalPrice,
+            priceAfterDiscount: course.priceAfterDiscount,
             category: course.category,
             images: course.images,
             comments: course.comments,
             faq: course.faq,
+            neededTime: course.neededTime,
+            sortByNumber: course.sortByNumber,
+            language: course.language,
+            prerequisitesText: course.prerequisitesText,
+            prerequisites: course.prerequisites,
+            owner: course.owner
 
         })
         return {status: 201, message: 'دوره با موفقیت اضافه شد'}
@@ -26,18 +43,35 @@ class CourseService {
     // update Course
 
     async updateCourse(id: string,course: CourseDto):Promise<object>{
+
         await this.findCourse(id)
+
+        if (course.discount > 0 && course.discount != 0) {
+            const add = (course.discount * course.price) / 100;
+            course.priceAfterDiscount = course.price - add;
+            course.priceAfterDiscount = Math.floor( course.priceAfterDiscount / 10000) * 10000 
+        } else {
+            course.priceAfterDiscount = course.price;
+            course.priceAfterDiscount = Math.floor( course.priceAfterDiscount / 10000) * 10000
+        }
+
         const result = await this.courseModel.updateOne({_id: id}, {$set: {
             title: course.title,
-            text: course.text,
+            Description: course.Description,
             shortText: course.shortText,
             price: course.price,
             discount: course.discount,
-            finalPrice: course.finalPrice,
+            priceAfterDiscount: course.priceAfterDiscount,
             category: course.category,
             images: course.images,
             comments: course.comments,
             faq: course.faq,
+            neededTime: course.neededTime,
+            sortByNumber: course.sortByNumber,
+            language: course.language,
+            prerequisitesText: course.prerequisitesText,
+            prerequisites: course.prerequisites,
+            owner: course.owner
 
         }})
         return {staus: 200, message: "دوره با موفقیت اپدیت شد"}
