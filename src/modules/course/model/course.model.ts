@@ -1,4 +1,4 @@
-import mongoose, { model, ObjectId } from "mongoose";
+import mongoose, { model, Mongoose, ObjectId } from "mongoose";
 import { FaqModel, IFAQ } from "src/modules/FAQ/model/faq.model";
 
 interface ICourse extends mongoose.Document {
@@ -20,7 +20,8 @@ interface ICourse extends mongoose.Document {
     owner: {
         name: String,
         image: String,
-    }
+    },
+    related: Array<ObjectId>
 }
 
 
@@ -34,7 +35,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
     priceAfterDiscount: {type: Number},
     category: {type: [mongoose.Types.ObjectId]},
     images:{type: [String]},
-    comments: { type: [mongoose.Types.ObjectId], ref: "comment" },
+    comments: { type: [], ref: "comment" },
     faq: {type: [FaqModel]},
     neededTime: {
         hour: Number,
@@ -47,7 +48,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
     owner: {
         name: String,
         image: String,
-    }
+    },
+    related: {type: [mongoose.Types.ObjectId]}
 
 
 })

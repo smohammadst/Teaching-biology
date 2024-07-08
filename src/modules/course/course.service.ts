@@ -18,7 +18,7 @@ class CourseService {
             course.priceAfterDiscount = Math.floor( course.priceAfterDiscount / 10000) * 10000
         }
         let result = await this.courseModel.create({
-            
+        
             title: course.title,
             Description: course.Description,
             shortText: course.shortText,
