@@ -7,8 +7,6 @@ interface IImages extends mongoose.Document {
 
 const imagesSchema = new mongoose.Schema<IImages>({
     images: {type: [String]},
-
-
 })
 
 const ImagesModel = model<IImages>("faq", imagesSchema)
@@ -17,3 +15,5 @@ export {
     IImages,
     ImagesModel
 }
+
+

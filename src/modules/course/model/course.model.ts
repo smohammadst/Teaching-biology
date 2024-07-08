@@ -1,4 +1,5 @@
 import mongoose, { model, Mongoose, ObjectId } from "mongoose";
+import { ChapterModel, IChapter } from "src/modules/chapter/model/chapter.model";
 import { FaqModel, IFAQ } from "src/modules/FAQ/model/faq.model";
 
 interface ICourse extends mongoose.Document {
@@ -21,7 +22,8 @@ interface ICourse extends mongoose.Document {
         name: String,
         image: String,
     },
-    related: Array<ObjectId>
+    related: Array<ObjectId>,
+    chapters: Array<IChapter>
 }
 
 
@@ -41,6 +43,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
         hour: Number,
         minute: Number
     },
+    chapters: {type: [ChapterModel]},
     sortByNumber:{type: Number},
     language: {type: String},
     prerequisitesText: {type: String},
