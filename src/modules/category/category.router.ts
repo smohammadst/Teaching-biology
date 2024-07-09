@@ -6,5 +6,5 @@ const categoryController = new CategoryController()
 
 export default (router: Router) => {
     router.post("/add", categoryController.create)
-    router.post("/all", categoryController.getAllChildern)
+    router.post("/getchildern", categoryController.getAllChildern)
 }

@@ -47,7 +47,7 @@
  */
 /**
  * @swagger
- *  /all:
+ *  /getchildern:
  *      post:
  *          tags: [Category(AdminPanel)]
  *          summary: get childern
