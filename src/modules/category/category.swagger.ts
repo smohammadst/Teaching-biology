@@ -53,7 +53,7 @@
  *          summary: get childern
  *          requestBody:
  *              required: true
- *              content:
+ *              content: Related categories
  *                  application/x-www-form-urlencoded:
  *                      schema:
  *                          $ref: '#/components/schemas/getCategory'
@@ -64,6 +64,3 @@
  *              201:
  *                  description: success
  */
-
-
-
