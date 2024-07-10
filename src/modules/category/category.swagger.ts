@@ -28,10 +28,29 @@
  */
 /**
  * @swagger
- *  /add:
+ *  /addCategoryCourse:
  *      post:
  *          tags: [Category(AdminPanel)]
- *          summary: create new category title
+ *          summary: create category course
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+/**
+ * @swagger
+ *  /createCategoryBlog:
+ *      post:
+ *          tags: [Category(AdminPanel)]
+ *          summary: create category Blog
  *          requestBody:
  *              required: true
  *              content:

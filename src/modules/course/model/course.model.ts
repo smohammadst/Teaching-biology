@@ -1,6 +1,29 @@
-import mongoose, { model, Mongoose, ObjectId } from "mongoose";
-import { ChapterModel, IChapter } from "src/modules/chapter/model/chapter.model";
+
+
 import { FaqModel, IFAQ } from "src/modules/FAQ/model/faq.model";
+import mongoose,  { model, ObjectId } from 'mongoose'
+
+
+interface IChapter extends mongoose.Document{
+    title:string,
+    text:string,
+    time:object,
+    episodes:Array<ObjectId>
+
+}
+
+const chaptergSchema = new mongoose.Schema<IChapter>({
+    title: {type: String},
+    text: {type: String},
+    time: {
+        hour: Number,
+        min: Number
+    },
+    episodes: {type: [mongoose.Types.ObjectId], default: []}
+
+})
+
+
 
 interface ICourse extends mongoose.Document {
     title:string,
@@ -9,10 +32,10 @@ interface ICourse extends mongoose.Document {
     price: number,
     discount: number,
     priceAfterDiscount: number,
-    category: Array<ObjectId>,
+    category: ObjectId,
     images: Array<string>,
     comments: Array<ObjectId>,
-    faq: Array<IFAQ>,
+    //faq: Array<IFAQ>,
     neededTime:{hour: number, minute: number},
     sortByNumber: number,
     language: string,
@@ -23,7 +46,7 @@ interface ICourse extends mongoose.Document {
         image: String,
     },
     related: Array<ObjectId>,
-    chapters: Array<IChapter>
+    chapters: IChapter[]
 }
 
 
@@ -34,16 +57,16 @@ const courseSchema = new mongoose.Schema<ICourse>({
     shortText: {type: String},
     price: {type: Number},
     discount: {type: Number},
-    priceAfterDiscount: {type: Number},
-    category: {type: [mongoose.Types.ObjectId], default: [], ref: "category"},
+    priceAfterDiscount: {type: Number, default: 0},
+    category: {type: mongoose.Types.ObjectId, ref: "category"},
     images:{type: [String]},
     comments: { type: [], ref: "comment" },
-    faq: {type: [FaqModel], default: []},
+    //faq: {type: [FaqModel], default: []},
     neededTime: {
         hour: Number,
         minute: Number
     },
-    chapters: {type: [ChapterModel], default: []},
+    chapters: {type: [chaptergSchema], default: []},
     sortByNumber:{type: Number},
     language: {type: String},
     prerequisitesText: {type: String},

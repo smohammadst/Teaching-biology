@@ -11,7 +11,11 @@ class CourseController {
 
             const course: CourseDto = req.body;
             const result = await CourseServices.createCourse(course)
-            return res.status(201).json(result)
+            return res.status(201).json({
+                statusCode: 201,
+                message: "ثبت دوره موفقیت امیز بود"
+              });
+
         } catch (error) {
             next(error)
         }

@@ -1,69 +1,69 @@
 import { IsArray, IsBoolean, IsEmpty, IsNumber, IsObject, IsString, MinLength } from "class-validator";
+import { ObjectId } from "mongoose";
 
 
 export class CourseDto {
     @IsString()
-    @IsEmpty()
+    //@IsEmpty()
     title:string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsString()
     @MinLength(3)
     Description:string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsString()
     shortText:string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsNumber()
     price: number;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsNumber()
     discount: number;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsNumber()
     priceAfterDiscount: number;
 
-    @IsEmpty()
-    @IsArray()
-    category: Array<string>;
+    //@IsEmpty()
+    category: ObjectId;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsArray()
     images: Array<string>;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsArray()
     comments: Array<string>;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsArray()
     faq: Array<string>;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsObject()
     neededTime: object;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsNumber()
     sortByNumber: number;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsString()
     language: string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsString()
     prerequisitesText: string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsArray()
     prerequisites: Array<string>;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsObject()
     owner: object
 }

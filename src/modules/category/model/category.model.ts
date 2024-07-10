@@ -6,7 +6,7 @@ interface ICategory extends mongoose.Document{
 
 }
 
-const chaptergSchema = new mongoose.Schema<ICategory>({
+const categorygSchema = new mongoose.Schema<ICategory>({
     title: {type: String},
     parent: {type: String, default: ''},
 
@@ -14,7 +14,7 @@ const chaptergSchema = new mongoose.Schema<ICategory>({
 
 })
 
-const CategoryModel = mongoose.model<ICategory>("category", chaptergSchema)
+const CategoryModel = mongoose.model<ICategory>("category", categorygSchema)
 
 export{
     CategoryModel,

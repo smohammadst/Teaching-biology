@@ -1,6 +1,7 @@
+import createHttpError from "http-errors";
 import { CourseDto } from "./dto/course.dto";
 import { CourseModel, ICourse } from "./model/course.model";
-const createError = require("http-errors");
+
 
 class CourseService {
     constructor(
@@ -8,7 +9,8 @@ class CourseService {
     ){}
     async createCourse(course: CourseDto): Promise<object>{
 
-        course.images = course.images.map(e => e.slice(33, e.length))
+        //let image = course.images.map(e => e.slice(33, e.length))
+
         if (course.discount > 0 && course.discount != 0) {
             const add = (course.discount * course.price) / 100;
             course.priceAfterDiscount = course.price - add;
@@ -39,6 +41,7 @@ class CourseService {
         })
         return {status: 201, message: 'دوره با موفقیت اضافه شد'}
     }
+
 
     // update Course
 
@@ -87,7 +90,7 @@ class CourseService {
     //find course
     async findCourse(id: string): Promise<ICourse>{
         const course = await this.courseModel.findOne({_id: id})
-        if(!course) throw createError.NotFound("دوره ای با این ایدی یافت نشد")
+        if(!course) throw createHttpError.NotFound("دوره ای با این ایدی یافت نشد")
         return course
     }
 }

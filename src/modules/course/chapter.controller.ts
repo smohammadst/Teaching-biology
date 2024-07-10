@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { chapterServices } from "./chapter.service";
-import { ChapterDto } from "./dto/chapter.dto";
+
+
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
+import { ChapterDto } from "./dto/chapter.dto";
+import { chapterServices } from "./chapter.service";
+
 
 class ChapterController {
     async create(req: Request, res: Response, next: NextFunction): Promise<Response>{

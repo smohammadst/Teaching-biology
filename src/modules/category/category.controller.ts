@@ -7,11 +7,21 @@ import { categoryServices } from "./category.service";
 
 class CategoryController {
 
-    async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
+    async createCategoryCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             
             const category: CategoryDto = req.body
-            const result = await categoryServices.createCategory(category)
+            const result = await categoryServices.createCategoryCourse(category)
+            return res.status(201).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async createCategoryBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            
+            const category: CategoryDto = req.body
+            const result = await categoryServices.createCategoryBlog(category)
             return res.status(201).json(result)
         } catch (error) {
             next(error)
