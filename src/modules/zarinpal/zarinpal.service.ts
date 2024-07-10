@@ -24,7 +24,7 @@ class PaymentService {
             const findCourse: ICourse = await this.courseRepository.findOne({ _id: id });
             if (findCourse) {
                 listCourse.push(findCourse._id);
-                amount += findCourse.finalPrice;
+                amount += findCourse.priceAfterDiscount;
             }
         }
         const user: IUser = await this.userRepository.findOne({ _id: userID })
@@ -88,8 +88,7 @@ class PaymentService {
             },
             body: verifyBody,
         }).then((result) => result.json());
-        if (verifyResult.data.code == 100){
-            
+        if (verifyResult.data.code == 100){   
         }
     }
 }

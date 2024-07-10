@@ -38,7 +38,10 @@
     "moment-jalali": "^0.3.9",
     "mongoose": "^8.2.3",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
+    "path": "^0.12.7",
+    "short-uuid": "^5.2.0",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"

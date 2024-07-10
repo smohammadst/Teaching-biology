@@ -8,7 +8,8 @@ class ChapterController {
     async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const chapter: ChapterDto = req.body;
-            const result = await chapterServices.create(chapter)
+            const {id} = req.params
+            const result = await chapterServices.createChapter(id,chapter)
             return res.status(201).json(result)
         } catch (error) {
             next(error)

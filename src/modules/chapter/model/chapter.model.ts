@@ -4,6 +4,7 @@ interface IChapter extends mongoose.Document{
     title:string,
     text:string,
     time:object,
+    episodes:Array<ObjectId>
 
 }
 
@@ -13,7 +14,8 @@ const chaptergSchema = new mongoose.Schema<IChapter>({
     time: {
         hour: Number,
         min: Number
-    }
+    },
+    episodes: {type: [mongoose.Types.ObjectId], default: []}
 
 })
 
