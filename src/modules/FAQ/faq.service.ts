@@ -1,7 +1,7 @@
 import { FaqDto } from "./dto/faq.dto";
 import { IFAQ } from "./model/faq.model";
 import { Model } from "mongoose";
-const createError = require("http-errors");
+import createHttpError from 'http-errors';
 
 class FaqService {
     constructor(
@@ -23,7 +23,7 @@ class FaqService {
 
     async findFaq(id: string): Promise<IFAQ> {
         const faq = await this.faqModel.findOne({ _id: id });
-        if (!faq) throw createError.NotFound("سوالات متداولی  با این شناسه یافت نشد")
+        if (!faq) throw createHttpError.NotFound("سوالات متداولی  با این شناسه یافت نشد")
         return faq
     }
 }

@@ -13,9 +13,9 @@ export interface MulterFile {
     mimetype: string
     originalname: string
     size: number
-    destination:string
+    destination: string
     filename: string
-  }
+}
 
 const createFolderWithDate = (folder: string) => {
     const year = moment().jYear();
@@ -43,7 +43,7 @@ const storage = multer.diskStorage({
 
 function fileFilter(req: Request, file: MulterFile, cb: CallableFunction) {
     const ext = path.extname(file.originalname);
-    const mimetypes = [".jpg",".JPG", ".jpeg", ".png", ".webp", ".gif", ".jfif"];
+    const mimetypes = [".jpg", ".JPG", ".jpeg", ".png", ".webp", ".gif", ".jfif"];
     if (mimetypes.includes(ext)) {
         return cb(null, true);
     }

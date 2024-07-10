@@ -2,6 +2,7 @@ import createHttpError from "http-errors";
 import { IUser, UserModel } from "src/modules/user/model/user.model";
 import { AuthMessageError, NotFoundError } from "../enums/message.enum";
 import { Request } from "express";
+import moment from "moment-jalali"
 
 async function checkRole(req: Request, role: Array<string>) {
     const userID = req.user
@@ -16,6 +17,15 @@ async function checkRole(req: Request, role: Array<string>) {
     }
 }
 
+function invoiceNumberGenerator(): string {
+    return (
+        moment().format("jYYYYjMMjDDHHmmssSSS") +
+        String(process.hrtime()[1]).padStart(9)
+    );
+}
+
+
 export {
+    invoiceNumberGenerator,
     checkRole
 }

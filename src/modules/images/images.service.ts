@@ -13,10 +13,7 @@ class ImageService {
             image
         })
         return { status: 201, message: "عکس با موفقیت اضافه شد" }
-    }x
-    
-
-
+    }
 }
 
 const ImageServices = new ImageService()
