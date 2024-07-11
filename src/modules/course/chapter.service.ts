@@ -20,7 +20,6 @@ class chapterService {
             { _id: course._id }, 
             {
                 $push: {
-
                     chapters: {
                         title: data.title, 
                         time: data.time,
