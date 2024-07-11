@@ -3,16 +3,15 @@ import { IsEmpty, IsObject, IsString, MaxLength, maxLength, MinLength, minLength
 
 export class EpisodeDto{
     @IsString()
-    @IsEmpty()
+    //@IsEmpty()
     @MinLength(3)
     @MaxLength(200)
     title: string;
 
-    @IsEmpty()
-    @IsString()
-    text: string;
 
     @IsObject()
-    @IsEmpty()
+    //@IsEmpty()
     time: object
+    chapterID: string
+    courseID: string
 }

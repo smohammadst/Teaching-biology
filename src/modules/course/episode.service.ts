@@ -2,30 +2,27 @@
 import { CourseModel, ICourse } from "../course/model/course.model";
 import { EpisodeDto } from "./dto/episode.dto";
 import createHttpError from "http-errors";
-import { EpisodeModel, IEpisode } from "./model/episode.model";
-import { ChapterModel, IChapter } from "../chapter/model/chapter.model";
+
 
 
 class episodeService {
     constructor(
         private courseModel = CourseModel<ICourse>,
-        private chapterModel = ChapterModel<IChapter>,
-        private episodeModel = EpisodeModel<IEpisode>,
     ) { }
     // Add a chapter to the desired course
     async createEpisode(courseID: string,chapterID: string, episode: EpisodeDto): Promise<object>{
 
         const course = await this.courseModel.findOne({_id: courseID});
-        if(!course) throw createHttpError.NotFound('دوره یافت نشد')
+        //if(!course) throw createHttpError.NotFound('دوره یافت نشد')
 
         const result = await this.courseModel.updateOne(
             {
-              _id: courseID,
+              _id:courseID,
               "chapters._id": chapterID,
             },
             {
               $push: {
-                "chapters.$.episodes": {title: episode.title, text: episode.text, time: episode.time},
+                "chapters.$.episodes": {title: episode.title, time: episode.time},
               },
             }
           );
@@ -56,13 +53,6 @@ class episodeService {
         return {status: 200, message: "با موفقیت حذف شد"}
     }
 
-    // Find a chapter of the desired course
-
-    async getOneEpisode(episodeID: string): Promise<IEpisode>{
-        const episode = await this.episodeModel.findOne({_id: episodeID})
-        if(!episode) throw  createHttpError.NotFound("اپیزودی یافت نشد")
-        return episode
-    } 
 }
 
 

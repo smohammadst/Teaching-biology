@@ -3,12 +3,30 @@
 import { FaqModel, IFAQ } from "src/modules/FAQ/model/faq.model";
 import mongoose,  { model, ObjectId } from 'mongoose'
 
+// Episode
+
+interface IEpisode extends mongoose.Document{
+    title:string,
+    time: {
+        min: number,
+        second: number
+    }
+
+}
+
+const episodeSchema = new mongoose.Schema<IEpisode>({
+    title: {type: String},
+    time: {type: Object},
+
+})
+
+// Chapter
 
 interface IChapter extends mongoose.Document{
     title:string,
     text:string,
     time: {hour:number, min: number},
-    episodes:Array<ObjectId>
+    episodes:Array<IEpisode>
 
 }
 
@@ -16,11 +34,12 @@ const chaptergSchema = new mongoose.Schema<IChapter>({
     title: {type: String},
     text: {type: String},
     time: {type: Object},
-    episodes: {type: [mongoose.Types.ObjectId], default: []}
+    episodes: {type: [episodeSchema], default: []}
 
 })
 
 
+// Course
 
 interface ICourse extends mongoose.Document {
     title:string,
