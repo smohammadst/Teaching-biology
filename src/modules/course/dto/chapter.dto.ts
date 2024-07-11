@@ -2,15 +2,14 @@ import { IsEmpty, IsObject, IsString } from "class-validator";
 
 
 export class ChapterDto{
+
+    id: string
     @IsString()
-    @IsEmpty()
+    //@IsEmpty()
     title: string;
 
-    @IsEmpty()
-    @IsString()
-    text: string;
 
-    @IsEmpty()
+    //@IsEmpty()
     @IsObject()
     time: object
 }

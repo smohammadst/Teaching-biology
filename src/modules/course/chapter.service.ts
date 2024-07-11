@@ -2,6 +2,8 @@ import { title } from "process";
 import { ChapterDto } from "./dto/chapter.dto";
 import { CourseModel, ICourse } from "../course/model/course.model";
 import createHttpError from "http-errors";
+import mongoose, { isValidObjectId, ObjectId } from "mongoose";
+
 
 
 class chapterService {
@@ -10,20 +12,18 @@ class chapterService {
     ) { }
     
     // Add a chapter to the desired course
-    async createChapter(id: string, chapter: ChapterDto): Promise<object>{
-
-        const course = await this.courseModel.findOne({_id: id});
+    async createChapter(data:ChapterDto): Promise<object>{
+        const {id} = data
+        const course = await this.courseModel.findById(id);
         if(!course) throw createHttpError.NotFound('دوره یافت نشد')
-
-        const result = await this.courseModel.create(
-            { _id: id }, 
+        const result = await this.courseModel.findOneAndUpdate(
+            { _id: course._id }, 
             {
                 $push: {
 
                     chapters: {
-                        text: chapter.text,
-                        title: chapter.title, 
-                        time: chapter.time,
+                        title: data.title, 
+                        time: data.time,
                     }
 
             }})
@@ -35,7 +35,6 @@ class chapterService {
         const result = await this.courseModel.updateOne({_id: id}, {
             $set: {
                 title: chapter.title,
-                text: chapter.text,
                 time: chapter.time
             }
     })

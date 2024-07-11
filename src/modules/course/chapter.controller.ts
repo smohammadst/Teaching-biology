@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { ChapterDto } from "./dto/chapter.dto";
 import { chapterServices } from "./chapter.service";
 
@@ -10,10 +10,11 @@ import { chapterServices } from "./chapter.service";
 class ChapterController {
     async create(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const chapter: ChapterDto = req.body;
-            const {id} = req.params
-            const result = await chapterServices.createChapter(id,chapter)
-            return res.status(201).json(result)
+            const data = req.body;
+            const result = await chapterServices.createChapter(data)
+            return res.status(201).json({
+                message: 'دوره با موفقیت افزوده شدد'
+            })
         } catch (error) {
             next(error)
         }
