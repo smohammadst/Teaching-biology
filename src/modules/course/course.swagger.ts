@@ -60,8 +60,9 @@
  */
 /**
  * @swagger
- *  /create:
+ *  /createCourse:
  *      post:
+ *          tags: [Course(AdminPanel)]
  *          summary: create and save course
  *          requestBody:
  *              required: true

@@ -51,6 +51,11 @@ class categoryService {
         if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");
         return category;
     }
+    async getAllCategory() {
+        const category = await this.categoryModel.find();
+        if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");
+        return category;
+    }
 
 
 }

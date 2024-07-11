@@ -83,3 +83,17 @@
  *              201:
  *                  description: success
  */
+/**
+ * @swagger
+ *  /all:
+ *      get:
+ *          tags: [Category(AdminPanel)]
+ *          summary: remove a Chapter of courses
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */

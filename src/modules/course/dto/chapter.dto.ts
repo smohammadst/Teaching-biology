@@ -1,4 +1,4 @@
-import { IsEmpty, IsObject, IsString } from "class-validator";
+import { IsEmpty, IsNotEmptyObject, isObject, IsObject, IsString, Length, MaxLength, ValidationError } from "class-validator";
 
 
 export class ChapterDto{
@@ -10,6 +10,7 @@ export class ChapterDto{
 
 
     //@IsEmpty()
+    @IsNotEmptyObject()
     @IsObject()
-    time: object
+    time: {hour:number, min:number}
 }

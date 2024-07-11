@@ -32,12 +32,15 @@ class chapterService {
 
     // Updating a chapter of the desired course
     async update(id: string, chapter: ChapterDto): Promise<object>{
-        const result = await this.courseModel.updateOne({_id: id}, {
-            $set: {
-                title: chapter.title,
-                time: chapter.time
-            }
-    })
+        const result = await this.courseModel.updateOne({"chapters._id": id}, 
+            { $set:
+                { 
+                    "chapters.$" : {
+                    title: chapter.title,
+                    time: chapter.time
+                    }
+                } 
+            })
         return {status: 200, message: "با موفقیت اپدیت شد"}
     }
     

@@ -7,7 +7,7 @@ import mongoose,  { model, ObjectId } from 'mongoose'
 interface IChapter extends mongoose.Document{
     title:string,
     text:string,
-    time:object,
+    time: {hour:number, min: number},
     episodes:Array<ObjectId>
 
 }
@@ -15,10 +15,7 @@ interface IChapter extends mongoose.Document{
 const chaptergSchema = new mongoose.Schema<IChapter>({
     title: {type: String},
     text: {type: String},
-    time: {
-        hour: Number,
-        min: Number
-    },
+    time: {type: Object},
     episodes: {type: [mongoose.Types.ObjectId], default: []}
 
 })

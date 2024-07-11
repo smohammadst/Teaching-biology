@@ -23,7 +23,7 @@ class ChapterController {
     async update(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params;
-            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            //if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
             const chapter: ChapterDto = req.body;
             const result = await chapterServices.update(id, chapter)
             return res.status(200).json(result)
