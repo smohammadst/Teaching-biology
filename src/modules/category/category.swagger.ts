@@ -10,6 +10,9 @@
  *                  title:
  *                      type: string
  *                      description: the title of category
+ *                  type:
+ *                      type: string
+ *                      description: Course or Blog
  *                  parent:
  *                      type: string
  *                      description: the parent of category
@@ -28,10 +31,29 @@
  */
 /**
  * @swagger
- *  /add:
+ *  /addCategory:
  *      post:
  *          tags: [Category(AdminPanel)]
- *          summary: create new category title
+ *          summary: create category course
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+/**
+ * @swagger
+ *  /createCategoryBlog:
+ *      post:
+ *          tags: [Category(AdminPanel)]
+ *          summary: create category Blog
  *          requestBody:
  *              required: true
  *              content:
@@ -63,4 +85,18 @@
  *          responses:
  *              201:
  *                  description: success
+ */
+/**
+ * @swagger
+ *  /all:
+ *      get:
+ *          tags: [Category(AdminPanel)]
+ *          summary: remove a Chapter of courses
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
  */

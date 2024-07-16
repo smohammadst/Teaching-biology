@@ -1,30 +1,28 @@
 import { title } from "process";
 import { ChapterDto } from "./dto/chapter.dto";
-import { ChapterModel, IChapter } from "./model/chapter.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
-const createError = require("http-errors");
+import createHttpError from "http-errors";
+import mongoose, { isValidObjectId, ObjectId } from "mongoose";
+
+
 
 class chapterService {
     constructor(
         private courseModel = CourseModel<ICourse>,
-        private chapterModel = ChapterModel<IChapter>
     ) { }
     
     // Add a chapter to the desired course
-    async createChapter(id: string, chapter: ChapterDto): Promise<object>{
-
-        const course = await this.courseModel.findOne({_id: id});
-        if(!course) throw createError.NotFound('دوره یافت نشد')
-
-        const result = await this.courseModel.create(
-            { _id: id }, 
+    async createChapter(data:ChapterDto): Promise<object>{
+        const {id} = data
+        const course = await this.courseModel.findById(id);
+        if(!course) throw createHttpError.NotFound('دوره یافت نشد')
+        const result = await this.courseModel.findOneAndUpdate(
+            { _id: course._id }, 
             {
                 $push: {
-
                     chapters: {
-                        text: chapter.text,
-                        title: chapter.title, 
-                        time: chapter.time,
+                        title: data.title, 
+                        time: data.time,
                     }
 
             }})
@@ -33,13 +31,15 @@ class chapterService {
 
     // Updating a chapter of the desired course
     async update(id: string, chapter: ChapterDto): Promise<object>{
-        const result = await this.courseModel.updateOne({_id: id}, {
-            $set: {
-                title: chapter.title,
-                text: chapter.text,
-                time: chapter.time
-            }
-    })
+        const result = await this.courseModel.updateOne({"chapters._id": id}, 
+            { $set:
+                { 
+                    "chapters.$" : {
+                    title: chapter.title,
+                    time: chapter.time
+                    }
+                } 
+            })
         return {status: 200, message: "با موفقیت اپدیت شد"}
     }
     
@@ -54,11 +54,7 @@ class chapterService {
 
     // Find a chapter of the desired course
 
-    async findChapter(id: string): Promise<IChapter> {
-        const chapter = await this.chapterModel.findOne({ _id: id });
-        if (!chapter) throw createError.NotFound("فصلی با این شناسه پیدا نشد");
-        return chapter
-    }
+    
 }
 
 
