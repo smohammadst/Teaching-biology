@@ -13,29 +13,39 @@ class categoryService {
 
     ) { }
     
-    async createCategoryCourse(category: CategoryDto): Promise<object>{
-        let parent: CategoryDto ;
-        if(category.parent){
-            parent = await this.categoryModel.findOne({title: category.parent});
-            if(!parent) throw createHttpError.NotFound("پرنت یافت نشد")
-           
+    async createCategory(category: CategoryDto): Promise<object>{
+
+        let title = category.title
+        let parent = category.parent
+
+        console.log(typeof(category.parent));
+
+        if (await CategoryModel.findOne({title}, {__v: 0, parent: 0}) ) {
+            throw new Error(
+                'این دسته بندی با این عنوان وجود دارد',
+            );
         }
-        const result = await this.categoryModel.create({
-            title: category.title,
-            parent: category.parent
-        })
-        return {status:201, message: "دسته بندی با موفقیت افزوده شد"}
-    }
-    async createCategoryBlog(category: CategoryDto): Promise<object>{
-        let parent: CategoryDto ;
-        if(category.parent){
-            parent = await this.categoryModel.findOne({title: category.parent});
-            if(!parent) throw createHttpError.NotFound("پرنت یافت نشد")
+        if (parent && !await CategoryModel.findOne({_id: parent})) {
+            throw new Error("پرنت وجود ندارد")
         }
-        const result = await this.categoryModel.create({
-            title: category.title,
-            parent: category.parent
-        })
+        
+        if(!parent){
+            const category = await CategoryModel.create({title})
+            //if(!category) throw createHttpError.InternalServerError("خطای داخلی")
+                const result = await this.categoryModel.create({
+                    title: category.title,
+                    type: category.type
+                })
+        }else{
+            const category = await CategoryModel.create({title, parent})
+            //if(!category) throw createHttpError.InternalServerError("خطای داخلی")
+                const result = await this.categoryModel.create({
+                    title: category.title,
+                    parent: category.parent,
+                    type: category.type
+                })
+
+        }
         return {status:201, message: "دسته بندی با موفقیت افزوده شد"}
     }
 

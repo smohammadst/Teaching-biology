@@ -11,17 +11,7 @@ class CategoryController {
         try {
             
             const category: CategoryDto = req.body
-            const result = await categoryServices.createCategoryCourse(category)
-            return res.status(201).json(result)
-        } catch (error) {
-            next(error)
-        }
-    }
-    async createCategoryBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
-        try {
-            
-            const category: CategoryDto = req.body
-            const result = await categoryServices.createCategoryBlog(category)
+            const result = await categoryServices.createCategory(category)
             return res.status(201).json(result)
         } catch (error) {
             next(error)

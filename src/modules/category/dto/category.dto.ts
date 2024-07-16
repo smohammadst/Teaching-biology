@@ -9,5 +9,8 @@ export class CategoryDto {
     @IsString()
     parent: string;
 
+    @IsString()
+    type: string;
+
     
 }

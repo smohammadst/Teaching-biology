@@ -10,6 +10,9 @@
  *                  title:
  *                      type: string
  *                      description: the title of category
+ *                  type:
+ *                      type: string
+ *                      description: Course or Blog
  *                  parent:
  *                      type: string
  *                      description: the parent of category
@@ -28,7 +31,7 @@
  */
 /**
  * @swagger
- *  /addCategoryCourse:
+ *  /addCategory:
  *      post:
  *          tags: [Category(AdminPanel)]
  *          summary: create category course

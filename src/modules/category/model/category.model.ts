@@ -2,13 +2,15 @@ import mongoose,  { Mongoose, ObjectId } from 'mongoose'
 
 interface ICategory extends mongoose.Document{
     title:string,
-    parent?: string,
+    parent?: ObjectId,
+    type: string
 
 }
 
 const categorygSchema = new mongoose.Schema<ICategory>({
     title: {type: String},
-    parent: {type: String, default: ''},
+    parent: {type: mongoose.Types.ObjectId, ref: 'category',default: undefined, required: false},
+    type: {type: String, default: "Course"}
 
 
 
