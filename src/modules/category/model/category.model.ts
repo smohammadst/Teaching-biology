@@ -10,7 +10,7 @@ interface ICategory extends mongoose.Document{
 const categorygSchema = new mongoose.Schema<ICategory>({
     title: {type: String},
     parent: {type: mongoose.Types.ObjectId, ref: 'category',default: undefined, required: false},
-    type: {type: String, default: "Course"}
+    type: {type: String, default: "course"}
 
 
 
