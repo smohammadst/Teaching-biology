@@ -36,7 +36,8 @@ class CourseService {
             language: course.language,
             prerequisitesText: course.prerequisitesText,
             prerequisites: course.prerequisites,
-            owner: course.owner
+            owner: course.owner,
+            typeCourse: course.typeCourse
 
         })
         return {status: 201, message: 'دوره با موفقیت اضافه شد'}
@@ -47,7 +48,7 @@ class CourseService {
 
     async updateCourse(id: string,course: CourseDto):Promise<object>{
 
-        await this.findCourse(id)
+        await this.findOneCourse(id)
 
         if (course.discount > 0 && course.discount != 0) {
             const add = (course.discount * course.price) / 100;
@@ -74,7 +75,8 @@ class CourseService {
             language: course.language,
             prerequisitesText: course.prerequisitesText,
             prerequisites: course.prerequisites,
-            owner: course.owner
+            owner: course.owner,
+            typeCourse: course.typeCourse
 
         }})
         return {staus: 200, message: "دوره با موفقیت اپدیت شد"}
@@ -82,16 +84,21 @@ class CourseService {
 
     //remove Course
     async deleteCourse(id: string): Promise<object>{
-        await this.findCourse(id)
+        //await this.findOneCourse(id)
         const result = await this.courseModel.deleteOne({_id: id})
         return {status: 200, message: "دوره با موفقیت حذف شد"}
     }
 
     //find course
-    async findCourse(id: string): Promise<ICourse>{
+    async findOneCourse(id: string): Promise<ICourse>{
         const course = await this.courseModel.findOne({_id: id})
         if(!course) throw createHttpError.NotFound("دوره ای با این ایدی یافت نشد")
         return course
+    }
+    async findAllCourse(): Promise<object>{
+        const AllCourse = await this.courseModel.find({})
+        if(!AllCourse) throw createHttpError.NotFound("دوره ای با این ایدی یافت نشد")
+        return AllCourse
     }
 }
 

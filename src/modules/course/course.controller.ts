@@ -34,9 +34,35 @@ class CourseController {
     async delete(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const { id } = req.params;
-            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            //if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
             const result = await CourseServices.deleteCourse(id)
-            return res.status(200).json(result)
+            return res.status(200).json({
+                statusCode: 200,
+                message: "حذف دوره موفقیت امیز بود"
+              });
+        } catch (error) {
+            next(error)
+        }
+    }
+    async findAllCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const resutl = await CourseServices.findAllCourse()
+            return res.status(200).json({
+                statusCode: 200,
+                resutl
+              });
+        } catch (error) {
+            next(error)
+        }
+    }
+    async findOneCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const {id} = req.params
+            const resutl = await CourseServices.findOneCourse(id)
+            return res.status(200).json({
+                statusCode: 200,
+                resutl
+              });
         } catch (error) {
             next(error)
         }

@@ -11,6 +11,10 @@ const episodeController = new EpisodeController()
 export default (router: Router) => {
 
     router.post("/createCourse", courseController.create)
+    router.patch("/updateCourse", courseController.update)
+    router.delete("/deleteCourse/:id", courseController.delete)
+    router.get("/getOnecourse/:id", courseController.findOneCourse)
+    router.get("/getAllCourse", courseController.findAllCourse)
     //chapter
     router.post("/addchapter", chapterController.create)
     router.patch("/chapter/delete/:id", chapterController.delete)

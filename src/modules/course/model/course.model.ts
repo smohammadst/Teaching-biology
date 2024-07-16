@@ -1,6 +1,4 @@
 
-
-import { FaqModel, IFAQ } from "src/modules/FAQ/model/faq.model";
 import mongoose,  { model, ObjectId } from 'mongoose'
 
 // Episode
@@ -51,7 +49,6 @@ interface ICourse extends mongoose.Document {
     category: ObjectId,
     images: Array<string>,
     comments: Array<ObjectId>,
-    //faq: Array<IFAQ>,
     neededTime:{hour: number, minute: number},
     sortByNumber: number,
     language: string,
@@ -62,10 +59,10 @@ interface ICourse extends mongoose.Document {
         image: String,
     },
     related: Array<ObjectId>,
-    chapters: IChapter[]
+    chapters: IChapter[],
+    typeCourse: string,
+
 }
-
-
 
 const courseSchema = new mongoose.Schema<ICourse>({
     title: {type:String},
@@ -77,7 +74,6 @@ const courseSchema = new mongoose.Schema<ICourse>({
     category: {type: mongoose.Types.ObjectId, ref: "category"},
     images:{type: [String]},
     comments: { type: [], ref: "comment" },
-    //faq: {type: [FaqModel], default: []},
     neededTime: {
         hour: Number,
         minute: Number
@@ -91,7 +87,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
         name: String,
         image: String,
     },
-    related: {type: [mongoose.Types.ObjectId], default: []}
+    related: {type: [mongoose.Types.ObjectId], default: []},
+    typeCourse: {type: String, default: ''},
 
 
 })

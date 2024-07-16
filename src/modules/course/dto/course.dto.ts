@@ -66,4 +66,7 @@ export class CourseDto {
     //@IsEmpty()
     @IsObject()
     owner: object
+
+    @IsString()
+    typeCourse: string
 }

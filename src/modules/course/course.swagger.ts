@@ -83,7 +83,7 @@
 
 /**
  * @swagger
- *  /update/{id}:
+ *  /updateCourse/{id}:
  *      patch:
  *          tags: [Course(AdminPanel)]
  *          summary: update course
@@ -107,4 +107,49 @@
  *                      application/json:
  *                          schema:
  *                              $ref: '#/definitions/publicDefinition'
+ */
+
+/**
+ * @swagger
+ *  /deleteCourse/{id}:
+ *      delete:
+ *          tags: [Course(AdminPanel)]
+ *          summary: delete One course
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of product
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/definitions/publicDefinition'
+ */
+/**
+ * @swagger
+ *  /getOnecourse/{id}:
+ *      get:
+ *          tags: [Course(AdminPanel)]
+ *          summary: get One course
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of course
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+/**
+ * @swagger
+ *  /getAllCourse:
+ *      get:
+ *          tags: [Course(AdminPanel)]
+ *          summary: get all courses
+ *          responses:
+ *              200:
+ *                  description: success
  */
