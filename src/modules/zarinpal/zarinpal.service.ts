@@ -20,7 +20,7 @@ class PaymentService {
         let amount: number = 0
         let listCourse: Array<string> = []
         for (let i = 0; i < bascket.length; i++) {
-            const id: string = bascket[i];
+            const id: string = bascket[i].id ;
             const findCourse: ICourse = await this.courseRepository.findOne({ _id: id });
             if (findCourse) {
                 listCourse.push(findCourse._id);

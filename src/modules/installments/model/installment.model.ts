@@ -2,12 +2,10 @@ import mongoose, { Document, ObjectId } from "mongoose";
 
 //پلن ها برای طرح اقساط
 interface IInstallmentPlan extends Document {
+    name: string,
     time: number,
-    listAmount: [
-        {
-            amount: number
-        }
-    ]
+    listAmount: [number]
+    sum: number
 }
 
 //دوره آموزشی و کاربری که اقساطی خرید کرده
@@ -20,27 +18,38 @@ interface IInstallment extends Document {
         {
             time: Date,
             amount: number,
+            statusPayment: boolean,
             status: boolean
         }
     ]
 }
 
 const InstallmentPlanSchema = new mongoose.Schema<IInstallmentPlan>({
+    name: { type: String, unique: true, trim: true },
     time: { type: Number },
     listAmount: {
-        type: [{
-            amount: Number
-        }]
-    }
+        type: [Number]
+    },
+    sum: { type: Number }
 })
 
 const InstallmentSchema = new mongoose.Schema<IInstallment>({
     user: { type: mongoose.Types.ObjectId, ref: "user" },
     courses: { type: [mongoose.Types.ObjectId], ref: "course" },
     plan: { type: mongoose.Types.ObjectId, ref: "plan" },
-    property: [{
-        time: Date,
-        amount: Number,
-        status: Boolean
-    }]
+    property: [
+        {
+            time: Date,
+            amount: Number,
+            status: Boolean,
+            statusPayment: Boolean
+        }
+    ]
 })
+const planModel = mongoose.model<IInstallmentPlan>("installmentplan",InstallmentPlanSchema)
+const installmentModel = mongoose.model<IInstallment>("installment",InstallmentSchema)
+
+export{
+    IInstallment,
+    IInstallmentPlan
+}

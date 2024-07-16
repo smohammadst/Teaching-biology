@@ -9,9 +9,6 @@ interface ICategory extends mongoose.Document{
 const chaptergSchema = new mongoose.Schema<ICategory>({
     title: {type: String},
     parent: {type: String, default: ''},
-
-
-
 })
 
 const CategoryModel = mongoose.model<ICategory>("category", chaptergSchema)
