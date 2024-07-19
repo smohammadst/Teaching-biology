@@ -13,6 +13,7 @@
  *                  type:
  *                      type: string
  *                      description: Course or Blog
+ *                      example: Course
  *                  parent:
  *                      type: string
  *                      description: the parent of category
@@ -50,10 +51,15 @@
  */
 /**
  * @swagger
- *  /createCategoryBlog:
- *      post:
+ *  /updateCategory/{id}:
+ *      patch:
  *          tags: [Category(AdminPanel)]
- *          summary: create category Blog
+ *          summary: edit or update category title with object id
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required : true
  *          requestBody:
  *              required: true
  *              content:
@@ -64,13 +70,30 @@
  *                      schema:
  *                          $ref: '#/components/schemas/Category'
  *          responses:
- *              201:
+ *              200:
+ *                  description: success
+ *              500:    
+ *                  description: internalServerErorr
+ */
+/**
+ * @swagger
+ *  /deleteCategory/{id}:
+ *      delete:
+ *          tags: [Category(AdminPanel)]
+ *          summary: remove category with object-id
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required : true
+ *          responses:
+ *              200:
  *                  description: success
  */
 /**
  * @swagger
  *  /getchildern:
- *      post:
+ *      get:
  *          tags: [Category(AdminPanel)]
  *          summary: get childern
  *          requestBody:

@@ -12,8 +12,7 @@ class categoryService {
     
     async createCategory(category: CategoryDto): Promise<object>{
 
-        let title = category.title
-        let parent = category.parent
+        const {title, parent, type} = category
 
         console.log(typeof(category.parent));
 
@@ -45,7 +44,26 @@ class categoryService {
         }
         return {status:201, message: "دسته بندی با موفقیت افزوده شد"}
     }
+    async updateCategoy(id: String,category:CategoryDto): Promise<object>{
 
+
+        const {title, parent, type} = category
+        if(!parent){
+            let result = await this.categoryModel.updateOne({_id: id}, {$set: {title, type}})
+        }else {
+            let result = await this.categoryModel.updateOne({_id: id}, {$set: {title, parent, type}})
+        }
+        //if(!result) throw createHttpError.InternalServerError("به روز رسانی دسته بندی انجام نشد")
+        return {status:200, message: "دسته بندی با موفقیت اپدیت افزوده شد"} 
+        
+    }
+    async deleteCategory(id: String): Promise<object>{
+
+        const result = await this.categoryModel.deleteOne({_id: id})
+        //if(!result) throw createHttpError.InternalServerError("به روز رسانی دسته بندی انجام نشد")
+        return {status:200, message: "دسته بندی با موفقیت حذف افزوده شد"} 
+        
+    }
     async findOneById(id: ObjectId) {
         const category = await this.categoryModel.findById({_id: id});
         if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");

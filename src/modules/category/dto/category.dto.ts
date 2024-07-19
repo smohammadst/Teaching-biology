@@ -1,4 +1,4 @@
-import { IsArray, IsEmpty, IsNumber, IsObject, IsString } from "class-validator";
+import { IsArray, IsEmpty, IsNotEmpty, IsNumber, IsObject, IsString } from "class-validator";
 import { isValidObjectId, ObjectId } from "mongoose";
 
 export class CategoryDto {
