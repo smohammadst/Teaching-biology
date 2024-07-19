@@ -33,7 +33,7 @@ export class CommentService {
                 email: commentDto.email
             })
         }
-        if (!createComment) throw createHttpError.InternalServerError(GlobalMessageError.InternalServerError)
+        if (!createComment) throw createHttpError.ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return createComment
     }
 
@@ -58,7 +58,7 @@ export class CommentService {
                 commentID: commentDto.parent
             })
         }
-        if (!createAnswer) throw createHttpError.InternalServerError(GlobalMessageError.InternalServerError)
+        if (!createAnswer) throw createHttpError.ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         await findComment.updateOne({ $push: { answer: createAnswer } })
         await findComment.save()
         return createAnswer

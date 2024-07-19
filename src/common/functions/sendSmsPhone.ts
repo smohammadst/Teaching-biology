@@ -1,10 +1,10 @@
-import melipayamak from "melipayamak"
+const melipayamak = require('melipayamak');
 
 const username: string = process.env.SMSUSERNAME
 const password: string = process.env.SMSPASSWORD
 const api = new melipayamak(username, password)
 
-export function sendSMS(phone: string, text: string) {
+export async function sendSMS(phone: string, text: string) {
     const sms = api.sms()
     const from: string = process.env.SMSPHONE
     let sendBool = false

@@ -15,6 +15,10 @@ interface IUser extends mongoose.Document {
     Role: Array<string>
 }
 
+export type Tuser = {
+    id: string
+}
+
 const userSchema = new mongoose.Schema<IUser>({
     first_name: { type: String },
     last_name: { type: String },

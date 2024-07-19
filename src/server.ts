@@ -1,17 +1,17 @@
 import * as express from 'express';
 import mongoose from 'mongoose';
 import * as morgan from 'morgan'
-import * as createError from 'http-errors'
+import { InternalServerError, NotFound } from 'http-errors'
 import * as swaggerUi from 'swagger-ui-express'
 import * as swaggerDocJs from 'swagger-jsdoc'
 import * as path from 'path';
 import router from './router.routes'
-
+import * as cors from "cors"
 export class Server {
     private appServer = express()
-    constructor(PORT: number, BASE_URL: string) {
+    constructor(PORT: number) {
         this.createServer(PORT)
-        this.configDB(BASE_URL)
+        this.configDB()
         this.configApplications(PORT)
         this.routerHandelling()
         this.errorHandelling()
@@ -35,7 +35,7 @@ export class Server {
                         },
                         servers: [
                             {
-                                url: `http://localhost:3000/`,
+                                url: `https://teachingbiology.liara.run/`,
                             },
                         ],
                         components: {
@@ -57,9 +57,14 @@ export class Server {
     }
     private createServer(PORT: number): void {
         this.appServer.listen(PORT, () => console.log(`server is running on port ${PORT}`))
+        this.appServer.use(
+            cors({
+                origin: "*",
+            })
+        );
     }
-    private async configDB(BASE_URL: string): Promise<any> {
-        mongoose.connect(BASE_URL)
+    private async configDB(): Promise<any> {
+        mongoose.connect(process.env.DATABASE_URL)
             .then(() => console.log("connected to db"))
             .catch((e) => console.log(e))
         process.on("SIGBREAK", async () => {
@@ -69,17 +74,15 @@ export class Server {
     }
     private errorHandelling(): void {
         this.appServer.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-            next(createError.NotFound("صفحه ی مورد نظر پدا نشد"));
+            next(NotFound("صفحه ی مورد نظر پدا نشد"));
         });
         this.appServer.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction): express.Response => {
-            const serverError = createError.InternalServerError();
-            const statusCode = error?.status || error?.code || serverError.status;
+            const serverError = InternalServerError();
+            const statusCodes = error?.status || error?.code || serverError.status;
             const message = error?.message || serverError.message;
-            return res.status(statusCode).json({
-                data: {
-                    statusCode,
-                    message,
-                },
+            return res.status(statusCodes).json({
+                statusCodes,
+                message,
             });
         });
     }
