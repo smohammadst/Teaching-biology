@@ -1,4 +1,3 @@
-import { File } from "buffer";
 
 const multer = require("multer")
 const moment = require("moment-jalaali")
