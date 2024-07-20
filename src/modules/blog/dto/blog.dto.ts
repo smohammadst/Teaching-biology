@@ -4,7 +4,7 @@ export class BlogDto {
     @IsString()
     title: string;
     @IsString()
-    text: string;
+    description: string;
     @IsString()
     shortText: string;
     @IsBoolean()

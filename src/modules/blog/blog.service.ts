@@ -2,7 +2,8 @@ import { Model } from "mongoose";
 import { BlogDto } from "./dto/blog.dto";
 const createError = require("http-errors");
 import { BlogModel, IBlog } from "./model/blog.model";
-
+import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>
@@ -10,7 +11,7 @@ class BlogService {
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
             title: blog.title,
-            text: blog.text,
+            description: blog.description,
             shortText: blog.shortText,
             status: blog.status,
             images: blog.images,
@@ -24,7 +25,7 @@ class BlogService {
         let result = await this.blogModel.updateOne({ _id: id }, {
             $set: {
                 title: blog.title,
-                text: blog.text,
+                description: blog.description,
                 shortText: blog.shortText,
                 status: blog.status,
                 images: blog.images,
@@ -43,6 +44,16 @@ class BlogService {
         const blog = await this.blogModel.findOne({ _id: id });
         if (!blog) throw createError.NotFound("بلاگی با این شناسه پیدا نشد");
         return blog
+    }
+    async findOneBlog(id: string): Promise<IBlog>{
+        const blog = await this.blogModel.findOne({_id: id})
+        if(!blog) throw  NotFound(AuthMessageError.NotFound)
+        return blog
+    }
+    async findAllCourse(): Promise<object>{
+        const AllBlog = await this.blogModel.find({})
+        if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
+        return AllBlog
     }
 
 }
