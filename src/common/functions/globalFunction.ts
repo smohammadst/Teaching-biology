@@ -43,12 +43,13 @@ async function verifyToken(req: Request& { user: IUser }, res: Response, next: N
 async function relatedFunc(model, id: string) {
     let related = await model.find({});
     let relates = []
+    
     for (let i = 0; i < related.length; i++) {
-        if (!(related[i]._id == id)) relates.push(related[i])
+        if (!(String(related[i]._id) == id)) relates.push(related[i])
     }
     return relates
 }
-function copyObject(object: object) {
+function copyObject(object) {
     return JSON.parse(JSON.stringify(object));
 }
 

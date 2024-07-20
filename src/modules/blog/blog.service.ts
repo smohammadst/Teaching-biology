@@ -62,8 +62,9 @@ class BlogService {
         let findblog = copyObject(blog);
         const relates = relatedFunc(this.blogModel, blog._id);
         findblog['related'] = relates
+        console.log(findblog);
 
-        return blog
+        return findblog
     }
     async findAllBlog(): Promise<object>{
         const AllBlog = await this.blogModel.find({})

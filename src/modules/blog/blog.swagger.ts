@@ -193,7 +193,7 @@
  *  /getOneBlog/{id}:
  *      get:
  *          tags: [Blog(AdminPanel)]
- *          summary: get One course
+ *          summary: get One blog
  *          parameters:
  *              -   in: path
  *                  name: id
@@ -201,12 +201,13 @@
  *                  description: objectId of blog
  *          responses:
  *              200:
- *                  description: updated Blog
+ *                  description: find one Blog
  *                  content:
  *                      application/json:
  *                          schema:
  *                              $ref: '#/definitions/publicDefinition'
  */
+
 /**
  * @swagger
  *  /getAllBlog:
