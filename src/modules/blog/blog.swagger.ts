@@ -32,10 +32,10 @@
  *                  shortLink:
  *                      type: string
  *                      description: shortttttttt
- *                  discount:
- *                      type: string
- *                      description: the title of course
- *                      example: 20
+ *                  related:
+ *                      type: array
+ *                      items:
+ *                          type: string
  *                  images:
  *                      type: array
  *                      items:
@@ -75,10 +75,10 @@
  *                  shortLink:
  *                      type: string
  *                      description: shortttttttt
- *                  discount:
- *                      type: string
- *                      description: the title of course
- *                      example: 20
+ *                  related:
+ *                      type: array
+ *                      items:
+ *                          type: string
  *                  images:
  *                      type: array
  *                      items:
@@ -201,7 +201,11 @@
  *                  description: objectId of blog
  *          responses:
  *              200:
- *                  description: success
+ *                  description: updated Blog
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/definitions/publicDefinition'
  */
 /**
  * @swagger

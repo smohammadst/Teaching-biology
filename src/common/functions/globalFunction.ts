@@ -40,11 +40,23 @@ async function verifyToken(req: Request& { user: IUser }, res: Response, next: N
     req.user = user
     return next();
 }
-
+async function relatedFunc(model, id: string) {
+    let related = await model.find({});
+    let relates = []
+    for (let i = 0; i < related.length; i++) {
+        if (!(related[i]._id == id)) relates.push(related[i])
+    }
+    return relates
+}
+function copyObject(object: object) {
+    return JSON.parse(JSON.stringify(object));
+}
 
 export {
     invoiceNumberGenerator,
     checkRole,
     verifyToken,
-    randomNumber
+    randomNumber,
+    relatedFunc,
+    copyObject
 }

@@ -1,9 +1,14 @@
 
+
+
 const multer = require("multer")
-const moment = require("moment-jalaali")
-const fs = require("fs")
-const path = require("path")
-const short = require('short-uuid');
+// const moment = require("jalali-moment")
+import moment  from "jalali-moment"
+import fs from 'fs';
+import path from 'path';
+
+const short = require("short-uuid")
+
 const createHttpError = require("http-errors");
 
 export interface MulterFile {
@@ -22,7 +27,8 @@ const createFolderWithDate = (folder: string) => {
     const day = moment().jDate();
     return `./public/upload/${folder}/${year}/${month}/${day}/`;
 }
-const translator = short()
+//const translator = short()
+
 const storage = multer.diskStorage({
     destination: (req: Request, file: MulterFile, callback: CallableFunction) => {
         const folder = req.url.indexOf("course") > 0 ? "course" : "other"
@@ -34,7 +40,8 @@ const storage = multer.diskStorage({
     },
     filename: (req: Request, file: MulterFile, callback: CallableFunction) => {
         const ext = path.extname(file.originalname)
-        const filename = String(translator.generate()) + ext;
+        //const filename = String(translator.generate()) + ext;
+        const filename = ''  +ext
         callback(null, filename)
 
     }

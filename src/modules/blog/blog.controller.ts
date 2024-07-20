@@ -40,7 +40,7 @@ class BlogController {
     }
     async findAllBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const result = await BlogServices.findAllCourse()
+            const result = await BlogServices.findAllBlog()
             return res.status(200).json({
                 statusCode: 200,
                 result

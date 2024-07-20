@@ -1,22 +1,28 @@
-import { Model } from "mongoose";
+import { Date } from "mongoose";
 import { BlogDto } from "./dto/blog.dto";
 const createError = require("http-errors");
 import { BlogModel, IBlog } from "./model/blog.model";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
+import { copyObject, relatedFunc } from "../../common/functions/globalFunction";
+
+
 class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
-            title: blog.title,
-            description: blog.description,
-            shortText: blog.shortText,
-            status: blog.status,
-            images: blog.images,
-            shortLink: blog.shortLink,
-            comment: blog.comment,
+                title: blog.title,
+                description: blog.description,
+                shortText: blog.shortText,
+                status: blog.status,
+                images: blog.images,
+                shortLink: blog.shortLink,
+                comment: blog.comment,
+                createdAt: new Date(),
+                related: blog.related,
+                latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
@@ -31,6 +37,10 @@ class BlogService {
                 images: blog.images,
                 shortLink: blog.shortLink,
                 comment: blog.comment,
+                category: blog.category,
+                createdAt: new Date(),
+                related: blog.related,
+                latest: blog.latest
             }
         })
         return { stauts: 200, message: 'با موفقیت اپدیت شد' }
@@ -42,15 +52,20 @@ class BlogService {
     }
     async findBlog(id: string): Promise<IBlog> {
         const blog = await this.blogModel.findOne({ _id: id });
+
         if (!blog) throw createError.NotFound("بلاگی با این شناسه پیدا نشد");
         return blog
     }
     async findOneBlog(id: string): Promise<IBlog>{
         const blog = await this.blogModel.findOne({_id: id})
         if(!blog) throw  NotFound(AuthMessageError.NotFound)
+        let findblog = copyObject(blog);
+        const relates = relatedFunc(this.blogModel, blog._id);
+        findblog['related'] = relates
+
         return blog
     }
-    async findAllCourse(): Promise<object>{
+    async findAllBlog(): Promise<object>{
         const AllBlog = await this.blogModel.find({})
         if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
         return AllBlog
@@ -63,3 +78,5 @@ const BlogServices = new BlogService()
 export {
     BlogServices
 }
+
+

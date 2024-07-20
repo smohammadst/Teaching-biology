@@ -17,6 +17,10 @@ export class BlogDto {
     images: Array<string>;
     @IsString()
     shortLink: string;
+    @IsArray()
+    related:Array<string>
+    @IsArray()
+    latest:Array<string>
 }
 
 export class UpdateBlogDto extends BlogDto{
