@@ -64,14 +64,14 @@ class AuthService {
 
     hashingPassword(password: string): string {
         const salt = 6;
-        //const hashPassword = bcrypt.hashSync(password, salt);
-        const hashPassword = ""
+        const hashPassword = bcrypt.hashSync(password, salt);
+
         return hashPassword;
     }
 
     comparePassword(password: string, hashPassword: string): boolean {
-        //return bcrypt.compareSync(password, hashPassword);
-        return true
+        return bcrypt.compareSync(password, hashPassword);
+        //return true
     }
 
     async checkOtp(method: AuthEnumMethod, code: number, username: string): Promise<object> {
