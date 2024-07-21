@@ -81,11 +81,11 @@ class BlogService {
 
         return findblog
     }
-    async findAllBlog(categoryId:string): Promise<Object>{
+    async findAllBlog(categoryId:string, limit: number): Promise<Object>{
         let result: Array<object>;
         if(categoryId){
             let category = await this.categoryModel.findOne({_id: categoryId})
-            const blogs = await this.blogModel.find({category: category._id})
+            const blogs = await this.blogModel.find({category: category._id}).limit(limit)
             result =  blogs
         }else {
             const AllBlog = await this.blogModel.find({})

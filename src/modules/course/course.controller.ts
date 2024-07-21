@@ -46,7 +46,9 @@ class CourseController {
     }
     async findAllCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const resutl = await CourseServices.findAllCourse()
+            let {categoryId, limit} = req.params
+            if('{categoryId}' == categoryId) categoryId = undefined
+            const resutl = await CourseServices.findAllCourse(categoryId, +limit)
             return res.status(200).json({
                 statusCode: 200,
                 resutl

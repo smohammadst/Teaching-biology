@@ -157,10 +157,22 @@
  */
 /**
  * @swagger
- *  /getAllCourse:
+ *  /getAllCourse/{categoryId}/{limit}:
  *      get:
- *          tags: [Course(AdminPanel)]
- *          summary: get all courses
+ *          tags: [Blog(AdminPanel)]
+ *          summary: get all course
+ *          parameters:
+ *              -   in: path
+ *                  name: categoryId
+ *                  type: string
+ *                  required: false
+ *                  default: 669d16c7670adf539f2ec227
+ *                  description: objectId of category
+ *              -   in: path
+ *                  name: limit
+ *                  type: number
+ *                  required: false
+ *                  description: Number bedeh :)
  *          responses:
  *              200:
  *                  description: success

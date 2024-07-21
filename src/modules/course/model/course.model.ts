@@ -6,9 +6,9 @@ import mongoose, { model, ObjectId } from 'mongoose'
 interface IEpisode extends mongoose.Document {
     title: string,
     time: {
-        min: number,
-        second: number
-    }
+            min: number,
+            second: number
+        }
 
 }
 
@@ -50,6 +50,7 @@ interface ICourse extends mongoose.Document {
     images: Array<string>,
     comments: Array<ObjectId>,
     neededTime: { hour: number, minute: number },
+    createdAt:string,
     sortByNumber: number,
     language: string,
     prerequisitesText: string,
@@ -59,6 +60,7 @@ interface ICourse extends mongoose.Document {
         image: String,
     },
     related: Array<ObjectId>,
+    latest: Array<ObjectId>,
     chapters: IChapter[],
     typeCourse: string,
     sale: number    
@@ -78,6 +80,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
         hour: Number,
         minute: Number
     },
+    createdAt: {type: String, default: ''},
     chapters: { type: [chaptergSchema], default: [] },
     sortByNumber: { type: Number },
     language: { type: String },
@@ -88,6 +91,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
         image: String,
     },
     related: { type: [mongoose.Types.ObjectId], default: [] },
+    latest:{ type: [mongoose.Types.ObjectId], default: [] },
     typeCourse: { type: String, default: '' },
     sale: { type: Number, default: 0 }
 

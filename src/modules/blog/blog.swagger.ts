@@ -202,7 +202,7 @@
 
 /**
  * @swagger
- *  /getAllBlog/{categoryId}:
+ *  /getAllBlog/{categoryId}/{limit}:
  *      get:
  *          tags: [Blog(AdminPanel)]
  *          summary: get all blog
@@ -213,6 +213,11 @@
  *                  required: false
  *                  default: 669d16c7670adf539f2ec227
  *                  description: objectId of category
+ *              -   in: path
+ *                  name: limit
+ *                  type: number
+ *                  required: false
+ *                  description: Number bedeh :)
  *          responses:
  *              200:
  *                  description: success

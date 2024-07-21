@@ -40,9 +40,9 @@ class BlogController {
     }
     async findAllBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            let { categoryId } = req.params 
+            let { categoryId, limit } = req.params 
             if('{categoryId}' == categoryId) categoryId = undefined
-            const result = await BlogServices.findAllBlog(categoryId)
+            const result = await BlogServices.findAllBlog(categoryId, +limit)
             return res.status(200).json({
                 statusCode: 200,
                 result
