@@ -49,6 +49,9 @@
  *                  typeCourse: 
  *                      type: string
  *                      description: پیشرفته|متوسط|مقدماتی
+ *                  owner:
+ *                      type: object
+ *                      description: time course
  *                  images:
  *                      type: array
  *                      items:

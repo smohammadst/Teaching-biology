@@ -56,8 +56,8 @@ interface ICourse extends mongoose.Document {
     prerequisitesText: string,
     prerequisites: Array<ObjectId>,
     owner: {
-        name: String,
-        image: String,
+        name: string,
+        image: string,
     },
     related: Array<ObjectId>,
     latest: Array<ObjectId>,
@@ -76,20 +76,14 @@ const courseSchema = new mongoose.Schema<ICourse>({
     category: { type: mongoose.Types.ObjectId, ref: "category" },
     images: { type: [String] },
     comments: { type: [], ref: "comment" },
-    neededTime: {
-        hour: Number,
-        minute: Number
-    },
+    neededTime: {type: Object, default: {}},
     createdAt: {type: String, default: ''},
     chapters: { type: [chaptergSchema], default: [] },
     sortByNumber: { type: Number },
     language: { type: String },
     prerequisitesText: { type: String },
     prerequisites: { type: [mongoose.Types.ObjectId], default: [] },
-    owner: {
-        name: String,
-        image: String,
-    },
+    owner: {type: Object, default: {}},
     related: { type: [mongoose.Types.ObjectId], default: [] },
     latest:{ type: [mongoose.Types.ObjectId], default: [] },
     typeCourse: { type: String, default: '' },
