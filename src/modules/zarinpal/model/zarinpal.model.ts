@@ -2,13 +2,16 @@ import mongoose, { Document, model, ObjectId } from "mongoose";
 
 interface ISale extends Document {
     userID: ObjectId,
-    courseID: Array<ObjectId>,
+    courseID: Array<{
+        course: ObjectId,
+        count: number
+    }>,
     payment: ObjectId,
 }
 
 const saleSchema = new mongoose.Schema<ISale>({
     userID: { type: mongoose.Types.ObjectId, ref: "user" },
-    courseID: { type: [mongoose.Types.ObjectId], ref: "course" },
+    courseID: { type: [{ course: mongoose.Types.ObjectId, count: Number }], ref: "course" },
     payment: { type: mongoose.Types.ObjectId, ref: "payment" }
 })
 

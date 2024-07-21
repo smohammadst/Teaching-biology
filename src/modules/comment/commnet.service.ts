@@ -3,7 +3,7 @@ import { IComment, CommentModel, AnswerModel, IAnswer } from "./model/comment.mo
 import { CommentDto } from "./dto/comment.Dto";
 import { TypeEnumComment, TypeEnumSned } from "./enum/typeComment.enum";
 import createHttpError from "http-errors";
-import { GlobalMessageError, NotFoundError } from "src/common/enums/message.enum";
+import { GlobalMessageError, NotFoundError } from "./../../common/enums/message.enum";
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
 

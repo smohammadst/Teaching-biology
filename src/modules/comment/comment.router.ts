@@ -6,11 +6,11 @@ const router = Router()
 const commentController = new CommentController()
 
 export default (router: Router) => {
-    router.post("addComment", commentController.createCommentAndAnswer)
+    router.post("/comment/addComment", commentController.createCommentAndAnswer)
 
-    router.post("changeStatus", commentController.changeStatus)
+    router.post("/comment/changeStatus", commentController.changeStatus)
 
-    router.delete("deleteComment", commentController.deleteComment)
+    router.delete("/comment/deleteComment", commentController.deleteComment)
 
-    router.get("allComment", commentController.readAllComments)
+    router.get("/comment/allComment", commentController.readAllComments)
 }

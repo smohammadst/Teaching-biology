@@ -12,7 +12,6 @@ import { sendSMS } from './../../common/functions/sendSmsPhone';
 import { TTokenPayload } from './../../common/types/token.type';
 import { isEmail, isMobilePhone, isMongoId } from 'class-validator';
 import { Model } from 'mongoose';
-import { randomInt } from 'node:crypto'
 import { randomNumber } from './../../common/functions/globalFunction';
 
 class AuthService {
@@ -24,7 +23,7 @@ class AuthService {
         const validate: string = this.usernameValidation(method, username)
         let user: IUser = await this.userExist(method, validate);
         if (user) throw Conflict(AuthMessageError.Confirm)
-        const code = randomNumber()
+        const code: string = randomNumber()
         console.log("dfsesd");
         if (password) {
             user = await this.userRepository.create({
@@ -46,7 +45,7 @@ class AuthService {
         }
 
         // await sendSMS(user.phone, "کد یکبار مصرف شما : ${code} میباشد")
-        return { message: "شما ثبت نام گردیدید" }
+        return { message: "شما ثبت نام گردیدید", code }
     }
 
     async loginPassword(method: AuthEnumMethod, username: string, password: string): Promise<string> {
@@ -75,10 +74,10 @@ class AuthService {
         //return true
     }
 
-    async checkOtp(method: AuthEnumMethod, code: number, username: string): Promise<object> {
+    async checkOtp(method: AuthEnumMethod, code: string, username: string): Promise<object> {
         const validate: string = this.usernameValidation(method, username)
         const user = await this.userExist(method, validate);
-        if (user.otp.code != code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
+        if ("" + user.otp.code != code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
         const date = new Date
         if (+date > user.otp.expiresIn) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
         const token = await this.createToken({ userId: "" + user.id })
@@ -155,16 +154,17 @@ class AuthService {
         const statusSendSms = sendSMS(user.phone, text)
         if (!statusSendSms) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return {
-            message: "کد یکبار مصرف ارسال شد"
+            message: "کد یکبار مصرف ارسال شد",
+            code
         }
     }
 
-    async genareteCodeAndUpdateUserOtp(method: AuthEnumMethod, username: string): Promise<number> {
+    async genareteCodeAndUpdateUserOtp(method: AuthEnumMethod, username: string): Promise<string> {
         const user: IUser = await this.userExist(method, username);
         if (!user) throw NotFound(AuthMessageError.NotFound);
-        const code: number = randomInt(10000, 99999);
+        const code: string = randomNumber();
         const date: number = new Date().getTime() + 120000
-        const otp: { code: number, expiresIn: number } = {
+        const otp: { code: string, expiresIn: number } = {
             code,
             expiresIn: date
         }

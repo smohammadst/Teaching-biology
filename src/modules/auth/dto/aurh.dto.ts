@@ -13,8 +13,8 @@ export class AuthDto {
     @IsEnum(AuthEnumMethod)
     method: AuthEnumMethod
     @IsEmpty()
-    @IsNumber()
-    code?: number
+    @IsString()
+    code?: string
 }
 
 export class ChangePasswordDto {
