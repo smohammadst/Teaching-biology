@@ -8,5 +8,5 @@ export default (router: Router) => {
     router.put("/updateBlog/:id", blogController.update)
     router.delete("/deleteBlog/:id", blogController.delete)
     router.get("/getOneBlog/:id", blogController.findOneBlog)
-    router.get("/getAllBlog", blogController.findAllBlog)
+    router.get("/getAllBlog/:categoryId", blogController.findAllBlog)
 }

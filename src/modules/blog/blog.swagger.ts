@@ -202,10 +202,17 @@
 
 /**
  * @swagger
- *  /getAllBlog:
+ *  /getAllBlog/{categoryId}:
  *      get:
  *          tags: [Blog(AdminPanel)]
  *          summary: get all blog
+ *          parameters:
+ *              -   in: path
+ *                  name: categoryId
+ *                  type: string
+ *                  required: false
+ *                  default: 669d16c7670adf539f2ec227
+ *                  description: objectId of category
  *          responses:
  *              200:
  *                  description: success

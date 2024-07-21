@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, ObjectId } from "mongoose";
 import { BlogDto } from "./dto/blog.dto";
 const createError = require("http-errors");
 import { BlogModel, IBlog } from "./model/blog.model";
@@ -11,7 +11,7 @@ import { CategoryModel, ICategory } from "../category/model/category.model";
 class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>,
-        private categoryModel = CategoryModel<ICategory>
+        public categoryModel = CategoryModel<ICategory>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
@@ -22,6 +22,7 @@ class BlogService {
                 images: blog.images,
                 category: blog.category,
                 shortLink: blog.shortLink,
+                sortByNumber: blog.sortByNumber,
                 comment: blog.comment,
                 createdAt: new Date(),
                 latest: blog.latest
@@ -39,6 +40,7 @@ class BlogService {
                 images: blog.images,
                 shortLink: blog.shortLink,
                 comment: blog.comment,
+                sortByNumber: blog.sortByNumber,
                 category: blog.category,
                 createdAt: new Date(),
                 latest: blog.latest
@@ -68,12 +70,30 @@ class BlogService {
                 relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
+
+        const result = await this.blogModel.find({}).sort({ createAt: -1 });
+        let latest = [];
+        for (let i = 1; i < result.length; i++){
+            latest.push(result[i])
+            if(i = 5) break
+        }
+        findblog['latest'] = latest
+
         return findblog
     }
-    async findAllBlog(): Promise<object>{
+    async findAllBlog(categoryId:string): Promise<object>{
+        let category = await this.categoryModel.findOne({_id: categoryId})
+        if(categoryId){
+            const blogs = await this.blogModel.find({category: category})
+            return blogs
+        }
         const AllBlog = await this.blogModel.find({})
         if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
         return AllBlog
+        
+        
+        
+        
     }
 
 }

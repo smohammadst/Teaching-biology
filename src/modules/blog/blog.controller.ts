@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { BlogDto } from "./dto/blog.dto";
 import { BlogServices } from "./blog.service";
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 //import { GlobalMessageError } from "src/common/enums/message.enum";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 
@@ -40,7 +40,8 @@ class BlogController {
     }
     async findAllBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const result = await BlogServices.findAllBlog()
+            const {categoryId} = req.params 
+            const result = await BlogServices.findAllBlog(categoryId)
             return res.status(200).json({
                 statusCode: 200,
                 result
