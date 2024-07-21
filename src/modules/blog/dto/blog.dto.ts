@@ -18,7 +18,8 @@ export class BlogDto {
     images: Array<string>;
     @IsString()
     shortLink: string;
-    related:string
+    @IsArray()
+    related:Array<string>
     @IsArray()
     latest:Array<string>
 }

@@ -12,11 +12,10 @@ class BlogService {
         private blogModel = BlogModel<IBlog>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
-        let relateArray: Array<string>;
-        if(blog.related){
-            relateArray = blog.related.split(",")
-        }
-
+        // let relateArray: Array<string>;
+        // if(blog.related){
+        //     relateArray = blog.related.split(",")
+        // }
         let result = await this.blogModel.create({
                 title: blog.title,
                 description: blog.description,
@@ -27,17 +26,17 @@ class BlogService {
                 shortLink: blog.shortLink,
                 comment: blog.comment,
                 createdAt: new Date(),
-                related: relateArray,
+                related: blog.related,
                 latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
     async updateBlog(id: string, blog: BlogDto): Promise<object> {
         await this.findBlog(id)
-        let relateArray: Array<string>;
-        if(blog.related){
-            relateArray = blog.related.split(",")
-        }
+        // let relateArray: Array<string>;
+        // if(blog.related){
+        //     relateArray = blog.related.split(",")
+        // }
         
         let result = await this.blogModel.updateOne({ _id: id }, {
             $set: {
@@ -50,7 +49,7 @@ class BlogService {
                 comment: blog.comment,
                 category: blog.category,
                 createdAt: new Date(),
-                related: relateArray,
+                related: blog.related,
                 latest: blog.latest
             }
         })

@@ -33,9 +33,11 @@
  *                      type: string
  *                      description: shortttttttt
  *                  related:
+ *                      description: array of string ['id', 'id']
  *                      type: array
  *                      items:
  *                          type: string
+
  *                  images:
  *                      type: array
  *                      items:

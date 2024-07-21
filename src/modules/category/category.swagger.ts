@@ -92,6 +92,21 @@
  */
 /**
  * @swagger
+ *  /getOneCategory/{id}:
+ *      get:
+ *          tags: [Category(AdminPanel)]
+ *          summary: get One Categoty
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required : true
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+/**
+ * @swagger
  *  /getchildern:
  *      get:
  *          tags: [Category(AdminPanel)]
@@ -114,7 +129,7 @@
  *  /all:
  *      get:
  *          tags: [Category(AdminPanel)]
- *          summary: remove a Chapter of courses
+ *          summary: get all Category
  *          responses:
  *              200:
  *                  description: success

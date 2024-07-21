@@ -45,6 +45,15 @@ class CategoryController {
             next(error)
         }
     }
+    async getOneCategory(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const {id} = req.params
+            const result = await categoryServices.getOneCategory(id)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
     async getAllCategory(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const result = await categoryServices.getAllCategory()
