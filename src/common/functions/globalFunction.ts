@@ -41,8 +41,8 @@ async function verifyToken(req: Request& { user: IUser }, res: Response, next: N
     return next();
 }
 async function relatedFunc(model, id: string) {
-    let allBlog = await model.find({});
-    let relates = [String];
+    let allBlog = await model.find({category: model.category});
+    let relates = [];
     for (let i = 0; i < allBlog.length; i++) {
         const oneblog =  allBlog[i]
         if (!(oneblog['_id'] == id)){

@@ -19,8 +19,6 @@ export class BlogDto {
     @IsString()
     shortLink: string;
     @IsArray()
-    related:Array<string>
-    @IsArray()
     latest:Array<string>
 }
 
