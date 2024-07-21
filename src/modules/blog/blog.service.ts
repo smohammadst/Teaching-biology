@@ -87,6 +87,9 @@ class BlogService {
             const blogs = await this.blogModel.find({category: category})
             return blogs
         }
+
+
+        
         const AllBlog = await this.blogModel.find({})
         if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
         return AllBlog
