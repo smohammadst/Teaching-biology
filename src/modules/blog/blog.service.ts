@@ -81,21 +81,19 @@ class BlogService {
 
         return findblog
     }
-    async findAllBlog(categoryId:string): Promise<object>{
-        let category = await this.categoryModel.findOne({_id: categoryId})
+    async findAllBlog(categoryId:string): Promise<Object>{
+        let result: Array<object>;
         if(categoryId){
-            const blogs = await this.blogModel.find({category: category})
-            return blogs
+            let category = await this.categoryModel.findOne({_id: categoryId})
+            const blogs = await this.blogModel.find({category: category._id})
+            result =  blogs
+        }else {
+            const AllBlog = await this.blogModel.find({})
+            if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
+            result =  AllBlog
         }
-
-
         
-        const AllBlog = await this.blogModel.find({})
-        if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
-        return AllBlog
-        
-        
-        
+        return result
         
     }
 
