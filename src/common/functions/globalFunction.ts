@@ -40,11 +40,26 @@ async function verifyToken(req: Request & { user: string }, res: Response, next:
     req.user = user.id
     return next();
 }
-
+async function relatedFunc(model, id: string) {
+    let allBlog = await model.find({});
+    let relates = [String];
+    for (let i = 0; i < allBlog.length; i++) {
+        const oneblog =  allBlog[i]
+        if (!(oneblog['_id'] == id)){
+            relates.push(allBlog[i])
+        } 
+    }
+    return relates
+}
+function copyObject(object: object) {
+    return JSON.parse(JSON.stringify(object));
+}
 
 export {
     invoiceNumberGenerator,
     checkRole,
     verifyToken,
-    randomNumber
+    randomNumber,
+    relatedFunc,
+    copyObject
 }

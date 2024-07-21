@@ -37,7 +37,7 @@ class CourseService {
             prerequisitesText: course.prerequisitesText,
             prerequisites: course.prerequisites,
             owner: course.owner,
-            typeCourse: course.typeCourse
+            typeCourse: course.typeCourse,
 
         })
         return {status: 201, message: 'دوره با موفقیت اضافه شد'}

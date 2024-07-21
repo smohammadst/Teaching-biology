@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { BlogDto } from "./dto/blog.dto";
 import { BlogServices } from "./blog.service";
-import createHttpError from 'http-errors';
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import mongoose from 'mongoose';
+//import { GlobalMessageError } from "src/common/enums/message.enum";
+import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 
 class BlogController {
 
@@ -18,7 +20,7 @@ class BlogController {
     async update(req:Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params;
-            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            if (!mongoose.isValidObjectId(id)) throw BadRequest(GlobalMessageError.BadRequest)
             const blog: BlogDto = req.body
             const result = await BlogServices.updateBlog(id, blog)
             return res.status(200).json(result)
@@ -29,9 +31,32 @@ class BlogController {
     async delete(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params;
-            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            if (!mongoose.isValidObjectId(id)) throw BadRequest(GlobalMessageError.BadRequest)
             const result = await BlogServices.deleteBlog(id)
             return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async findAllBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const result = await BlogServices.findAllBlog()
+            return res.status(200).json({
+                statusCode: 200,
+                result
+              });
+        } catch (error) {
+            next(error)
+        }
+    }
+    async findOneBlog(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const {id} = req.params
+            const result = await BlogServices.findOneBlog(id)
+            return res.status(200).json({
+                statusCode: 200,
+                result
+              });
         } catch (error) {
             next(error)
         }

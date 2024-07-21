@@ -1,10 +1,11 @@
-import { IsArray, IsBoolean, IsMongoId, IsString, isArray } from "class-validator";
+import { IsArray, IsBoolean, IsEmpty, IsMongoId, IsString, isArray } from "class-validator";
+import { ObjectId } from "mongoose";
 
 export class BlogDto {
     @IsString()
     title: string;
     @IsString()
-    text: string;
+    description: string;
     @IsString()
     shortText: string;
     @IsBoolean()
@@ -17,6 +18,10 @@ export class BlogDto {
     images: Array<string>;
     @IsString()
     shortLink: string;
+    @IsArray()
+    related:Array<string>
+    @IsArray()
+    latest:Array<string>
 }
 
 export class UpdateBlogDto extends BlogDto{

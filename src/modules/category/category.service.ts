@@ -2,7 +2,8 @@ import { CourseModel, ICourse } from "../course/model/course.model";
 import { CategoryDto } from "./dto/category.dto";
 import { CategoryModel, ICategory } from "./model/category.model";
 import { isValidObjectId, ObjectId } from "mongoose";
-import createHttpError from "http-errors";
+import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 
 
 class categoryService {
@@ -64,21 +65,21 @@ class categoryService {
         return {status:200, message: "دسته بندی با موفقیت حذف افزوده شد"} 
         
     }
-    async findOneById(id: ObjectId) {
+    async getOneCategory(id: string) {
         const category = await this.categoryModel.findById({_id: id});
-        if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");
+        if (!category) throw NotFound(AuthMessageError.NotFound);
         return category;
     }
 
     async getChildern(nameParent: string) {
         console.log(typeof(nameParent));
         const category = await this.categoryModel.find({parent: nameParent});
-        if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");
+        if (!category) throw NotFound(AuthMessageError.NotFound);
         return category;
     }
     async getAllCategory() {
         const category = await this.categoryModel.find();
-        if (!category) throw createHttpError.NotFound("کتگوری یافت نشد");
+        if (!category) throw NotFound(AuthMessageError.NotFound);
         return category;
     }
 

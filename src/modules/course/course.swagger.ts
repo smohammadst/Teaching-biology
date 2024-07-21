@@ -25,6 +25,9 @@
  *                  category:
  *                      type: string
  *                      description: the title of parent category
+ *                  neededTime:
+ *                      type: object
+ *                      description: time course
  *                  price:
  *                      type: string
  *                      description: the title of course
@@ -37,6 +40,15 @@
  *                      type: string
  *                      description: the title of course
  *                      example: IR
+ *                  prerequisitesText: 
+ *                      type: string
+ *                      description: the prerequisitesText of course
+ *                  prerequisites: 
+ *                      type: string
+ *                      description: the id of course
+ *                  typeCourse: 
+ *                      type: string
+ *                      description: پیشرفته|متوسط|مقدماتی
  *                  images:
  *                      type: array
  *                      items:

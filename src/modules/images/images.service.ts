@@ -10,7 +10,7 @@ class ImageService {
     async createImage(image: string[]): Promise<object>{
         
         let result = await this.imagesModel.create({
-            image
+            images: image
         })
         return { status: 201, message: "عکس با موفقیت اضافه شد" }
     }
