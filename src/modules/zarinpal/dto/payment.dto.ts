@@ -4,6 +4,6 @@ export class PaymentDto {
     @IsArray()
     bascket: Array<{
         id: string,
-        installment: boolean
+        count: number
     }>
 }

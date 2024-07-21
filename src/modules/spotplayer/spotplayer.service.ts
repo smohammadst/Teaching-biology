@@ -1,24 +1,23 @@
 import { isMongoId } from "class-validator";
-import { ICourse } from "../course/model/course.model";
+import { CourseModel, ICourse } from "../course/model/course.model";
 import { SpotPlayerDto } from "./dto/spotplayer.dto";
-import { IDataSpotPlayer, ISpotPlayer } from "./model/spotpalyer.model";
+import { DataSpotPlayerModel, IDataSpotPlayer, ISpotPlayer, SpotPlayerModel } from "./model/spotpalyer.model";
 import createHttpError from "http-errors";
 import { AuthService } from "../auth/auth.service";
 import { AuthEnumMethod } from "../auth/enum/method.enum";
 import axios from "axios";
 import { Model } from "mongoose";
 
-export class SpotPlayerService {
+class SpotPlayerService {
     constructor(
-        private spotPlayerRepository = Model<ISpotPlayer>,
-        private dataSpotPlayerRepository = Model<IDataSpotPlayer>,
-        private courseRepository = Model<ICourse>,
-        private authService = new AuthService()
+        private spotPlayerRepository = SpotPlayerModel<ISpotPlayer>,
+        private dataSpotPlayerRepository = DataSpotPlayerModel<IDataSpotPlayer>,
+        private courseRepository = CourseModel<ICourse>,
     ) { }
 
     async requestApiSpotPlayer(spotDto: SpotPlayerDto): Promise<void> {
         const { courseID, userID } = spotDto;
-        const findUser = await this.authService.userExist(AuthEnumMethod.id, userID)
+        const findUser = await AuthService.userExist(AuthEnumMethod.id, userID)
         const listCourse = await this.validateCoursesID(courseID);
         if (listCourse) throw createHttpError.NotFound("سبد خرید خالی میباشد")
         let dataForRequest = JSON.stringify({
@@ -102,4 +101,10 @@ export class SpotPlayerService {
         }
         return tokens
     }
+}
+
+const spotPlayerService = new SpotPlayerService()
+
+export {
+    spotPlayerService as SpotPlayerService
 }

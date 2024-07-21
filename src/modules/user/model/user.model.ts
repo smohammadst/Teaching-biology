@@ -6,7 +6,7 @@ interface IUser extends mongoose.Document {
     email?: string,
     phone?: string,
     password?: string,
-    otp?: { code: number, expiresIn: number },
+    otp?: { code: string, expiresIn: number },
     bascket?: Array<ObjectId>,
     listLikeBlog?: Array<ObjectId>,
     listLikeCourse?: Array<ObjectId>,
