@@ -159,7 +159,7 @@
  * @swagger
  *  /getAllCourse/{categoryId}/{limit}:
  *      get:
- *          tags: [Blog(AdminPanel)]
+ *          tags: [Course(AdminPanel)]
  *          summary: get all course
  *          parameters:
  *              -   in: path
