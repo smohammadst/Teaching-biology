@@ -12,22 +12,33 @@ class BlogService {
         private blogModel = BlogModel<IBlog>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
+        let relateArray: Array<string>;
+        if(blog.related){
+            relateArray = blog.related.split(",")
+        }
+
         let result = await this.blogModel.create({
                 title: blog.title,
                 description: blog.description,
                 shortText: blog.shortText,
                 status: blog.status,
                 images: blog.images,
+                category: blog.category,
                 shortLink: blog.shortLink,
                 comment: blog.comment,
                 createdAt: new Date(),
-                related: blog.related,
+                related: relateArray,
                 latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
     async updateBlog(id: string, blog: BlogDto): Promise<object> {
         await this.findBlog(id)
+        let relateArray: Array<string>;
+        if(blog.related){
+            relateArray = blog.related.split(",")
+        }
+        
         let result = await this.blogModel.updateOne({ _id: id }, {
             $set: {
                 title: blog.title,
@@ -39,7 +50,7 @@ class BlogService {
                 comment: blog.comment,
                 category: blog.category,
                 createdAt: new Date(),
-                related: blog.related,
+                related: relateArray,
                 latest: blog.latest
             }
         })
@@ -59,10 +70,10 @@ class BlogService {
     async findOneBlog(id: string): Promise<IBlog>{
         const blog = await this.blogModel.findOne({_id: id})
         if(!blog) throw  NotFound(AuthMessageError.NotFound)
-        let findblog = copyObject(blog);
-        const relates = relatedFunc(this.blogModel, blog._id);
+        const findblog = copyObject(blog);       
+        const relates = await relatedFunc(this.blogModel, id);
         findblog['related'] = relates
-        console.log(findblog);
+        //console.log(findblog);
 
         return findblog
     }

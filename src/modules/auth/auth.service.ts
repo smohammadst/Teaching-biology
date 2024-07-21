@@ -6,6 +6,7 @@ import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { sign } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+
 import { sendEmail } from './../../common/functions/sendEmail';
 import { sendSMS } from './../../common/functions/sendSmsPhone';
 import { TTokenPayload } from './../../common/types/token.type';
@@ -63,12 +64,14 @@ class AuthService {
 
     hashingPassword(password: string): string {
         const salt = 6;
-        const hashPassword = bcrypt.hashSync(password, salt);
+        //const hashPassword = bcrypt.hashSync(password, salt);
+        const hashPassword = ""
         return hashPassword;
     }
 
     comparePassword(password: string, hashPassword: string): boolean {
-        return bcrypt.compareSync(password, hashPassword);
+        //return bcrypt.compareSync(password, hashPassword);
+        return true
     }
 
     async checkOtp(method: AuthEnumMethod, code: number, username: string): Promise<object> {

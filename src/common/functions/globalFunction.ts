@@ -41,15 +41,17 @@ async function verifyToken(req: Request& { user: IUser }, res: Response, next: N
     return next();
 }
 async function relatedFunc(model, id: string) {
-    let related = await model.find({});
-    let relates = []
-    
-    for (let i = 0; i < related.length; i++) {
-        if (!(String(related[i]._id) == id)) relates.push(related[i])
+    let allBlog = await model.find({});
+    let relates = [String];
+    for (let i = 0; i < allBlog.length; i++) {
+        const oneblog =  allBlog[i]
+        if (!(oneblog['_id'] == id)){
+            relates.push(allBlog[i])
+        } 
     }
     return relates
 }
-function copyObject(object) {
+function copyObject(object: object) {
     return JSON.parse(JSON.stringify(object));
 }
 

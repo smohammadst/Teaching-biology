@@ -20,7 +20,7 @@ const blogSchema = new mongoose.Schema<IBlog>({
     shortText : {type: String},
     status: {type: Boolean},
     comments: {type: [mongoose.Types.ObjectId] , ref:"comment"},
-    category: {type: [mongoose.Types.ObjectId]},
+    category: {type: [mongoose.Types.ObjectId], ref: 'category'},
     images: {type: [String]},
     shortLink: {type: String},
     createdAt: {type: String, default: ''},
