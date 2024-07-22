@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, ObjectId } from "mongoose";
 import { BlogDto } from "./dto/blog.dto";
 import { BlogModel, IBlog } from "./model/blog.model";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
@@ -13,20 +13,21 @@ class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>,
         private categoryModel = CategoryModel<ICategory>,
-        private readonly userRepository = UserModel<IUser>
+        private userRepository = UserModel<IUser>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
-            title: blog.title,
-            description: blog.description,
-            shortText: blog.shortText,
-            status: blog.status,
-            images: blog.images,
-            category: blog.category,
-            shortLink: blog.shortLink,
-            comment: blog.comment,
-            createdAt: new Date(),
-            latest: blog.latest
+                title: blog.title,
+                description: blog.description,
+                shortText: blog.shortText,
+                status: blog.status,
+                images: blog.images,
+                category: blog.category,
+                shortLink: blog.shortLink,
+                sortByNumber: blog.sortByNumber,
+                comment: blog.comment,
+                createdAt: new Date(),
+                latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
@@ -41,6 +42,7 @@ class BlogService {
                 images: blog.images,
                 shortLink: blog.shortLink,
                 comment: blog.comment,
+                sortByNumber: blog.sortByNumber,
                 category: blog.category,
                 createdAt: new Date(),
                 latest: blog.latest
@@ -70,12 +72,31 @@ class BlogService {
             relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
+
+        const result = await this.blogModel.find({}).sort({ createAt: -1 });
+        let latest = [];
+        for (let i = 1; i < result.length; i++){
+            latest.push(result[i])
+            if(i = 5) break
+        }
+        findblog['latest'] = latest
+
         return findblog
     }
-    async findAllBlog(): Promise<object> {
-        const AllBlog = await this.blogModel.find({})
-        if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
-        return AllBlog
+    async findAllBlog(categoryId:string, limit: number): Promise<Object>{
+        let result: Array<object>;
+        if(categoryId){
+            let category = await this.categoryModel.findOne({_id: categoryId})
+            const blogs = await this.blogModel.find({category: category._id}).limit(limit)
+            result =  blogs
+        }else {
+            const AllBlog = await this.blogModel.find({})
+            if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
+            result =  AllBlog
+        }
+        
+        return result
+        
     }
 
     async likeCourse(courseID: string, userID: string) {

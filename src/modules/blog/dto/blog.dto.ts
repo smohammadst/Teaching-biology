@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmpty, IsMongoId, IsString, isArray } from "class-validator";
+import { IsArray, IsBoolean, IsEmpty, IsMongoId, IsNumber, IsString, isArray } from "class-validator";
 import { ObjectId } from "mongoose";
 
 export class BlogDto {
@@ -18,6 +18,8 @@ export class BlogDto {
     images: Array<string>;
     @IsString()
     shortLink: string;
+    @IsNumber()
+    sortByNumber: number
     @IsArray()
     latest:Array<string>
 }

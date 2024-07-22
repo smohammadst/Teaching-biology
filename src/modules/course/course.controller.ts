@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { CourseDto } from "./dto/course.dto";
 import { CourseServices } from "./course.service";
-import createHttpError from 'http-errors';
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
+import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
 import mongoose from 'mongoose';
 
 class CourseController {
@@ -10,6 +11,7 @@ class CourseController {
         try {
 
             const course: CourseDto = req.body;
+            console.log(course);
             const result = await CourseServices.createCourse(course)
             return res.status(201).json({
                 statusCode: 201,
@@ -23,7 +25,7 @@ class CourseController {
     async update(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const { id } = req.params;
-            if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            if (!mongoose.isValidObjectId(id)) throw BadRequest(GlobalMessageError.BadRequest)
             const course: CourseDto = req.body;
             const result = await CourseServices.updateCourse(id,course)
             return res.status(200).json(result)
@@ -34,7 +36,7 @@ class CourseController {
     async delete(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const { id } = req.params;
-            //if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            if (!mongoose.isValidObjectId(id)) throw BadRequest(GlobalMessageError.BadRequest)
             const result = await CourseServices.deleteCourse(id)
             return res.status(200).json({
                 statusCode: 200,
@@ -46,7 +48,9 @@ class CourseController {
     }
     async findAllCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
-            const resutl = await CourseServices.findAllCourse()
+            let {categoryId, limit} = req.params
+            if('{categoryId}' == categoryId) categoryId = undefined
+            const resutl = await CourseServices.findAllCourse(categoryId, +limit)
             return res.status(200).json({
                 statusCode: 200,
                 resutl

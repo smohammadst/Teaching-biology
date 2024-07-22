@@ -11,7 +11,8 @@ interface IBlog extends mongoose.Document{
     shortLink: string,
     createdAt: string,
     related: Array<ObjectId>,
-    latest: Array<ObjectId>
+    latest: Array<ObjectId>,
+    sortByNumber: number
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
@@ -23,6 +24,7 @@ const blogSchema = new mongoose.Schema<IBlog>({
     category: {type: [mongoose.Types.ObjectId], ref: 'category'},
     images: {type: [String]},
     shortLink: {type: String},
+    sortByNumber: {type: Number},
     createdAt: {type: String, default: ''},
     related: {type: [mongoose.Types.ObjectId], default:[]},
     latest: {type: [mongoose.Types.ObjectId]}

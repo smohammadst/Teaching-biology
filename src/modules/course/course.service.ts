@@ -1,14 +1,17 @@
-import { NotFound, ServiceUnavailable } from "http-errors";
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
+import { copyObject, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
 import { CourseDto } from "./dto/course.dto";
 import { CourseModel, ICourse } from "./model/course.model";
-import { validateObjectID } from "src/common/functions/globalFunction";
-import { IUser, UserModel } from "../user/model/user.model";
+import { AuthMessageError } from '../../common/enums/message.enum';
+import { CategoryModel, ICategory } from '../category/model/category.model';
+import { IUser, UserModel } from '../user/model/user.model';
 
 
 class CourseService {
     constructor(
-        private readonly courseModel = CourseModel<ICourse>,
-        private readonly userRepository = UserModel<IUser>
+        private courseModel = CourseModel<ICourse>,
+        private categotyModel = CategoryModel<ICategory>,
+        private userRepository = UserModel<IUser>
     ) { }
     async createCourse(course: CourseDto): Promise<object> {
 
@@ -33,6 +36,7 @@ class CourseService {
             images: course.images,
             comments: course.comments,
             faq: course.faq,
+            createdAt: new Date(),
             neededTime: course.neededTime,
             sortByNumber: course.sortByNumber,
             language: course.language,
@@ -72,6 +76,7 @@ class CourseService {
                 images: course.images,
                 comments: course.comments,
                 faq: course.faq,
+                createdAt: new Date(),
                 neededTime: course.neededTime,
                 sortByNumber: course.sortByNumber,
                 language: course.language,
@@ -90,18 +95,6 @@ class CourseService {
         //await this.findOneCourse(id)
         const result = await this.courseModel.deleteOne({ _id: id })
         return { status: 200, message: "دوره با موفقیت حذف شد" }
-    }
-
-    //find course
-    async findOneCourse(id: string): Promise<ICourse> {
-        const course = await this.courseModel.findOne({ _id: id })
-        if (!course) throw NotFound("دوره ای با این ایدی یافت نشد")
-        return course
-    }
-    async findAllCourse(): Promise<object> {
-        const AllCourse = await this.courseModel.find({})
-        if (!AllCourse) throw NotFound("دوره ای با این ایدی یافت نشد")
-        return AllCourse
     }
 
     async likeCourse(courseID: string, userID: string) {
@@ -130,8 +123,50 @@ class CourseService {
         const updateCourse = await this.courseModel.updateOne({ _id: courseID }, optionCourse)
         const updateUser = await this.userRepository.updateOne({ _id: userID }, optionUser)
         if (updateCourse.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        if(updateUser.modifiedCount == 0 ) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
+        if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
         return { message, status: 200 }
+    }
+    async findCourse(id: string): Promise<ICourse> {
+        const course = await this.courseModel.findOne({ _id: id })
+        if (!course) throw NotFound(AuthMessageError.NotFound)
+        return course
+    }
+    async findOneCourse(id: string): Promise<ICourse> {
+        const course = await this.courseModel.findOne({ _id: id })
+        if (!course) throw NotFound(AuthMessageError.NotFound)
+        // find blog related
+        const CategoryCourse = await this.courseModel.find({ category: course.category })
+        const findCourse = copyObject(course);
+        let relates = [];
+        for (let i = 1; i < CategoryCourse.length; i++) {
+            relates.push(CategoryCourse[i])
+        }
+        findCourse['related'] = relates
+
+        const result = await this.courseModel.find({}).sort({ createAt: -1 });
+        let latest = [];
+        for (let i = 0; i < 5; i++) {
+            latest.push(result[i])
+            if (i = 5) break
+        }
+        findCourse['latest'] = latest
+
+        return findCourse
+    }
+    async findAllCourse(categoryId: string, limit: number): Promise<Object> {
+        let result: Array<object>;
+        if (categoryId) {
+            let category = await this.categotyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category._id }).limit(limit)
+            result = courses
+        } else {
+            const AllCourse = await this.courseModel.find({})
+            if (!AllCourse) throw NotFound(AuthMessageError.NotFound)
+            result = AllCourse
+        }
+
+        return result
+
     }
 }
 
