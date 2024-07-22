@@ -1,30 +1,32 @@
 import { Date } from "mongoose";
 import { BlogDto } from "./dto/blog.dto";
-const createError = require("http-errors");
 import { BlogModel, IBlog } from "./model/blog.model";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
-import { copyObject, relatedFunc } from "../../common/functions/globalFunction";
+import { copyObject, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
 import { CategoryModel, ICategory } from "../category/model/category.model";
+import { IUser, UserModel } from "../user/model/user.model";
+import { CourseServices } from "../course/course.service";
 
 
 class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>,
-        private categoryModel = CategoryModel<ICategory>
+        private categoryModel = CategoryModel<ICategory>,
+        private readonly userRepository = UserModel<IUser>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
-                title: blog.title,
-                description: blog.description,
-                shortText: blog.shortText,
-                status: blog.status,
-                images: blog.images,
-                category: blog.category,
-                shortLink: blog.shortLink,
-                comment: blog.comment,
-                createdAt: new Date(),
-                latest: blog.latest
+            title: blog.title,
+            description: blog.description,
+            shortText: blog.shortText,
+            status: blog.status,
+            images: blog.images,
+            category: blog.category,
+            shortLink: blog.shortLink,
+            comment: blog.comment,
+            createdAt: new Date(),
+            latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
@@ -54,26 +56,56 @@ class BlogService {
     async findBlog(id: string): Promise<IBlog> {
         const blog = await this.blogModel.findOne({ _id: id });
 
-        if (!blog) throw createError.NotFound("بلاگی با این شناسه پیدا نشد");
+        if (!blog) throw NotFound("بلاگی با این شناسه پیدا نشد");
         return blog
     }
-    async findOneBlog(id: string): Promise<IBlog>{
-        const blog = await this.blogModel.findOne({_id: id})
-        if(!blog) throw  NotFound(AuthMessageError.NotFound)
+    async findOneBlog(id: string): Promise<IBlog> {
+        const blog = await this.blogModel.findOne({ _id: id })
+        if (!blog) throw NotFound(AuthMessageError.NotFound)
         // find blog related
-        const CategoryBlog = await this.blogModel.find({category: blog.category})
+        const CategoryBlog = await this.blogModel.find({ category: blog.category })
         const findblog = copyObject(blog);
         let relates = [];
-        for (let i = 1; i < CategoryBlog.length; i++){
-                relates.push(CategoryBlog[i])
+        for (let i = 1; i < CategoryBlog.length; i++) {
+            relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
         return findblog
     }
-    async findAllBlog(): Promise<object>{
+    async findAllBlog(): Promise<object> {
         const AllBlog = await this.blogModel.find({})
-        if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
+        if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
         return AllBlog
+    }
+
+    async likeCourse(courseID: string, userID: string) {
+        validateObjectID(courseID)
+        validateObjectID(userID)
+        const findUser = await this.userRepository.findOne({ _id: userID })
+        if (!findUser) throw NotFound("کاربری یافت نشد")
+        const findCourse = await CourseServices.findOneCourse(courseID)
+        const listLike = findCourse.like
+        let optionCourse: object
+        let optionUser: object
+        let message: string
+        for (var i = 0; i < listLike.length; i++) {
+            if (listLike[i] === findUser._id) {
+                optionCourse = { $pull: { like: userID } }
+                optionUser = { $pull: { listLikeBlog: userID } }
+                message = "مقاله مد نظر از علایق شما حذف گردید"
+                break
+            }
+        }
+        if (optionCourse) {
+            optionCourse = { $push: { like: userID } }
+            optionUser = { $push: { listLikeCourse: userID } }
+            message = "مقاله مد نظر شما به علایق شما اضافه گردید"
+        }
+        const updateCourse = await this.blogModel.updateOne({ _id: courseID }, optionCourse)
+        const updateUser = await this.userRepository.updateOne({ _id: userID }, optionUser)
+        if (updateCourse.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
+        if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
+        return { message, status: 200 }
     }
 
 }

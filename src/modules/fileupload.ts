@@ -1,9 +1,7 @@
-
-
-
-const multer = require("multer")
+// const multer = require("multer")
+import * as multer from "multer"
 // const moment = require("jalali-moment")
-import moment  from "jalali-moment"
+import moment from "moment-jalali"
 import fs from 'fs';
 import path from 'path';
 
@@ -41,7 +39,7 @@ const storage = multer.diskStorage({
     filename: (req: Request, file: MulterFile, callback: CallableFunction) => {
         const ext = path.extname(file.originalname)
         //const filename = String(translator.generate()) + ext;
-        const filename = ''  +ext
+        const filename = '' + ext
         callback(null, filename)
 
     }

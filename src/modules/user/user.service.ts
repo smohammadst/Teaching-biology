@@ -1,17 +1,28 @@
 import { IUser, UserModel } from "./model/user.model";
 import { UserDto } from "./dto/user.dto";
-class UserService {
-    constructor(private readonly userModel = UserModel<IUser>){}
-    
+import { validateObjectID } from "src/common/functions/globalFunction";
+import { BadRequest, NotFound } from "http-errors"
+import { AnswerModel, CommentModel, IAnswer, IComment } from "../comment/model/comment.model";
 
-    async create(user: UserDto) {
-        const newUser = new this.userModel
-        newUser.first_name = user.first_name
-        newUser.last_name = user.last_name
-        newUser.phone = user.phone
-        newUser.email = user.email
-        await newUser.save()
-        return this.userModel.find({})
+class UserService {
+    constructor(
+        private readonly userRepository = UserModel<IUser>,
+        private readonly commentRepository = CommentModel<IComment>,
+        private readonly answerRepository = AnswerModel<IAnswer>
+    ) { }
+
+    async getAllCommentUser(userID: string) {
+        if (!validateObjectID(userID))
+            throw BadRequest("آیدی ارسال شده صحیح نمیباشد")
+        const findUser = await this.userRepository.findOne({ _id: userID })
+        if (!findUser) throw NotFound("کاربری یافت نشد")
+        const comment = await this.commentRepository.find({ userID: findUser._id }, { "title": 1, "text": 1, "status": 1 }).populate("user", "+first_name", "+last_name");
+        const answer = await this.answerRepository.find({ userID: findUser._id }, { "title": 1, "text": 1, "status": 1 }).populate("user", "+first_name", "+last_name");
+        if (!comment && !answer) throw NotFound("شما هیچ کامنتی ندارید")
+        return {
+            comment,
+            answer
+        }
     }
 }
 const UserServices = new UserService()

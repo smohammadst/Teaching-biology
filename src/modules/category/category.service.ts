@@ -82,8 +82,6 @@ class categoryService {
         if (!category) throw NotFound(AuthMessageError.NotFound);
         return category;
     }
-
-
 }
 
 
