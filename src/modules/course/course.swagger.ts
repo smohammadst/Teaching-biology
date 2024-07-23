@@ -182,7 +182,7 @@
  *                  name: sort
  *                  type: string
  *                  required: false
- *                  description:  vorodi latest, oldest, popular
+ *                  description:  vorodi latest, oldest, popular, high, low
  *          responses:
  *              200:
  *                  description: success
