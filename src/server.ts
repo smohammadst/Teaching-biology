@@ -36,7 +36,7 @@ export class Server {
                         servers: [
                             {
                                 url: `https://teachingbiology.liara.run/`,
-                                
+
                             },
                         ],
                         components: {
@@ -58,11 +58,22 @@ export class Server {
     }
     private createServer(PORT: number): void {
         this.appServer.listen(PORT, () => console.log(`server is running on port ${PORT}`))
+        const allowedOrigins = ['http://localhost:5173']
         this.appServer.use(
             cors({
-                origin: "*",
+                origin: function (origin, callback) {
+                    if (!origin || allowedOrigins.includes(origin)) {
+                        callback(null, true);
+                    } else {
+                        callback(new Error('Not allowed by CORS'));
+                    }
+                },
+                credentials: true,
+                methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+                allowedHeaders: 'X-Requested-With,content-type,Authorization'
             })
         );
+
     }
     private async configDB(): Promise<any> {
         mongoose.connect(process.env.DATABASE_URL)
