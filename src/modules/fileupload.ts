@@ -1,14 +1,6 @@
-// const multer = require("multer")
 import * as multer from "multer"
-// const moment = require("jalali-moment")
-<<<<<<< HEAD
-import moment  from "jalali-moment"
-=======
-import moment from "moment-jalali"
-import fs from 'fs';
->>>>>>> 212f1b398c0c92c8158964ea7ebc8e7a70975700
+
 import path from 'path';
-import fs from 'fs';
 import {existsSync, mkdirSync} from 'fs';
 import { extname, join } from "path";
 const short = require("short-uuid")
@@ -46,16 +38,11 @@ const storage = multer.diskStorage({
         callback(null, path)
     },
     filename: (req: Request, file: MulterFile, callback: CallableFunction) => {
-<<<<<<< HEAD
         //const ext = path.extname(file.originalname)
         const ext = extname(file.originalname).toLowerCase();
         const filename = String(translator.generate()) + ext;
         //const filename = ''  +ext
-=======
-        const ext = path.extname(file.originalname)
-        //const filename = String(translator.generate()) + ext;
-        const filename = '' + ext
->>>>>>> 212f1b398c0c92c8158964ea7ebc8e7a70975700
+
         callback(null, filename)
 
     }

@@ -10,16 +10,11 @@ import { IUser, UserModel } from '../user/model/user.model';
 class CourseService {
     constructor(
         private courseModel = CourseModel<ICourse>,
-<<<<<<< HEAD
-        private categortyModel = CategoryModel<ICategory>
-    ){}
-    async createCourse(course: CourseDto): Promise<object>{
-=======
-        private categotyModel = CategoryModel<ICategory>,
+        private categortyModel = CategoryModel<ICategory>,
         private userRepository = UserModel<IUser>
     ) { }
     async createCourse(course: CourseDto): Promise<object> {
->>>>>>> 212f1b398c0c92c8158964ea7ebc8e7a70975700
+
 
         //let image = course.images.map(e => e.slice(33, e.length))
 
@@ -159,7 +154,6 @@ class CourseService {
 
         return findCourse
     }
-<<<<<<< HEAD
     async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
         let result: Array<object>;
         if(categoryId && sort == 'latest'){
@@ -179,15 +173,6 @@ class CourseService {
             const courses = await this.courseModel.find({category: category._id})
             result =  courses
         }else {
-=======
-    async findAllCourse(categoryId: string, limit: number): Promise<Object> {
-        let result: Array<object>;
-        if (categoryId) {
-            let category = await this.categotyModel.findOne({ _id: categoryId })
-            const courses = await this.courseModel.find({ category: category._id }).limit(limit)
-            result = courses
-        } else {
->>>>>>> 212f1b398c0c92c8158964ea7ebc8e7a70975700
             const AllCourse = await this.courseModel.find({})
             if (!AllCourse) throw NotFound(AuthMessageError.NotFound)
             result = AllCourse
