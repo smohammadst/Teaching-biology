@@ -9,7 +9,7 @@ import { CategoryModel, ICategory } from '../category/model/category.model';
 class CourseService {
     constructor(
         private courseModel = CourseModel<ICourse>,
-        private categotyModel = CategoryModel<ICategory>
+        private categortyModel = CategoryModel<ICategory>
     ){}
     async createCourse(course: CourseDto): Promise<object>{
 
@@ -123,11 +123,23 @@ class CourseService {
 
         return findCourse
     }
-    async findAllCourse(categoryId:string, limit: number): Promise<Object>{
+    async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
         let result: Array<object>;
-        if(categoryId){
-            let category = await this.categotyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit)
+        if(categoryId && sort == 'latest'){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: -1})
+            result =  courses
+        }else if(categoryId && sort == 'oldest'){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
+            result =  courses
+        }else if(categoryId && sort == 'popular'){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({sale: -1})
+            result =  courses
+        }else if(categoryId){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id})
             result =  courses
         }else {
             const AllCourse = await this.courseModel.find({})

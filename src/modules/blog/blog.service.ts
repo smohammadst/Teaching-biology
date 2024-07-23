@@ -8,6 +8,7 @@ import { copyObject, relatedFunc } from "../../common/functions/globalFunction";
 import { CategoryModel, ICategory } from "../category/model/category.model";
 
 
+
 class BlogService {
     constructor(
         private blogModel = BlogModel<IBlog>,
@@ -81,9 +82,17 @@ class BlogService {
 
         return findblog
     }
-    async findAllBlog(categoryId:string, limit: number): Promise<Object>{
+    async findAllBlog(categoryId:string, limit: number, filter: string): Promise<Object>{
         let result: Array<object>;
-        if(categoryId){
+        if(categoryId && filter == 'latest'){
+            let category = await this.categoryModel.findOne({_id: categoryId})
+            const blogs = await this.blogModel.find({category: category._id}).limit(limit).sort({createdAt: -1})
+            result =  blogs
+        }else if(categoryId && filter == 'oldest'){
+            let category = await this.categoryModel.findOne({_id: categoryId})
+            const blogs = await this.blogModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
+            result =  blogs
+        }else if(categoryId){
             let category = await this.categoryModel.findOne({_id: categoryId})
             const blogs = await this.blogModel.find({category: category._id}).limit(limit)
             result =  blogs

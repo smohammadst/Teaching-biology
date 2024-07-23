@@ -202,7 +202,7 @@
 
 /**
  * @swagger
- *  /getAllBlog/{categoryId}/{limit}:
+ *  /getAllBlog/{categoryId}/{limit}/{filter}:
  *      get:
  *          tags: [Blog(AdminPanel)]
  *          summary: get all blog
@@ -218,6 +218,11 @@
  *                  type: number
  *                  required: false
  *                  description: Number bedeh :)
+ *              -   in: path
+ *                  name: filter
+ *                  type: string
+ *                  required: false
+ *                  description: vorodi latest, oldest
  *          responses:
  *              200:
  *                  description: success

@@ -52,6 +52,9 @@
  *                  owner:
  *                      type: object
  *                      description: time course
+ *                  sortByNumber:
+ *                      type: number
+ *                      description: add bedeh
  *                  images:
  *                      type: array
  *                      items:
@@ -113,8 +116,7 @@
  *              content:
  *                  application/x-www-form-urlencoded:
  *                      schema:
- *                          $ref: '#/components/schemas/Edit-Course'
- *          
+ *                          $ref: '#/components/schemas/Course'
  *          responses:
  *              200:
  *                  description: updated Course
@@ -160,7 +162,7 @@
  */
 /**
  * @swagger
- *  /getAllCourse/{categoryId}/{limit}:
+ *  /getAllCourse/{categoryId}/{limit}/{sort}:
  *      get:
  *          tags: [Course(AdminPanel)]
  *          summary: get all course
@@ -176,6 +178,11 @@
  *                  type: number
  *                  required: false
  *                  description: Number bedeh :)
+ *              -   in: path
+ *                  name: sort
+ *                  type: string
+ *                  required: false
+ *                  description:  vorodi latest, oldest, popular
  *          responses:
  *              200:
  *                  description: success
