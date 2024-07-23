@@ -53,6 +53,16 @@ class episodeService {
         return {status: 200, message: "با موفقیت حذف شد"}
     }
 
+    async getEpisodesOfChpater(chapterID){
+      const episodes = await this.courseModel.findOne({"chapters._id": chapterID}, {
+          "chapters.episodes":1,
+          "chapters.title":1
+      })
+      
+      //if(!episodes) throw createError.NotFound("این فصل ایپزود ندارد")
+      return episodes
+  }
+
 }
 
 

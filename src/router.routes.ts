@@ -11,7 +11,7 @@ export default (): Router => {
     //userRouter(router)
     courseRouter(router)
     categoryRouter(router),
-    authRouter(router)
+    authRouter(router),
     imagesRouter(router)
     blogRouter(router)
     return router;

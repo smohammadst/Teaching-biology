@@ -97,5 +97,5 @@ const CourseModel = model<ICourse>("course", courseSchema)
 
 export {
     ICourse,
-    CourseModel
+    CourseModel,
 }

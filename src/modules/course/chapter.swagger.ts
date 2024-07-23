@@ -89,6 +89,25 @@
  */
 /**
  * @swagger
+ *  /getChapters/{id}:
+ *      get:
+ *          tags: [Chapter(AdminPanel)]
+ *          summary: get chapters
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */
+/**
+ * @swagger
  *  /chapter/delete/{id}:
  *      patch:
  *          tags: [Chapter(AdminPanel)]
@@ -106,3 +125,7 @@
  *                          schema: 
  *                              $ref: '#/definitions/publicDefinition'
  */
+
+
+
+

@@ -81,3 +81,22 @@
  *                          schema: 
  *                              $ref: '#/definitions/publicDefinition'
  */
+/**
+ * @swagger
+ *  /getEpisodesOfChpater/{chapterID}:
+ *      get:
+ *          tags: [Episode(AdminPanel)]
+ *          summary: remove episode of Chapter
+ *          parameters:
+ *              -   in: path
+ *                  name: chapterID
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */

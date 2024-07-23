@@ -135,6 +135,7 @@ class CourseService {
     // api one course
     async findOneCourse(id: string): Promise<ICourse> {
         const course = await this.courseModel.findOne({ _id: id })
+
         if (!course) throw NotFound(AuthMessageError.NotFound)
         // find blog related
         const CategoryCourse = await this.courseModel.find({ category: course.category })
@@ -145,11 +146,12 @@ class CourseService {
         }
         findCourse['related'] = relates
 
-        const result = await this.courseModel.find({}).sort({ createAt: -1 });
+        const result = await this.courseModel.find({}).sort({ createdAt: -1 });
         let latest = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < result.length ; i++) {
+            if (i == 5) break
             latest.push(result[i])
-            if (i = 5) break
+            
         }
         findCourse['latest'] = latest
 

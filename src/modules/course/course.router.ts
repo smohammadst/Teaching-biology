@@ -16,12 +16,14 @@ export default (router: Router) => {
     router.get("/getOnecourse/:id", courseController.findOneCourse)
     router.get("/getAllCourse/:categoryId/:limit/:sort", courseController.findAllCourse)
     //chapter
+    router.get("/getChapters/:id", chapterController.getChapters)
     router.post("/addchapter", chapterController.create)
     router.patch("/chapter/delete/:id", chapterController.delete)
     router.patch("/chapter/update/:id", chapterController.update)
     //episode
     router.post("/createEpisode", episodeController.create)
     router.patch("/deleteEpisode/:episodeID", episodeController.delete)
+    router.get("/getEpisodesOfChpater/:chapterID", episodeController.getEpisodesOfChpater)
     
 
 }

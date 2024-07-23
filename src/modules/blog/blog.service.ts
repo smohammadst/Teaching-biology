@@ -74,11 +74,14 @@ class BlogService {
         }
         findblog['related'] = relates
 
-        const result = await this.blogModel.find({}).sort({ createAt: -1 });
+        const result = await this.blogModel.find({}).sort({ createdAt: -1 });
+        console.log(result);
         let latest = [];
-        for (let i = 1; i < result.length; i++){
+        for (let i = 0; i < result.length; i++){
+            if(i == 5) break
             latest.push(result[i])
-            if(i = 5) break
+            
+            
         }
         findblog['latest'] = latest
 

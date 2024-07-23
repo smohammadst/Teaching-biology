@@ -43,6 +43,19 @@ class ChapterController {
             next(error)
         }
     }
+    async getChapters(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const {id} = req.params;
+            //if (!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            const result = await chapterServices.getChapters(id)
+            return res.status(200).json({
+                statusCode: 200,
+                result
+              });
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export{

@@ -3,7 +3,8 @@ import { ChapterDto } from "./dto/chapter.dto";
 import { CourseModel, ICourse } from "../course/model/course.model";
 import createHttpError from "http-errors";
 import mongoose, { isValidObjectId, ObjectId } from "mongoose";
-
+import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
+import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 
 
 class chapterService {
@@ -53,6 +54,13 @@ class chapterService {
     }
 
     // Find a chapter of the desired course
+
+    async getChapters(id: string): Promise<ICourse>{
+        const chapter = await this.courseModel.findOne({_id: id}, {chapters: 1, title: 1})
+        if(!chapter) throw NotFound(AuthMessageError.NotFound)
+        return chapter
+
+    }
 
     
 }

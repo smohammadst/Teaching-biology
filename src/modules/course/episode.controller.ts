@@ -41,6 +41,19 @@ class EpisodeController {
             next(error)
         }
     }
+    async getEpisodesOfChpater(req: Request, res: Response, next: NextFunction): Promise<Response>{
+        try {
+            const {chapterID} = req.params;
+            //if (!mongoose.isValidObjectId(episodeID)) throw createHttpError.BadRequest("آیدی ارسال شده صحیح نمیباشد")
+            const result = await episodeServices.getEpisodesOfChpater(chapterID)
+            return res.status(200).json({
+                statusCode: 200,
+                result
+              });
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export{
