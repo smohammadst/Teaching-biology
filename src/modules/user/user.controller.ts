@@ -3,13 +3,39 @@ import { UserDto } from "./dto/user.dto";
 import { UserService } from "./user.service";
 
 class UserController {
-    async create(req: Request, res: Response, next: NextFunction): Promise<Response> {
+    async getAllComment(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-            const user: UserDto = req.body
-            const createUser = await UserService.create(user)
-            return res.status(200).json({
-                users: createUser
-            })
+            const userID = req.user._id
+            const result = await UserService.getAllCommentUser(userID);
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async findEvidenceUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userID = req.user._id
+            const result = await UserService.findEvidenceForUser(userID)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async getLikeCourse(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userID = req.user._id
+            const result = await UserService.getLikeCourse(userID)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+    async getLikeBlog(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userID = req.user._id
+            const result = await UserService.getLikeBlog(userID)
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }

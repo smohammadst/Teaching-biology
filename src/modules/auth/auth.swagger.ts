@@ -37,15 +37,16 @@
  *              properties:
  *                  username:
  *                      type: string
- *                      description: the title of category
+ *                      description: شماره همراه کاربر یا ایمیل کاربر
  *                  password:
  *                      type: string
- *                      description: Course or Blog
+ *                      description: اگر پسسورد خواست کاربر
  *                  code:
  *                      type: number
- *                      description: Course or Blog
+ *                      description: کد برای اعتبار سنجی
  *                  type:
  *                      $ref: '#/components/schemas/AuthEnumType'
+ *                      description:    نوع درخواست هست که معلوم میکنه برای ثبت نام هست یا ورود یا ....
  *                  method:
  *                      $ref: '#/components/schemas/AuthEnumMethod'
  */
@@ -70,17 +71,17 @@
  *                  description: success
  */
 
-/**
- * @swagger
- *  /all:
- *      get:
- *          tags: [Auth]
- *          summary: remove a Chapter of courses
- *          responses:
- *              200:
- *                  description: success
- *                  content:
- *                      application/json:
- *                          schema: 
- *                              $ref: '#/definitions/publicDefinition'
- */
+// /**
+//  * @swagger
+//  *  /all:
+//  *      get:
+//  *          tags: [Auth]
+//  *          summary: remove a Chapter of courses
+//  *          responses:
+//  *              200:
+//  *                  description: success
+//  *                  content:
+//  *                      application/json:
+//  *                          schema: 
+//  *                              $ref: '#/definitions/publicDefinition'
+//  */

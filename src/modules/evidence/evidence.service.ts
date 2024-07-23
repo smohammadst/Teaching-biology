@@ -50,10 +50,14 @@ class EvidenceService {
         return { evidence: findEvidence }
     }
 
-    async findEvidenceForUser(userID: string) {
-        validateObjectID(userID);
-        const findEvidenceUser = await this.evidenceRepository.find({ userID }).populate("user", "+first_name", "+last_name").populate("course", "+title")
-        if (!findEvidenceUser) throw NotFound("شما گواهی درخواست نداده ایید")
-        return { evidence: findEvidenceUser }
+    async uploadFileEvidence(userID: string, courseID: string, routUpload: string) {
+        validateObjectID(userID)
+        validateObjectID(courseID)
     }
+}
+
+const evidenceService = new EvidenceService()
+
+export {
+    evidenceService as EvidenceService
 }
