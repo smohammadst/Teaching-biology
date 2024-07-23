@@ -168,6 +168,15 @@ class CourseService {
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({sale: -1})
             result =  courses
+        }else if(categoryId && sort == 'high'){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: -1})
+            result =  courses
+        }else if(categoryId){
+        }else if(categoryId && sort == 'low'){
+            let category = await this.categortyModel.findOne({_id: categoryId})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: +1})
+            result =  courses
         }else if(categoryId){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id})
