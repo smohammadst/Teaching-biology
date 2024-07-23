@@ -63,7 +63,8 @@ interface ICourse extends mongoose.Document {
     latest: Array<ObjectId>,
     chapters: IChapter[],
     typeCourse: string,
-    sale: number    
+    sale: number,
+    like: ObjectId[]
 }
 
 const courseSchema = new mongoose.Schema<ICourse>({
@@ -87,7 +88,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
     related: { type: [mongoose.Types.ObjectId], default: [] },
     latest:{ type: [mongoose.Types.ObjectId], default: [] },
     typeCourse: { type: String, default: '' },
-    sale: { type: Number, default: 0 }
+    sale: { type: Number, default: 0 },
+    like: { type: [mongoose.Types.ObjectId], ref: "user" }
 
 })
 

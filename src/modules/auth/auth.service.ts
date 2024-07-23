@@ -85,6 +85,13 @@ class AuthService {
         return { token, refreshToken }
     }
 
+    async refreshToken(userID: string) {
+        const user = await this.userRepository.findOne({ _id: userID })
+        if (!user) throw NotFound("کاربری یافت نشد")
+        const token = await this.createToken({ userId: "" + user.id })
+        const refreshToken = await this.createToken({ userId: "" + user.id })
+    }
+
     async createToken(payload: TTokenPayload) {
         const token = sign(payload,
             process.env.SECRET_KEY_TOKEN, { expiresIn: "1h" })

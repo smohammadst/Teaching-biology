@@ -15,9 +15,6 @@ interface IUser extends mongoose.Document {
     Role: Array<string>
 }
 
-export type Tuser = {
-    id: string
-}
 
 const userSchema = new mongoose.Schema<IUser>({
     first_name: { type: String },
@@ -27,8 +24,8 @@ const userSchema = new mongoose.Schema<IUser>({
     password: { type: String },
     otp: { type: Object },
     bascket: { type: [mongoose.Types.ObjectId] },
-    listLikeBlog: { type: [mongoose.Types.ObjectId] },
-    listLikeCourse: { type: [mongoose.Types.ObjectId] },
+    listLikeBlog: { type: [mongoose.Types.ObjectId], ref: "blog" },
+    listLikeCourse: { type: [mongoose.Types.ObjectId], ref: "course" },
     isvalidateMobile: { type: Boolean, default: false },
     Role: { type: [String], default: ["USER"] }
 });

@@ -1,4 +1,7 @@
 import mongoose, { ObjectId } from "mongoose";
+import { statusEnum } from "./../../../common/enums/status.enum";
+
+
 
 interface IComment extends mongoose.Document {
     userID?: ObjectId,
@@ -9,7 +12,7 @@ interface IComment extends mongoose.Document {
     fullName: string,
     answer?: Array<ObjectId>,
     star?: number,
-    status: boolean,
+    status: string,
     email: string
 }
 
@@ -18,7 +21,7 @@ interface IAnswer extends mongoose.Document {
     commentID: ObjectId,
     text: string,
     fullName: string
-    status: boolean
+    status: string
 }
 
 const commentSchema = new mongoose.Schema<IComment>({
@@ -30,7 +33,7 @@ const commentSchema = new mongoose.Schema<IComment>({
     fullName: { type: String },
     answer: { type: [mongoose.Types.ObjectId], ref: "answer" },
     star: { type: Number, max: 5 },
-    status: { type: Boolean, default: false },
+    status: { type: String, default: statusEnum.pending },
     email: { type: String }
 })
 
@@ -39,7 +42,7 @@ const answerSchema = new mongoose.Schema<IAnswer>({
     commentID: { type: mongoose.Types.ObjectId, ref: "comment" },
     fullName: { type: String },
     text: { type: String, required: true },
-    status: { type: Boolean, default: false }
+    status: { type: String, default: statusEnum.pending }
 })
 
 const CommentModel = mongoose.model("comment", commentSchema)
@@ -49,5 +52,5 @@ export {
     CommentModel,
     AnswerModel,
     IAnswer,
-    IComment
+    IComment,
 }

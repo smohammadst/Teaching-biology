@@ -6,6 +6,7 @@ import createHttpError from "http-errors";
 import { GlobalMessageError, NotFoundError } from "./../../common/enums/message.enum";
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
+import {statusEnum as statusComment} from './../../common/enums/status.enum'
 
 export class CommentService {
     constructor(
@@ -89,7 +90,7 @@ export class CommentService {
         return { status: 200, message: 'کامنت با موفقیت حذف گردید' }
     }
     async avrageStar(): Promise<number> {
-        const comments = await this.commentRepository.find({ status: true })
+        const comments = await this.commentRepository.find({ status: statusComment.accept })
         const countComment = comments.length
         let sumStar = 0
         for (let i = 0; i < comments.length; i++) {
@@ -98,16 +99,19 @@ export class CommentService {
         const avrage = sumStar / countComment
         return avrage
     }
-    async changeStatus(id: string): Promise<object> {
+    async changeStatus(id: string, status: boolean): Promise<object> {
         const findComment = await this.commentRepository.findOne({ _id: id });
         if (!findComment) {
             const findAnswer = await this.answerRepository.findOne({ _id: id });
             if (!findAnswer) throw createHttpError.NotFound(NotFoundError.NotFoundComment)
-            findAnswer.status = true
+            if (status)
+                findAnswer.status = statusComment.accept
+            else
+                findAnswer.status = statusComment.reject
             await findAnswer.save()
             return { status: 200, message: "با موفقیت انجام شد" }
         }
-        findComment.status = true
+        findComment.status = statusComment.accept
         await findComment.save()
         return { status: 200, message: "با موفقیت انجام شد" }
     }
@@ -171,11 +175,11 @@ export class CommentService {
     }
 
     async readAllCommentsAndAnswerByAdmin() {
-        const allComment = await this.commentRepository.find({ status: false })
+        const allComment = await this.commentRepository.find({ status: statusComment.reject })
             .populate({
                 path: "answer",
                 model: "answer",
-                match: { status: false }
+                match: { status: statusComment.reject }
             }).exec()
         if (allComment) return { status: 404, message: "هیچ کامنتی یافت نشد" }
         return { status: 200, allComment }
