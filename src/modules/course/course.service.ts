@@ -132,6 +132,7 @@ class CourseService {
         if (!course) throw NotFound(AuthMessageError.NotFound)
         return course
     }
+    // api one course
     async findOneCourse(id: string): Promise<ICourse> {
         const course = await this.courseModel.findOne({ _id: id })
         if (!course) throw NotFound(AuthMessageError.NotFound)
@@ -154,6 +155,7 @@ class CourseService {
 
         return findCourse
     }
+    //api all course => sort / limit / category
     async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
         let result: Array<object>;
         if(categoryId && sort == 'latest'){
@@ -172,14 +174,13 @@ class CourseService {
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: -1})
             result =  courses
-        }else if(categoryId){
         }else if(categoryId && sort == 'low'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: +1})
             result =  courses
         }else if(categoryId){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id})
+            const courses = await this.courseModel.find({category: category._id}).limit(limit)
             result =  courses
         }else {
             const AllCourse = await this.courseModel.find({})
@@ -189,6 +190,11 @@ class CourseService {
 
         return result
 
+    }
+    async findCategoty(categoryId: string): Promise<ICategory>{
+        let category = await this.categortyModel.findOne({_id: categoryId})
+        if(!category) throw  NotFound(AuthMessageError.NotFound)
+        return category
     }
 }
 
