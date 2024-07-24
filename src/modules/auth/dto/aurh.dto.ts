@@ -15,6 +15,12 @@ export class AuthDto {
     @IsEmpty()
     @IsString()
     code?: string
+    @IsEmpty()
+    @IsString()
+    first_name: string
+    @IsEmpty()
+    @IsString()
+    last_name: string
 }
 
 export class ChangePasswordDto {

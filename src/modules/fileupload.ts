@@ -1,67 +1,58 @@
-import * as multer from "multer"
-
+import multer, { FileFilterCallback } from "multer";
 import path from 'path';
-import {existsSync, mkdirSync} from 'fs';
-import { extname, join } from "path";
-const short = require("short-uuid")
-
-const createHttpError = require("http-errors");
+import { existsSync, mkdirSync } from 'fs';
+import { extname } from "path";
+import short from "short-uuid";
+import createHttpError from "http-errors";
 import { Request, Response, NextFunction } from "express";
 
 export interface MulterFile {
-    key: string // Available using `S3`.
-    path: string // Available using `DiskStorage`.
-    mimetype: string
-    originalname: string
-    size: number
-    destination: string
-    filename: string
-    length: number
+    key: string; // Available using `S3`.
+    path: string; // Available using `DiskStorage`.
+    mimetype: string;
+    originalname: string;
+    size: number;
+    destination: string;
+    filename: string;
+    length: number;
 }
-
 
 const createFolderWithDate = (folder: string) => {
-    const year = new Date().getFullYear
-    const month = new Date().getMonth
-    const day = new Date().getDay;
-    return `./public/upload/${folder}/${year}/${month}/${day}/`;
-}
-const translator = short()
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth() + 1; // getMonth returns 0-11
+    const day = new Date().getDate(); // getDate returns day of month
+    const folderPath = path.join(__dirname, `./public/upload/${folder}/${year}/${month}/${day}/`);
+    return folderPath;
+};
+
+const translator = short();
 
 const storage = multer.diskStorage({
-    destination: (req: Request, file: MulterFile, callback: CallableFunction) => {
-        const folder = req.url.indexOf("course") > 0 ? "course" : "other"
-        const path = createFolderWithDate(folder)
-        if (!existsSync(path)) {
-            mkdirSync(path, { recursive: true })
-        }
-        callback(null, path)
+    destination: (req: Request, file: Express.Multer.File, callback: (error: Error | null, destination: string) => void) => {
+        const folder = req.url.indexOf("course") > 0 ? "course" : "other";
+        const folderPath = createFolderWithDate(folder);
+        callback(null, folderPath);
     },
-    filename: (req: Request, file: MulterFile, callback: CallableFunction) => {
-        //const ext = path.extname(file.originalname)
+    filename: (req: Request, file: Express.Multer.File, callback: (error: Error | null, filename: string) => void) => {
         const ext = extname(file.originalname).toLowerCase();
-        const filename = String(translator.generate()) + ext;
-        //const filename = ''  +ext
-
-        callback(null, filename)
-
+        const filename = translator.generate() + ext;
+        callback(null, filename);
     }
-})
+});
 
-function fileFilter(req: Request, file: MulterFile, cb: CallableFunction) {
-    const ext = path.extname(file.originalname);
-    const mimetypes = [".jpg", ".JPG", ".jpeg", ".png", ".webp", ".gif", ".jfif"];
+const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+    const ext = extname(file.originalname).toLowerCase();
+    const mimetypes = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".jfif"];
     if (mimetypes.includes(ext)) {
         return cb(null, true);
     }
     return cb(createHttpError.BadRequest("فرمت ارسال شده تصویر صحیح نمیباشد"));
-}
+};
 
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter });
 
-export {
-    upload
-}
+export { upload };
+
 
 /********************** */
 // const multer = require("multer")

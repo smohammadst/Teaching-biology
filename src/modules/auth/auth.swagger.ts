@@ -44,9 +44,15 @@
  *                  code:
  *                      type: number
  *                      description: کد برای اعتبار سنجی
+ *                  first_name:
+ *                      type: string
+ *                      description: نام برای ثبت نام
+ *                  last_name: 
+ *                      type: string
+ *                      description: نام خانوادگی برای ثبت نام
  *                  type:
  *                      $ref: '#/components/schemas/AuthEnumType'
- *                      description:    نوع درخواست هست که معلوم میکنه برای ثبت نام هست یا ورود یا ....
+ *                      description:     نوع درخواست هست که معلوم میکنه برای ثبت نام هست یا ورود یا درخواست دوباره ی کد اگر لاگین بود تایپ از نوع لاگین پسوورد باشه اگه رجیستر بود شماره کاربر اسم و فامیلی کاربر و تایپ از نوع لاگین هست اگه کاربر کد ممجدد خواست تایپ رو از نوع ریست کد موبایل میزاری
  *                  method:
  *                      $ref: '#/components/schemas/AuthEnumMethod'
  */

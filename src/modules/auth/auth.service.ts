@@ -19,10 +19,11 @@ class AuthService {
         private userRepository = UserModel<IUser>
     ) { }
 
-    async register(method: AuthEnumMethod, username: string, password?: string): Promise<object> {
+    async register(method: AuthEnumMethod, first_name: string, last_name: string, username: string, password?: string): Promise<object> {
         const validate: string = this.usernameValidation(method, username)
         let user: IUser = await this.userExist(method, validate);
         if (user) throw Conflict(AuthMessageError.Confirm)
+        if (!first_name && !last_name) throw BadRequest("نام و نام خانوادگی خالی می باشد")
         const code: string = randomNumber()
         console.log("dfsesd");
         if (password) {
@@ -32,7 +33,9 @@ class AuthService {
                 otp: {
                     code,
                     expirseIn: 60 * 60 * 120
-                }
+                },
+                last_name,
+                first_name
             })
         } else {
             user = await this.userRepository.create({
@@ -40,7 +43,9 @@ class AuthService {
                 otp: {
                     code,
                     expirseIn: 60 * 60 * 120
-                }
+                },
+                last_name,
+                first_name
             })
         }
 
@@ -71,7 +76,7 @@ class AuthService {
 
     comparePassword(password: string, hashPassword: string): boolean {
         return bcrypt.compareSync(password, hashPassword);
-       //return true
+        //return true
     }
 
     async checkOtp(method: AuthEnumMethod, code: string, username: string): Promise<object> {
@@ -99,10 +104,10 @@ class AuthService {
     }
 
     userExistence(authDto: AuthDto) {
-        const { username, method, type, password, code } = authDto;
+        const { username, method, type, password, code, first_name, last_name } = authDto;
         switch (type) {
             case AuthEnumType.register:
-                return this.register(method, username, password)
+                return this.register(method, first_name, last_name, username, password)
             case AuthEnumType.loginPassword:
                 return this.loginPassword(method, username, password)
             case AuthEnumType.resetCodePhone:
