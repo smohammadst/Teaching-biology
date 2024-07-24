@@ -12,8 +12,8 @@
  *                      description: the title of category
  *                  type:
  *                      type: string
- *                      description: Course or Blog
- *                      example: Course
+ *                      description: course or blog
+ *                      example: course
  *                  parent:
  *                      type: string
  *                      description: the parent of category

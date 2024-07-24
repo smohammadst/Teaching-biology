@@ -12,7 +12,8 @@ interface IBlog extends mongoose.Document{
     createdAt: string,
     related: Array<ObjectId>,
     latest: Array<ObjectId>,
-    sortByNumber: number
+    sortByNumber: number,
+    view: number,
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
@@ -27,7 +28,8 @@ const blogSchema = new mongoose.Schema<IBlog>({
     sortByNumber: {type: Number},
     createdAt: {type: String, default: ''},
     related: {type: [mongoose.Types.ObjectId], default:[]},
-    latest: {type: [mongoose.Types.ObjectId]}
+    latest: {type: [mongoose.Types.ObjectId]},
+    view: {type: Number, default: 0}
 })
 
 const BlogModel = mongoose.model<IBlog>("blog", blogSchema)

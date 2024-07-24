@@ -7,6 +7,7 @@ import { copyObject, relatedFunc, validateObjectID } from "../../common/function
 import { CategoryModel, ICategory } from "../category/model/category.model";
 import { IUser, UserModel } from "../user/model/user.model";
 import { CourseServices } from "../course/course.service";
+import e from "express";
 
 
 
@@ -84,6 +85,7 @@ class BlogService {
             
         }
         findblog['latest'] = latest
+        const view = await this.blogModel.updateOne({_id: id},{$inc: {'view': 1 }} )
 
         return findblog
     }
@@ -96,6 +98,9 @@ class BlogService {
         }else if(categoryId && filter == 'oldest'){
             let category = await this.categoryModel.findOne({_id: categoryId})
             const blogs = await this.blogModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
+            result =  blogs
+        }else if(!categoryId && limit){
+            const blogs = await this.blogModel.find({}).limit(limit)
             result =  blogs
         }else if(categoryId){
             let category = await this.categoryModel.findOne({_id: categoryId})

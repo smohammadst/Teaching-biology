@@ -43,9 +43,6 @@
  *                  prerequisitesText: 
  *                      type: string
  *                      description: the prerequisitesText of course
- *                  prerequisites: 
- *                      type: string
- *                      description: the id of course
  *                  typeCourse: 
  *                      type: string
  *                      description: پیشرفته|متوسط|مقدماتی

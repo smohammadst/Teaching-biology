@@ -13,48 +13,129 @@ class categoryService {
     
     async createCategory(category: CategoryDto): Promise<object>{
 
-        const {title, parent, type} = category
+        const {title, parent, type} = category        
+        if(type == 'course'){
+            if(!parent){
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
 
-        console.log(typeof(category.parent));
-
-        if (await CategoryModel.findOne({title}, {__v: 0, parent: 0}) ) {
-            throw new Error(
-                'این دسته بندی با این عنوان وجود دارد',
-            );
+                const result = await this.categoryModel.create({
+                        title: category.title,
+                        type: category.type
+                })
+            }else{
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+                if (parent && !await CategoryModel.findOne({_id: parent})) {
+                    throw new Error("پرنت وجود ندارد")
+                }
+                    const result = await this.categoryModel.create({
+                        title: category.title,
+                        parent: category.parent,
+                        type: category.type
+                    })
+    
+            }
         }
-        if (parent && !await CategoryModel.findOne({_id: parent})) {
-            throw new Error("پرنت وجود ندارد")
+        if(type == 'blog'){
+            if(!parent){
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+                const result = await this.categoryModel.create({
+                        title: category.title,
+                        type: category.type
+                })
+            }else{
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+                if (parent && !await CategoryModel.findOne({_id: parent})) {
+                    throw new Error("پرنت وجود ندارد")
+                }
+                    const result = await this.categoryModel.create({
+                        title: category.title,
+                        parent: category.parent,
+                        type: category.type,
+                    })
+    
+            }
         }
         
-        if(!parent){
-            const category = await CategoryModel.create({title})
-            //if(!category) throw createHttpError.InternalServerError("خطای داخلی")
-                const result = await this.categoryModel.create({
-                    title: category.title,
-                    type: category.type
-                })
-        }else{
-            const category = await CategoryModel.create({title, parent})
-            //if(!category) throw createHttpError.InternalServerError("خطای داخلی")
-                const result = await this.categoryModel.create({
-                    title: category.title,
-                    parent: category.parent,
-                    type: category.type
-                })
-
-        }
         return {status:201, message: "دسته بندی با موفقیت افزوده شد"}
     }
     async updateCategoy(id: String,category:CategoryDto): Promise<object>{
-
-
         const {title, parent, type} = category
-        if(!parent){
-            let result = await this.categoryModel.updateOne({_id: id}, {$set: {title, type}})
-        }else {
-            let result = await this.categoryModel.updateOne({_id: id}, {$set: {title, parent, type}})
+        if(type == 'course'){
+            if(!parent){
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+
+                const result = await this.categoryModel.updateOne({_id: id},{$set: {
+                    title: category.title,
+                    type: category.type
+
+                }})
+            }else{
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+                if (parent && !await CategoryModel.findOne({_id: parent})) {
+                    throw new Error("پرنت وجود ندارد")
+                }
+                const result = await this.categoryModel.updateOne({_id: id},{$set: {
+                    title: category.title,
+                    type: category.type,
+                    parent: category.parent
+
+                }})
+            }
         }
-        //if(!result) throw createHttpError.InternalServerError("به روز رسانی دسته بندی انجام نشد")
+        if(type == 'blog'){
+            if(!parent){
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+
+                const result = await this.categoryModel.updateOne({_id: id},{$set: {
+                    title: category.title,
+                    type: category.type
+
+                }})
+            }else{
+                if (await CategoryModel.findOne({title, type}, {__v: 0, parent: 0}) ) {
+                    throw new Error(
+                        'این دسته بندی با این عنوان وجود دارد',
+                    );
+                }
+                if (parent && !await CategoryModel.findOne({_id: parent})) {
+                    throw new Error("پرنت وجود ندارد")
+                }
+                const result = await this.categoryModel.updateOne({_id: id},{$set: {
+                    title: category.title,
+                    type: category.type,
+                    parent: category.parent
+
+                }})
+            }
+        }
         return {status:200, message: "دسته بندی با موفقیت اپدیت افزوده شد"} 
         
     }

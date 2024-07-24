@@ -155,6 +155,9 @@ class CourseService {
         }
         findCourse['latest'] = latest
 
+        
+        const view = await this.courseModel.updateOne({_id: id},{$inc: {'view': 1 }} )
+
         return findCourse
     }
     //api all course => sort / limit / category

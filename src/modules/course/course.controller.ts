@@ -62,6 +62,7 @@ class CourseController {
     async findOneCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params
+            
             const resutl = await CourseServices.findOneCourse(id)
             return res.status(200).json({
                 statusCode: 200,
