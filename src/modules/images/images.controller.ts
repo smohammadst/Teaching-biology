@@ -7,8 +7,8 @@ import { MulterFile } from "../fileupload";
 
 
 class ImageController {
-
-    async create(req: Request & { file: Express.Multer.File }, res: Response, next: NextFunction): Promise<Response> {
+    //& { file: Express.Multer.File }
+    async create(req: Request , res: Response, next: NextFunction): Promise<Response> {
         try {
             let images: string[]
             //const fileField = req?.file || undefined

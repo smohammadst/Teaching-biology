@@ -63,6 +63,7 @@ class BlogController {
             next(error)
         }
     }
+    
 }
 
 export {

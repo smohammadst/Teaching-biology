@@ -9,4 +9,5 @@ export default (router: Router) => {
     router.delete("/deleteBlog/:id", blogController.delete)
     router.get("/getOneBlog/:id", blogController.findOneBlog)
     router.get("/getAllBlog/:categoryId/:limit/:filter", blogController.findAllBlog)
+
 }
