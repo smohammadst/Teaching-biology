@@ -14,3 +14,9 @@ class PaymentController {
         }
     }
 }
+
+const paymentController = new PaymentController()
+
+export{
+    paymentController as PaymentController
+}
