@@ -168,8 +168,8 @@
  *                  name: categoryId
  *                  type: string
  *                  required: false
- *                  default: 669d16c7670adf539f2ec227
  *                  description: objectId of category
+ *                  nullable: true
  *              -   in: path
  *                  name: limit
  *                  type: number

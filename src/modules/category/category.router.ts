@@ -9,6 +9,6 @@ export default (router: Router) => {
     router.patch("/updateCategory/:id", categoryController.updateCategoty)
     router.delete("/deleteCategory/:id", categoryController.deleteCategory)
     router.get("/getOneCategory/:id", categoryController.getOneCategory)
-    router.get("/all", categoryController.getAllCategory)
+    router.get("/getAllCategory/:type", categoryController.getAllCategory)
     //router.get("/getchildern", categoryController.getAllChildern)
 }

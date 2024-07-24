@@ -126,10 +126,16 @@
  */
 /**
  * @swagger
- *  /all:
+ *  /getAllCategory/{type}:
  *      get:
  *          tags: [Category(AdminPanel)]
  *          summary: get all Category
+ *          parameters:
+ *              -   in: path
+ *                  name: type
+ *                  type: string
+ *                  nullable: true
+ *                  required: false
  *          responses:
  *              200:
  *                  description: success

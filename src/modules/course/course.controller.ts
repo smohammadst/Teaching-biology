@@ -3,7 +3,8 @@ import { CourseDto } from "./dto/course.dto";
 import { CourseServices } from "./course.service";
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
+import { stringify } from "querystring";
 
 class CourseController {
 
@@ -62,7 +63,7 @@ class CourseController {
     async findOneCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             const {id} = req.params
-            
+
             const resutl = await CourseServices.findOneCourse(id)
             return res.status(200).json({
                 statusCode: 200,
