@@ -158,9 +158,17 @@ class categoryService {
         if (!category) throw NotFound(AuthMessageError.NotFound);
         return category;
     }
-    async getAllCategory() {
-        const category = await this.categoryModel.find();
-        if (!category) throw NotFound(AuthMessageError.NotFound);
+    async getAllCategory(type: string) {
+
+        let category;
+        if(type){
+            category = await this.categoryModel.find({type: type});
+            if (!category) throw NotFound(AuthMessageError.NotFound);
+        }
+            category = await this.categoryModel.find();
+            if (!category) throw NotFound(AuthMessageError.NotFound);
+        
+        
         return category;
     }
 }

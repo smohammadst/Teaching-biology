@@ -69,7 +69,7 @@ class AuthService {
     hashingPassword(password: string): string {
         const salt = 6;
         const hashPassword = bcrypt.hashSync(password, salt);
-        //const hashPassword = ""
+       // const hashPassword = ""
 
         return hashPassword;
     }
