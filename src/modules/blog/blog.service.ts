@@ -145,10 +145,6 @@ class BlogService {
         if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
         return { message, status: 200 }
     }
-
-    
-
-    
 }
 
 const BlogServices = new BlogService()

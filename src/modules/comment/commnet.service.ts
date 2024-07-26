@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { IComment, CommentModel, AnswerModel, IAnswer } from "./model/comment.model";
 import { CommentDto } from "./dto/comment.Dto";
 import { TypeEnumComment, TypeEnumSned } from "./enum/typeComment.enum";
-import createHttpError from "http-errors";
+import * as createHttpError from "http-errors";
 import { GlobalMessageError, NotFoundError } from "./../../common/enums/message.enum";
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";

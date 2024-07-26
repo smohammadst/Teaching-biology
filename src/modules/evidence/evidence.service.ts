@@ -1,7 +1,7 @@
 import { NotFound, ServiceUnavailable, BadRequest } from 'http-errors';
 import { CourseModel, ICourse } from "../course/model/course.model";
 import { RequestDto } from "./dto/evidence.dto";
-import { validateObjectID } from 'src/common/functions/globalFunction';
+import { validateObjectID } from './../../common/functions/globalFunction';
 import { IUser, UserModel } from '../user/model/user.model';
 import { EvidenceModel, IEvidence } from './model/evidence.mode';
 import { statusEnum } from './../../common/enums/status.enum';

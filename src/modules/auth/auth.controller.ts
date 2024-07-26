@@ -22,4 +22,13 @@ export class AuthController {
             next(error)
         }
     }
+    async refreshToken(req: Request & { user: string }, res: Response, next: NextFunction) {
+        try {
+            const userID = req.user
+            const refreshToken = await AuthService.refreshToken(userID)
+            return res.status(200).json({ refreshToken, statusCode: 200 })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

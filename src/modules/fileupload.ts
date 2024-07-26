@@ -1,8 +1,8 @@
-import multer, { FileFilterCallback } from "multer";
+import * as multer from "multer";
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { extname } from "path";
-import short from "short-uuid";
+const  short = require('short-uuid');
 import createHttpError from "http-errors";
 import { Request, Response, NextFunction } from "express";
 
@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     const ext = extname(file.originalname).toLowerCase();
     const mimetypes = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".jfif"];
     if (mimetypes.includes(ext)) {

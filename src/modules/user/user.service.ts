@@ -1,6 +1,6 @@
 import { IUser, UserModel } from "./model/user.model";
 import { UserDto } from "./dto/user.dto";
-import { validateObjectID } from "src/common/functions/globalFunction";
+import { validateObjectID } from "./../../common/functions/globalFunction";
 import { BadRequest, NotFound } from "http-errors"
 import { AnswerModel, CommentModel, IAnswer, IComment } from "../comment/model/comment.model";
 import { EvidenceModel, IEvidence } from "../evidence/model/evidence.mode";

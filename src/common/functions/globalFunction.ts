@@ -31,6 +31,19 @@ function invoiceNumberGenerator(): string {
     );
 }
 
+function VerifyRefreshToken(token) {
+    return new Promise((resolve, reject) => {
+        Jwt.verify(token, process.env.REFRESH_TOKEN_SECRET_KEY, async (err, payload) => {
+            if (err)
+                reject(Unauthorized("وارد حساب کاربری خود شوید"));
+            const { userId } = payload || {};
+            const user = await UserModel.findOne({ _id: userId }, { password: 0, otp: 0 });
+            if (!user) reject(Unauthorized("حساب کاربری یافت نشد"));
+            resolve(userId);
+        });
+    });
+}
+
 async function verifyToken(req: Request & { user: string }, res: Response, next: NextFunction) {
     if (!req.headers['authorization']) return next(Unauthorized("دوباره تلاش کنید"));
     const authorization: string = req.headers["authorization"];
@@ -38,7 +51,7 @@ async function verifyToken(req: Request & { user: string }, res: Response, next:
     const verifyUser: TTokenPayload = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY) as TTokenPayload;
     const user: IUser = await this.userRepository.findOne({ _id: verifyUser.userId }, { _id: 1 })
     if (!user) return Unauthorized("کاربری یافت نشد");
-    req.user = user.id
+    req.user = user._id
     return next();
 }
 
@@ -69,5 +82,6 @@ export {
     randomNumber,
     relatedFunc,
     copyObject,
-    validateObjectID
+    validateObjectID,
+    VerifyRefreshToken
 }

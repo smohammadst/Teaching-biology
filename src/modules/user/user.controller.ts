@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { UserDto } from "./dto/user.dto";
 import { UserService } from "./user.service";
+import { IUser } from "./model/user.model";
 
 class UserController {
-    async getAllComment(req: Request, res: Response, next: NextFunction): Promise<Response> {
+    async getAllComment(req: Request & { user: IUser }, res: Response, next: NextFunction): Promise<Response> {
         try {
             const userID = req.user._id
             const result = await UserService.getAllCommentUser(userID);
@@ -13,7 +14,7 @@ class UserController {
         }
     }
 
-    async findEvidenceUser(req: Request, res: Response, next: NextFunction) {
+    async findEvidenceUser(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const userID = req.user._id
             const result = await UserService.findEvidenceForUser(userID)
@@ -22,7 +23,7 @@ class UserController {
             next(error)
         }
     }
-    async getLikeCourse(req: Request, res: Response, next: NextFunction) {
+    async getLikeCourse(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const userID = req.user._id
             const result = await UserService.getLikeCourse(userID)
@@ -31,7 +32,7 @@ class UserController {
             next(error)
         }
     }
-    async getLikeBlog(req: Request, res: Response, next: NextFunction) {
+    async getLikeBlog(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const userID = req.user._id
             const result = await UserService.getLikeBlog(userID)

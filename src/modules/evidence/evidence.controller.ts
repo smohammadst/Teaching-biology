@@ -3,9 +3,10 @@ import { NextFunction, Request, Response } from "express";
 import { RequestDto } from "./dto/evidence.dto";
 import { EvidenceService } from "./evidence.service";
 import { isBoolean } from "class-validator";
+import { IUser } from '../user/model/user.model';
 
 class EvidenceController {
-    async add(req: Request, res: Response, next: NextFunction) {
+    async add(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const userID: string = req.user._id;
             const addDto: RequestDto = req.body

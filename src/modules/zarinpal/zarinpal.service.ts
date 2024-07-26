@@ -5,8 +5,8 @@ import { Model, ObjectId } from 'mongoose';
 import { IPayment, ISale, PaymentModel, SaleModel } from './model/zarinpal.model';
 import axios from 'axios';
 import createHttpError from 'http-errors';
-import { invoiceNumberGenerator } from 'src/common/functions/globalFunction';
-import moment from "moment-jalali"
+import { invoiceNumberGenerator } from './../../common/functions/globalFunction';
+import * as moment from "moment-jalali"
 import { Response } from "express";
 import { SpotPlayerService } from "../spotplayer/spotplayer.service";
 

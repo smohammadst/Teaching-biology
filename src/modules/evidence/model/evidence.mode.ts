@@ -1,5 +1,5 @@
 import mongoose, { Document, ObjectId } from "mongoose";
-import { statusEnum } from "src/common/enums/status.enum";
+import { statusEnum } from "./../../../common/enums/status.enum";
 
 interface IEvidence extends Document {
     title: string,

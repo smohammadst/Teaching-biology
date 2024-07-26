@@ -6,5 +6,6 @@ const authController = new AuthController()
 
 export default (router: Router) => {
     router.post("/userExistence", authController.userExistence)
-    router.post("/changePassword",verifyToken, authController.changePassword)
+    router.post("/changePassword", verifyToken, authController.changePassword)
+    router.post("/refreshToken", authController.refreshToken)
 };

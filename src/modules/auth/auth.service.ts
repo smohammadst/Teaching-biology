@@ -69,7 +69,7 @@ class AuthService {
     hashingPassword(password: string): string {
         const salt = 6;
         const hashPassword = bcrypt.hashSync(password, salt);
-       // const hashPassword = ""
+        // const hashPassword = ""
 
         return hashPassword;
     }
@@ -95,6 +95,10 @@ class AuthService {
         if (!user) throw NotFound("کاربری یافت نشد")
         const token = await this.createToken({ userId: "" + user.id })
         const refreshToken = await this.createToken({ userId: "" + user.id })
+    }
+
+    async accessToken(token: string){
+        
     }
 
     async createToken(payload: TTokenPayload) {
