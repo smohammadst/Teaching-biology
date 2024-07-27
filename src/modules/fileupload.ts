@@ -8,7 +8,7 @@ import { mkdirSync } from "fs"
 export interface MulterFile {
     title: string
 }
-// ایجاد پوشه با تاریخ
+
 const createFolderWithDate = (folder: string) => {
     const year = new Date().getFullYear();
     const month = new Date().getMonth() + 1; // getMonth returns 0-11
@@ -18,7 +18,6 @@ const createFolderWithDate = (folder: string) => {
     return folderPath;
 };
 
-// تنظیمات Multer
 const storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, callback: (error: Error | null, destination: string) => void) => {
         const folder = req.url.includes("course") ? "course" : "other";
@@ -28,7 +27,7 @@ const storage = multer.diskStorage({
     },
     filename: (req: Request, file: Express.Multer.File, callback: (error: Error | null, filename: string) => void) => {
         const ext = extname(file.originalname).toLowerCase();
-        const name = Date.now() // استفاده از uuid برای یکتا سازی نام فایل‌ها
+        const name = Date.now()
         const filename = `${name}${ext}`;
         callback(null, filename);
     }
