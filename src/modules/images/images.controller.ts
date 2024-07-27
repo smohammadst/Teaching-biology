@@ -5,13 +5,13 @@ import { MulterFile } from "../fileupload";
 
 class ImageController {
     //& { file: Express.Multer.File }
-    async create(req: Request & { files: Express.Multer.File }, res: Response, next: NextFunction): Promise<Response> {
+    async create(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             let images: string[]
             const fileField: any = req.files
-            console.log("contoller");
+            // console.log("files : " + fileField);
             if (fileField.length > 0) images = fileField.map(file => file.destination.substr(8) + file.filename)
-            console.log(`controller: ${fileField}`);
+            // console.log(`controller: ${fileField}`);
             const result = await ImageServices.createImage(images)
             return res.status(201).json(result)
         } catch (error) {

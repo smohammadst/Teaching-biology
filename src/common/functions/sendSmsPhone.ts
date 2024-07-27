@@ -1,4 +1,4 @@
-const melipayamak = require('melipayamak');
+import melipayamak = require('melipayamak');
 
 const username: string = process.env.SMSUSERNAME
 const password: string = process.env.SMSPASSWORD

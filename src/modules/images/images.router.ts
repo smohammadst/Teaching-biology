@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Response, Router, Request } from "express";
 import { ImageController } from "./images.controller";
 import { upload } from "../fileupload";
 

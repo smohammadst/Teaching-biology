@@ -162,8 +162,8 @@ class AuthService {
         if (!user) throw NotFound(AuthMessageError.NotFound)
         const code = await this.genareteCodeAndUpdateUserOtp(method, phone)
         const text: string = `کد:${code}`
-        const statusSendSms = sendSMS(user.phone, text)
-        if (!statusSendSms) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+        // const statusSendSms = sendSMS(user.phone, text)
+        if (!true) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return {
             message: "کد یکبار مصرف ارسال شد",
             code

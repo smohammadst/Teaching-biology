@@ -7,6 +7,7 @@ import * as swaggerDocJs from 'swagger-jsdoc'
 import * as path from 'path';
 import router from './router.routes'
 import * as cors from "cors"
+import uploadFile from "express-fileupload"
 export class Server {
     private appServer = express()
     constructor(PORT: number) {
@@ -15,6 +16,9 @@ export class Server {
         this.configApplications(PORT)
         this.routerHandelling()
         this.errorHandelling()
+    }
+    uploadFiles() {
+        this.appServer.use(uploadFile({ abortOnLimit: true, limits: { fileSize: 150000 } }))
     }
     configApplications(PORT: number): void {
         this.appServer.use(morgan("dev"));
