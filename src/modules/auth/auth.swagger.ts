@@ -28,6 +28,13 @@
  * @swagger
  *  components:
  *      schemas:
+ *          refreshToken:
+ *              type:   object
+ *              required:
+ *                  -   token
+ *              properties:
+ *                  token:
+ *                      type:   string
  *          Auth:
  *              type: object
  *              required:
@@ -55,6 +62,26 @@
  *                      description:     نوع درخواست هست که معلوم میکنه برای ثبت نام هست یا ورود یا درخواست دوباره ی کد اگر لاگین بود تایپ از نوع لاگین پسوورد باشه اگه رجیستر بود شماره کاربر اسم و فامیلی کاربر و تایپ از نوع لاگین هست اگه کاربر کد ممجدد خواست تایپ رو از نوع ریست کد موبایل میزاری
  *                  method:
  *                      $ref: '#/components/schemas/AuthEnumMethod'
+ */
+
+/**
+ * @swagger
+ *  /refreshToken:
+ *      post:
+ *          tags: [Auth]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/refreshToken'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/refreshToken'
+ *          responses:
+ *              201:
+ *                  description: success
  */
 
 /**

@@ -7,8 +7,6 @@ import { copyObject, relatedFunc, validateObjectID } from "../../common/function
 import { CategoryModel, ICategory } from "../category/model/category.model";
 import { IUser, UserModel } from "../user/model/user.model";
 import { CourseServices } from "../course/course.service";
-import e from "express";
-
 
 
 class BlogService {
@@ -19,17 +17,17 @@ class BlogService {
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
         let result = await this.blogModel.create({
-                title: blog.title,
-                description: blog.description,
-                shortText: blog.shortText,
-                status: blog.status,
-                images: blog.images,
-                category: blog.category,
-                shortLink: blog.shortLink,
-                sortByNumber: blog.sortByNumber,
-                comment: blog.comment,
-                createdAt: new Date(),
-                latest: blog.latest
+            title: blog.title,
+            description: blog.description,
+            shortText: blog.shortText,
+            status: blog.status,
+            images: blog.images,
+            category: blog.category,
+            shortLink: blog.shortLink,
+            sortByNumber: blog.sortByNumber,
+            comment: blog.comment,
+            createdAt: new Date(),
+            latest: blog.latest
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
@@ -74,46 +72,41 @@ class BlogService {
             relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
-
         const result = await this.blogModel.find({}).sort({ createdAt: -1 });
         console.log(result);
         let latest = [];
-        for (let i = 0; i < result.length; i++){
-            if(i == 5) break
+        for (let i = 0; i < result.length; i++) {
+            if (i == 5) break
             latest.push(result[i])
-            
-            
         }
         findblog['latest'] = latest
-        const view = await this.blogModel.updateOne({_id: id},{$inc: {'view': 1 }} )
+        const view = await this.blogModel.updateOne({ _id: id }, { $inc: { 'view': 1 } })
 
         return findblog
     }
-    async findAllBlog(categoryId:string, limit: number, filter: string): Promise<Object>{
+    async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
         let result: Array<object>;
-        if(categoryId && filter == 'latest'){
-            let category = await this.categoryModel.findOne({_id: categoryId})
-            const blogs = await this.blogModel.find({category: category._id}).limit(limit).sort({createdAt: -1})
-            result =  blogs
-        }else if(categoryId && filter == 'oldest'){
-            let category = await this.categoryModel.findOne({_id: categoryId})
-            const blogs = await this.blogModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
-            result =  blogs
-        }else if(!categoryId && limit){
+        if (categoryId && filter == 'latest') {
+            let category = await this.categoryModel.findOne({ _id: categoryId })
+            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: -1 })
+            result = blogs
+        } else if (categoryId && filter == 'oldest') {
+            let category = await this.categoryModel.findOne({ _id: categoryId })
+            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: +1 })
+            result = blogs
+        } else if (!categoryId && limit) {
             const blogs = await this.blogModel.find({}).limit(limit)
-            result =  blogs
-        }else if(categoryId){
-            let category = await this.categoryModel.findOne({_id: categoryId})
-            const blogs = await this.blogModel.find({category: category._id}).limit(limit)
-            result =  blogs
-        }else {
+            result = blogs
+        } else if (categoryId) {
+            let category = await this.categoryModel.findOne({ _id: categoryId })
+            const blogs = await this.blogModel.find({ category: category._id }).limit(limit)
+            result = blogs
+        } else {
             const AllBlog = await this.blogModel.find({})
-            if(!AllBlog) throw NotFound(AuthMessageError.NotFound)
-            result =  AllBlog
+            if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
+            result = AllBlog
         }
-        
         return result
-        
     }
 
     async likeCourse(courseID: string, userID: string) {
@@ -135,7 +128,7 @@ class BlogService {
             }
         }
         if (optionCourse) {
-            optionCourse = { $push: { like: userID } }
+            optionCourse = { $push: { like: userID }, $inc: { numberLike: 1 } }
             optionUser = { $push: { listLikeCourse: userID } }
             message = "مقاله مد نظر شما به علایق شما اضافه گردید"
         }
@@ -152,5 +145,3 @@ const BlogServices = new BlogService()
 export {
     BlogServices
 }
-
-

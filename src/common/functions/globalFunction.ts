@@ -31,17 +31,10 @@ function invoiceNumberGenerator(): string {
     );
 }
 
-function VerifyRefreshToken(token) {
-    return new Promise((resolve, reject) => {
-        Jwt.verify(token, process.env.REFRESH_TOKEN_SECRET_KEY, async (err, payload) => {
-            if (err)
-                reject(Unauthorized("وارد حساب کاربری خود شوید"));
-            const { userId } = payload || {};
-            const user = await UserModel.findOne({ _id: userId }, { password: 0, otp: 0 });
-            if (!user) reject(Unauthorized("حساب کاربری یافت نشد"));
-            resolve(userId);
-        });
-    });
+async function VerifyRefreshToken(token : string) {
+    const verifyUser: TTokenPayload = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY) as TTokenPayload;
+    const user: IUser = await this.userRepository.findOne({ _id: verifyUser.userId }, { _id: 1 })
+    return user._id
 }
 
 async function verifyToken(req: Request & { user: string }, res: Response, next: NextFunction) {

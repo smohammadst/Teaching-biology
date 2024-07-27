@@ -5,14 +5,13 @@ import { IUser, UserModel } from '../user/model/user.model';
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { sign } from "jsonwebtoken";
-import bcrypt from "bcrypt";
-
+import *  as bcrypt from "bcrypt";
 import { sendEmail } from './../../common/functions/sendEmail';
 import { sendSMS } from './../../common/functions/sendSmsPhone';
 import { TTokenPayload } from './../../common/types/token.type';
 import { isEmail, isMobilePhone, isMongoId } from 'class-validator';
 import { Model } from 'mongoose';
-import { randomNumber } from './../../common/functions/globalFunction';
+import { randomNumber, VerifyRefreshToken } from './../../common/functions/globalFunction';
 
 class AuthService {
     constructor(
@@ -62,7 +61,7 @@ class AuthService {
         if (!user.isvalidateMobile || !user.isValidateEmail)
             throw Unauthorized(AuthMessageError.UnauthorizedEmailAndPhone)
         let token
-        token = this.createToken({ userId: user._id })
+        token = this.createToken({ userId: user._id }, "1h")
         return token
     }
 
@@ -85,25 +84,21 @@ class AuthService {
         if ("" + user.otp.code != code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
         const date = new Date
         if (+date > user.otp.expiresIn) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
-        const token = await this.createToken({ userId: "" + user.id })
-        const refreshToken = await this.createToken({ userId: "" + user.id })
+        const token = await this.createToken({ userId: "" + user.id }, "1h")
+        const refreshToken = await this.createToken({ userId: "" + user.id }, "1y")
         return { token, refreshToken }
     }
 
-    async refreshToken(userID: string) {
-        const user = await this.userRepository.findOne({ _id: userID })
-        if (!user) throw NotFound("کاربری یافت نشد")
-        const token = await this.createToken({ userId: "" + user.id })
-        const refreshToken = await this.createToken({ userId: "" + user.id })
+    async refreshToken(token: string) {
+        const verifyRefreshToken: string = await VerifyRefreshToken(token)
+        const generateToken = await this.createToken({ userId: verifyRefreshToken }, "1h")
+        const generateRefreshToken = await this.createToken({ userId: verifyRefreshToken }, "1y")
+        return { token: generateToken, refreshToken: generateRefreshToken }
     }
 
-    async accessToken(token: string){
-        
-    }
-
-    async createToken(payload: TTokenPayload) {
+    async createToken(payload: TTokenPayload, expiresIn: string) {
         const token = sign(payload,
-            process.env.SECRET_KEY_TOKEN, { expiresIn: "1h" })
+            process.env.SECRET_KEY_TOKEN, { expiresIn })
         return token;
     }
 
