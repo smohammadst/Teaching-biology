@@ -86,23 +86,37 @@ class BlogService {
     }
     async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
         let result: Array<object>;
-        if (categoryId && filter == 'latest') {
+        
+        if (categoryId !== undefined && filter == 'latest' && limit) {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: -1 })
             result = blogs
+            
         } else if (categoryId && filter == 'oldest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: +1 })
             result = blogs
-        } else if (!categoryId && limit) {
-            const blogs = await this.blogModel.find({}).limit(limit)
+        } else if(categoryId && filter == 'popular'){
+            let category = await this.categoryModel.findOne({ _id: categoryId })
+            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ numberLike: +1 })
             result = blogs
-        } else if (categoryId) {
+        }else if (categoryId  && filter == undefined) {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit)
             result = blogs
-        } else {
-            const AllBlog = await this.blogModel.find({})
+        } else if (categoryId == undefined && filter  && limit){
+            let blogs;
+            if(filter == 'latest'){
+                blogs = await this.blogModel.find({}).limit(limit).sort({ createdAt: -1 })
+            }else if(filter == 'oldest'){
+                blogs = await this.blogModel.find({}).limit(limit).sort({ createdAt: +1 })
+            }else {
+                blogs = await this.blogModel.find({ }).limit(limit).sort({ numberLike: +1 })
+            }
+             
+            result = blogs
+        }else {
+            const AllBlog = await this.blogModel.find({}).limit(limit)
             if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
             result = AllBlog
         }
