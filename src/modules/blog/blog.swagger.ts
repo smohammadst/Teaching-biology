@@ -71,6 +71,9 @@
  *                  shortLink:
  *                      type: string
  *                      description: shortttttttt
+ *                  author:
+ *                      type: object
+ *                      description: name author
  *                  images:
  *                      type: array
  *                      items:

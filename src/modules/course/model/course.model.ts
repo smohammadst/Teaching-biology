@@ -65,7 +65,11 @@ interface ICourse extends mongoose.Document {
     typeCourse: string,
     sale: number,
     view: number,
-    like: ObjectId[]
+    like: ObjectId[],
+    rating: {
+        rate: number,
+        count: number
+    }
 }
 
 const courseSchema = new mongoose.Schema<ICourse>({
@@ -91,7 +95,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
     typeCourse: { type: String, default: '' },
     sale: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
-    like: { type: [mongoose.Types.ObjectId], ref: "user" }
+    like: { type: [mongoose.Types.ObjectId], ref: "user" },
+    rating: { type: Object, default: {} },
 
 })
 courseSchema.index({ title: "text", shortText: "text", category: "text" })

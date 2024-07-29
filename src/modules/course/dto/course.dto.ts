@@ -45,7 +45,7 @@ export class CourseDto {
 
     //@IsEmpty()
     @IsObject()
-    neededTime: object;
+    neededTime: {hour: number, min: number};
 
     //@IsEmpty()
     @IsNumber()
@@ -69,4 +69,7 @@ export class CourseDto {
 
     @IsString()
     typeCourse: string
+
+    @IsObject()
+    rating : {rate: number, count: number}
 }

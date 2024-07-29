@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmpty, IsMongoId, IsNumber, IsString, isArray } from "class-validator";
+import { IsArray, IsBoolean, IsEmpty, IsMongoId, IsNumber, IsObject, IsString, isArray } from "class-validator";
 import { ObjectId } from "mongoose";
 
 export class BlogDto {
@@ -20,8 +20,8 @@ export class BlogDto {
     shortLink: string;
     @IsNumber()
     sortByNumber: number
-    @IsArray()
-    latest:Array<string>
+    @IsObject()
+    author: {name: string}
 }
 
 export class UpdateBlogDto extends BlogDto{

@@ -15,6 +15,7 @@ interface IBlog extends mongoose.Document {
     sortByNumber: number,
     view: number,
     like: ObjectId[],
+    author: {name : string}
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
@@ -32,6 +33,7 @@ const blogSchema = new mongoose.Schema<IBlog>({
     latest: { type: [mongoose.Types.ObjectId] },
     view: { type: Number, default: 0 },
     like: { type: [mongoose.Types.ObjectId], ref: "user" },
+    author: {type: Object, default: {}},
 
 })
 

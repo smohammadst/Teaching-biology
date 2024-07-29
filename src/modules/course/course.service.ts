@@ -45,6 +45,7 @@ class CourseService {
             prerequisites: course.prerequisites,
             owner: course.owner,
             typeCourse: course.typeCourse,
+            rating: course.rating
         })
         return { status: 201, message: 'دوره با موفقیت اضافه شد' }
     }
@@ -84,7 +85,8 @@ class CourseService {
                 prerequisitesText: course.prerequisitesText,
                 prerequisites: course.prerequisites,
                 owner: course.owner,
-                typeCourse: course.typeCourse
+                typeCourse: course.typeCourse,
+                rating: course.rating
 
             }
         })
@@ -163,32 +165,46 @@ class CourseService {
     //api all course => sort / limit / category
     async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
         let result: Array<object>;
-        if(categoryId && sort == 'latest'){
+        if(categoryId !== 'undefined' && sort == 'latest'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: -1})
             result =  courses
-        }else if(categoryId && sort == 'oldest'){
+        }else if(categoryId !== 'undefined' && sort == 'oldest'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
             result =  courses
-        }else if(categoryId && sort == 'popular'){
+        }else if(categoryId !== 'undefined' && sort == 'popular'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({sale: -1})
             result =  courses
-        }else if(categoryId && sort == 'high'){
+        }else if(categoryId !== 'undefined' && sort == 'high'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: -1})
             result =  courses
-        }else if(categoryId && sort == 'low'){
+        }else if(categoryId !== 'undefined' && sort == 'low'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: +1})
             result =  courses
-        }else if(categoryId){
+        }else if(categoryId !== 'undefined'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit)
             result =  courses
-        }else {
-            const AllCourse = await this.courseModel.find({})
+        }else if(categoryId == "undefined" && sort !==  "undefined"){
+            let courses;
+            if(sort == 'latest'){
+                courses = await this.courseModel.find({}).limit(limit).sort({ createdAt: -1 })
+            }else if(sort == 'oldest'){
+                courses = await this.courseModel.find({}).limit(limit).sort({ createdAt: +1 })
+            }else if(sort == 'popular'){
+                 courses = await this.courseModel.find({}).limit(limit).sort({sale: -1})
+            }else if(sort == 'low'){
+                courses = await this.courseModel.find({}).limit(limit).sort({price: +1})
+            }else  if(sort == "high"){
+                courses = await this.courseModel.find({ }).limit(limit).sort({ price: -1 })
+            }
+            result =  courses
+        }else if(categoryId == 'undefined'  && sort == "undefined"){
+            const AllCourse = await this.courseModel.find({}).limit(limit)
             if (!AllCourse) throw NotFound(AuthMessageError.NotFound)
             result = AllCourse
         }

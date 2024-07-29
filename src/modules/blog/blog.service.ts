@@ -27,7 +27,8 @@ class BlogService {
             sortByNumber: blog.sortByNumber,
             comment: blog.comment,
             createdAt: new Date(),
-            latest: blog.latest
+            author: blog.author
+
         })
         return { status: 201, message: 'با موفقیت اضافه شد' }
     }
@@ -45,7 +46,7 @@ class BlogService {
                 sortByNumber: blog.sortByNumber,
                 category: blog.category,
                 createdAt: new Date(),
-                latest: blog.latest
+                author: blog.author
             }
         })
         return { stauts: 200, message: 'با موفقیت اپدیت شد' }
