@@ -61,7 +61,7 @@ export class CourseDto {
 
     //@IsEmpty()
     @IsArray()
-    prerequisites: Array<string>;
+    prerequisites: string[];
 
     //@IsEmpty()
     @IsObject()

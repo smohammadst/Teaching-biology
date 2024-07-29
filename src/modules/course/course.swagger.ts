@@ -43,6 +43,11 @@
  *                  prerequisitesText: 
  *                      type: string
  *                      description: the prerequisitesText of course
+ *                  prerequisites: 
+ *                      type: array
+ *                      items: 
+ *                          type: string
+ *                      description: the prerequisitesText of course
  *                  typeCourse: 
  *                      type: string
  *                      description: پیشرفته|متوسط|مقدماتی

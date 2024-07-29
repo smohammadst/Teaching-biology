@@ -26,6 +26,12 @@ class CourseService {
             course.priceAfterDiscount = course.price;
             course.priceAfterDiscount = Math.floor(course.priceAfterDiscount / 10000) * 10000
         }
+        const prerequisitesArray = [];
+        for(let i=0 ; i< course.prerequisites.length ; i++){
+            const coursePre = await this.courseModel.find({_id: course.prerequisites[i]})
+            prerequisitesArray.push(coursePre)
+        }
+        
         let result = await this.courseModel.create({
             title: course.title,
             Description: course.Description,
@@ -42,7 +48,7 @@ class CourseService {
             sortByNumber: course.sortByNumber,
             language: course.language,
             prerequisitesText: course.prerequisitesText,
-            prerequisites: course.prerequisites,
+            prerequisites: prerequisitesArray,
             owner: course.owner,
             typeCourse: course.typeCourse,
             rating: course.rating
@@ -65,6 +71,11 @@ class CourseService {
             course.priceAfterDiscount = course.price;
             course.priceAfterDiscount = Math.floor(course.priceAfterDiscount / 10000) * 10000
         }
+        const prerequisitesArray = [];
+        for(let i=0 ; i< course.prerequisites.length ; i++){
+            const coursePre = await this.courseModel.find({_id: course.prerequisites[i]})
+            prerequisitesArray.push(coursePre)
+        }
 
         const result = await this.courseModel.updateOne({ _id: id }, {
             $set: {
@@ -83,7 +94,7 @@ class CourseService {
                 sortByNumber: course.sortByNumber,
                 language: course.language,
                 prerequisitesText: course.prerequisitesText,
-                prerequisites: course.prerequisites,
+                prerequisites: prerequisitesArray,
                 owner: course.owner,
                 typeCourse: course.typeCourse,
                 rating: course.rating,
