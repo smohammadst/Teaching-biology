@@ -17,7 +17,7 @@ class CourseService {
 
 
         //let image = course.images.map(e => e.slice(33, e.length))
-
+        let category = await this.categortyModel.findOne({_id: course.category})
         if (course.discount > 0 && course.discount != 0) {
             const add = (course.discount * course.price) / 100;
             course.priceAfterDiscount = course.price - add;
@@ -33,7 +33,7 @@ class CourseService {
             price: course.price,
             discount: course.discount,
             priceAfterDiscount: course.priceAfterDiscount,
-            category: course.category,
+            category: category.title,
             images: course.images,
             comments: course.comments,
             faq: course.faq,

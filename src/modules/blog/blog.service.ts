@@ -16,13 +16,14 @@ class BlogService {
         private userRepository = UserModel<IUser>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
+        let category = await this.categoryModel.findOne({_id: blog.category})
         let result = await this.blogModel.create({
             title: blog.title,
             description: blog.description,
             shortText: blog.shortText,
             status: blog.status,
             images: blog.images,
-            category: blog.category,
+            category: category.title,
             shortLink: blog.shortLink,
             sortByNumber: blog.sortByNumber,
             comment: blog.comment,
