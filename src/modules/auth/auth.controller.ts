@@ -1,27 +1,51 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../user/user.service";
 import { AuthService } from "./auth.service";
-import { AuthDto, ChangePasswordDto } from "./dto/aurh.dto";
+import { RegisterDto, LoginDto, CheckOtp, ResetCodeDto } from "./dto/aurh.dto";
 
 export class AuthController {
-    async userExistence(req: Request, res: Response, next: NextFunction) {
+
+    async register(req: Request, res: Response, next: NextFunction) {
         try {
-            const authDto: AuthDto = req.body;
-            const result = await AuthService.userExistence(authDto);
+            const body: RegisterDto = req.body
+            const result: object = await AuthService.register(body)
             return res.status(201).json(result)
         } catch (error) {
             next(error)
         }
     }
-    async changePassword(req: Request, res: Response, next: NextFunction) {
+
+    async loginOtp(req: Request, res: Response, next: NextFunction) {
         try {
-            const changePasswordDto: ChangePasswordDto = req.body;
-            const result = await AuthService.changePassword(changePasswordDto)
+            const body: LoginDto = req.body
+            const result: object = await AuthService.loginOtp(body)
             return res.status(200).json(result)
         } catch (error) {
             next(error)
         }
     }
+
+    async checkOtp(req: Request, res: Response, next: NextFunction) {
+        try {
+            const body: CheckOtp = req.body
+            const result: object = await AuthService.checkOtp(body)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async resetCode(req: Request, res: Response, next: NextFunction) {
+        try {
+            const body: ResetCodeDto = req.body
+            const result: object = await AuthService.resetCode(body)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
     async refreshToken(req: Request & { user: string }, res: Response, next: NextFunction) {
         try {
             const userID = req.user

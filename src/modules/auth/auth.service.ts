@@ -1,92 +1,70 @@
-import { AuthEnumMethod } from './enum/method.enum';
-import { AuthDto, ChangePasswordDto } from "./dto/aurh.dto";
-import { AuthEnumType } from "./enum/type.enum";
+import { RegisterDto, LoginDto, CheckOtp, ResetCodeDto } from "./dto/aurh.dto";
 import { IUser, UserModel } from '../user/model/user.model';
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { sign } from "jsonwebtoken";
-import *  as bcrypt from "bcrypt";
-import { sendEmail } from './../../common/functions/sendEmail';
-import { sendSMS } from './../../common/functions/sendSmsPhone';
 import { TTokenPayload } from './../../common/types/token.type';
 import { isEmail, isMobilePhone, isMongoId } from 'class-validator';
-import { Model } from 'mongoose';
 import { randomNumber, VerifyRefreshToken } from './../../common/functions/globalFunction';
 
 class AuthService {
     constructor(
-        private userRepository = UserModel<IUser>
+        private readonly userRepository = UserModel<IUser>
     ) { }
-
-    async register(method: AuthEnumMethod, first_name: string, last_name: string, username: string, password?: string): Promise<object> {
-        const validate: string = this.usernameValidation(method, username)
-        let user: IUser = await this.userExist(method, validate);
-        if (user) throw Conflict(AuthMessageError.Confirm)
-        if (!first_name && !last_name) throw BadRequest("نام و نام خانوادگی خالی می باشد")
-        const code: string = randomNumber()
-        console.log("dfsesd");
-        if (password) {
-            user = await this.userRepository.create({
-                [method]: username,
-                password: this.hashingPassword(password),
-                otp: {
-                    code,
-                    expirseIn: 60 * 60 * 120
-                },
-                last_name,
-                first_name
-            })
-        } else {
-            user = await this.userRepository.create({
-                [method]: username,
-                otp: {
-                    code,
-                    expirseIn: 60 * 60 * 120
-                },
-                last_name,
-                first_name
-            })
-        }
-
-        // await sendSMS(user.phone, "کد یکبار مصرف شما : ${code} میباشد")
-        return { message: "شما ثبت نام گردیدید", code }
+    async register(registerDto: RegisterDto) {
+        const { email, phone, first_name, last_name } = registerDto;
+        const existPhone = await this.userExist(phone)
+        const existEmail = await this.userExist(null, email)
+        if (existEmail || existPhone) throw Conflict(AuthMessageError.Confirm)
+        const code = randomNumber()
+        const createUser: IUser = await this.userRepository.create({
+            email,
+            phone,
+            first_name,
+            last_name,
+            otp: {
+                code,
+                expiresIn: 120000
+            }
+        })
+        if (!createUser) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+        return { status: 201, message: "شما با موفقیت ثبت نام شدید" }
     }
 
-    async loginPassword(method: AuthEnumMethod, username: string, password: string): Promise<string> {
-        const validate: string = this.usernameValidation(method, username)
-        let user: IUser = await this.userExist(method, validate)
-        if (!user) throw NotFound(AuthMessageError.NotFound)
-        const comparePassword = this.comparePassword(password, user.password)
-        if (!comparePassword) throw Unauthorized(AuthMessageError.UnauthorizedPassword)
-        if (!user.isvalidateMobile || !user.isValidateEmail)
-            throw Unauthorized(AuthMessageError.UnauthorizedEmailAndPhone)
-        let token
-        token = this.createToken({ userId: user._id }, "1h")
-        return token
+    async loginOtp(loginDto: LoginDto) {
+        const { phone } = loginDto
+        const existUser = await this.userExist(phone)
+        if (!existUser) throw NotFound(AuthMessageError.NotFound)
+        return await this.generateCodeAndUpdateUserOtp(existUser)
     }
 
-    hashingPassword(password: string): string {
-        const salt = 6;
-        const hashPassword = bcrypt.hashSync(password, salt);
-        // const hashPassword = ""
-
-        return hashPassword;
-    }
-
-    comparePassword(password: string, hashPassword: string): boolean {
-        return bcrypt.compareSync(password, hashPassword);
-        //return true
-    }
-
-    async checkOtp(method: AuthEnumMethod, code: string, username: string): Promise<object> {
-        const validate: string = this.usernameValidation(method, username)
-        const user = await this.userExist(method, validate);
-        if ("" + user.otp.code != code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
-        const date = new Date
-        if (+date > user.otp.expiresIn) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
-        const token = await this.createToken({ userId: "" + user.id }, "1h")
-        const refreshToken = await this.createToken({ userId: "" + user.id }, "1y")
+    async checkOtp(checkDto: CheckOtp) {
+        const { phone, code } = checkDto
+        const existUser = await this.userRepository.findOne({ phone })
+        if (!existUser) throw NotFound(AuthMessageError.NotFound)
+        if (code !== existUser.otp.code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
+        const date = Date.now()
+        if (existUser.otp.expiresIn < date) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
+        const token = await this.createToken({ userId: existUser._id }, "1h")
+        const refreshToken = await this.createToken({ userId: existUser._id }, "1y")
         return { token, refreshToken }
+    }
+
+    async resetCode(restCodeDto: ResetCodeDto) {
+        const { phone } = restCodeDto;
+        const userExist = await this.userExist(phone)
+        if (!userExist) throw NotFound(AuthMessageError.NotFound)
+        return await this.generateCodeAndUpdateUserOtp(userExist)
+    }
+
+    async sendPhoneCode(code: string) {
+        const text: string = `کد:${code}`
+        // const statusSendSms = sendSMS(user.phone, text)
+        if (!true) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+        return {
+            message: "کد یکبار مصرف ارسال شد",
+            code
+        }
     }
 
     async refreshToken(token: string) {
@@ -102,106 +80,46 @@ class AuthService {
         return token;
     }
 
-    userExistence(authDto: AuthDto) {
-        const { username, method, type, password, code, first_name, last_name } = authDto;
-        switch (type) {
-            case AuthEnumType.register:
-                return this.register(method, first_name, last_name, username, password)
-            case AuthEnumType.loginPassword:
-                return this.loginPassword(method, username, password)
-            case AuthEnumType.resetCodePhone:
-                return this.sendPhoneCode(method, username);
-            case AuthEnumType.restCodeEmail:
-                return this.sendEmailCode(method, username)
-            case AuthEnumType.loginOtp:
-                return this.checkOtp(method, code, username)
-            default:
-                break;
-        }
-    }
-    async userExist(methode: AuthEnumMethod, username: string): Promise<IUser> {
-        let user: IUser;
-        switch (methode) {
-            case AuthEnumMethod.email:
-                user = await this.userRepository.findOne({ email: username })
-                return user
-            case AuthEnumMethod.phone:
-                user = await this.userRepository.findOne({ phone: username })
-                return user
-            case AuthEnumMethod.id:
-                user = await this.userRepository.findOne({ _id: username })
-                return user
-        }
-    }
-
-    async changePassword(changePasswordDto: ChangePasswordDto): Promise<boolean> {
-        const { method, username, oldPassword, newPassword } = changePasswordDto
-        const user: IUser = await this.userExist(method, username);
-        if (!user) throw NotFound(AuthMessageError.NotFound);
-        if (!this.comparePassword(oldPassword, user.password)) throw Conflict(AuthMessageError.Confirm)
-        user.password = this.hashingPassword(newPassword);
-        await user.save();
-        return true;
-    }
-
-    async sendEmailCode(method: AuthEnumMethod, email: string): Promise<object> {
-        const user: IUser = await this.userExist(method, email);
-        if (!user) throw NotFound(AuthMessageError.NotFound)
-        const code = await this.genareteCodeAndUpdateUserOtp(method, email);
-        const from: string = process.env.ADMINEMAIL
-        const to: string = user.email
-        const subject: string = "رمز یک بار مصرف"
-        const text: string = `کد : ${code}`
-        const successMessage: object = sendEmail(from, to, subject, text)
-        return successMessage
-
-    }
-
-    async sendPhoneCode(method: AuthEnumMethod, phone: string) {
-        const user = await this.userExist(method, phone);
-        if (!user) throw NotFound(AuthMessageError.NotFound)
-        const code = await this.genareteCodeAndUpdateUserOtp(method, phone)
-        const text: string = `کد:${code}`
-        // const statusSendSms = sendSMS(user.phone, text)
-        if (!true) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
-        return {
-            message: "کد یکبار مصرف ارسال شد",
-            code
-        }
-    }
-
-    async genareteCodeAndUpdateUserOtp(method: AuthEnumMethod, username: string): Promise<string> {
-        const user: IUser = await this.userExist(method, username);
-        if (!user) throw NotFound(AuthMessageError.NotFound);
-        const code: string = randomNumber();
-        const date: number = new Date().getTime() + 120000
-        const otp: { code: string, expiresIn: number } = {
-            code,
-            expiresIn: date
-        }
-        user.otp = otp
+    async generateCodeAndUpdateUserOtp(user: IUser) {
+        const code = randomNumber()
+        const updateUser = await user.updateOne(
+            {
+                $set: { otp: { code, expirseIn: 12000 } }
+            }
+        )
+        if (updateUser.modifiedCount == 0) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         await user.save()
-        return code
+        return { status: 200, message: "کد با موفقیت برای شما ارسال شد" }
     }
 
-    usernameValidation(methode: AuthEnumMethod, username: string) {
-        switch (methode) {
-            case AuthEnumMethod.email:
-                if (isEmail(username)) return username
-                throw BadRequest(GlobalMessageError.BadRequest)
-            case AuthEnumMethod.phone:
-                if (isMobilePhone(username, "fa-IR")) return username
-                throw BadRequest(GlobalMessageError.BadRequest)
-            case AuthEnumMethod.id:
-                if (isMongoId(username)) return username
-                throw BadRequest(GlobalMessageError.BadRequest)
-            default:
-                Unauthorized("username is not correct")
+    async usernameValidation(phone?: string, email?: string) {
+        if (email) {
+            if (isEmail(email)) return email
+            throw BadRequest(GlobalMessageError.BadRequest)
+        } else if (phone) {
+            if (isMobilePhone(phone, "fa-IR")) return phone
+            throw BadRequest(GlobalMessageError.BadRequest)
+        } else {
+            throw BadRequest(GlobalMessageError.BadRequest)
         }
     }
 
+    async userExist(phone?: string, email?: string, id?: string): Promise<IUser> {
+        let user: IUser;
+        if (email) {
+            user = await this.userRepository.findOne({ email })
+            return user
+        } else if (phone) {
+            user = await this.userRepository.findOne({ phone })
+            return user
+        } else if (id) {
+            user = await this.userRepository.findOne({ _id: id })
+            return user
+        }
+    }
 }
 const AuthServices = new AuthService()
+
 export {
     AuthServices as AuthService
 }

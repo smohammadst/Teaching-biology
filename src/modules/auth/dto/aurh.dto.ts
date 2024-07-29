@@ -1,35 +1,29 @@
 import { IsEmail, IsEmpty, IsEnum, IsMobilePhone, IsMongoId, IsNumber, IsString } from "class-validator";
-import { AuthEnumType } from "../enum/type.enum";
-import { AuthEnumMethod } from "../enum/method.enum";
 
-export class AuthDto {
-    @IsString()
-    username: string
-    @IsEmpty()
-    @IsString()
-    password?: string
-    @IsEnum(AuthEnumType)
-    type: AuthEnumType
-    @IsEnum(AuthEnumMethod)
-    method: AuthEnumMethod
-    @IsEmpty()
-    @IsString()
-    code?: string
-    @IsEmpty()
+export class RegisterDto {
     @IsString()
     first_name: string
-    @IsEmpty()
     @IsString()
     last_name: string
+    @IsString()
+    email: string
+    @IsMobilePhone("fa-IR")
+    phone: string
 }
 
-export class ChangePasswordDto {
+export class LoginDto {
+    @IsMobilePhone("fa-IR")
+    phone: string
+}
+
+export class CheckOtp {
+    @IsMobilePhone("fa-IR")
+    phone: string
     @IsString()
-    newPassword: string
-    @IsString()
-    oldPassword: string
-    @IsString()
-    username: string
-    @IsEnum(AuthEnumMethod)
-    method: AuthEnumMethod
+    code?: string
+}
+
+export class ResetCodeDto {
+    @IsMobilePhone("fa-IR")
+    phone: string
 }

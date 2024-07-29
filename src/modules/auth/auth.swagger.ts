@@ -2,32 +2,23 @@
  * @swagger
  *  components:
  *      schemas:
- *          AuthEnumType:
- *              type: string
- *              enum:
- *                      -   register
- *                      -   loginOtp
- *                      -   loginPassword                
- *                      -   resetCodePhone
- *                      -   resetCodeEmail
- */ 
-
-/**
- * @swagger
- *  components:
- *      schemas:
- *          AuthEnumMethod:
- *              type: string
- *              enum:
- *                      -   email
- *                      -   phone
- *                      -   id
- */ 
-
-/**
- * @swagger
- *  components:
- *      schemas:
+ *          resetCode:
+ *              type:   object
+ *              required:
+ *                  -   phone
+ *              properties:
+ *                  phone:
+ *                      type:   string
+ *          checkOtp:
+ *              type:   object
+ *              required:
+ *                  -   phone
+ *                  -   code
+ *              properties:
+ *                  phone:
+ *                      type:   string
+ *                  code:
+ *                      type:   string
  *          refreshToken:
  *              type:   object
  *              required:
@@ -35,20 +26,25 @@
  *              properties:
  *                  token:
  *                      type:   string
- *          Auth:
+ *          login:
+ *              type:   object
+ *              required:
+ *                  -   phone
+ *              properties:
+ *                  phone:
+ *                      type:   string
+ *          register:
  *              type: object
  *              required:
- *                  -   username
- *                  -   type
- *                  -   method
+ *                  -   first_name
+ *                  -   last_name
+ *                  -   phone
+ *                  -   email
  *              properties:
- *                  username:
+ *                  email:
  *                      type: string
  *                      description: شماره همراه کاربر یا ایمیل کاربر
- *                  password:
- *                      type: string
- *                      description: اگر پسسورد خواست کاربر
- *                  code:
+ *                  phone:
  *                      type: number
  *                      description: کد برای اعتبار سنجی
  *                  first_name:
@@ -57,16 +53,11 @@
  *                  last_name: 
  *                      type: string
  *                      description: نام خانوادگی برای ثبت نام
- *                  type:
- *                      $ref: '#/components/schemas/AuthEnumType'
- *                      description:     نوع درخواست هست که معلوم میکنه برای ثبت نام هست یا ورود یا درخواست دوباره ی کد اگر لاگین بود تایپ از نوع لاگین پسوورد باشه اگه رجیستر بود شماره کاربر اسم و فامیلی کاربر و تایپ از نوع لاگین هست اگه کاربر کد ممجدد خواست تایپ رو از نوع ریست کد موبایل میزاری
- *                  method:
- *                      $ref: '#/components/schemas/AuthEnumMethod'
  */
 
 /**
  * @swagger
- *  /refreshToken:
+ *  /auth/refreshToken:
  *      post:
  *          tags: [Auth]
  *          summary: auth
@@ -86,7 +77,7 @@
 
 /**
  * @swagger
- *  /userExistence:
+ *  /auth/register:
  *      post:
  *          tags: [Auth]
  *          summary: auth
@@ -95,26 +86,71 @@
  *              content:
  *                  application/x-www-form-urlencoded:
  *                      schema:
- *                          $ref: '#/components/schemas/Auth'
+ *                          $ref: '#/components/schemas/register'
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/Auth'
+ *                          $ref: '#/components/schemas/register'
  *          responses:
  *              201:
  *                  description: success
  */
 
-// /**
-//  * @swagger
-//  *  /all:
-//  *      get:
-//  *          tags: [Auth]
-//  *          summary: remove a Chapter of courses
-//  *          responses:
-//  *              200:
-//  *                  description: success
-//  *                  content:
-//  *                      application/json:
-//  *                          schema: 
-//  *                              $ref: '#/definitions/publicDefinition'
-//  */
+/**
+ * @swagger
+ *  /auth/login:
+ *      post:
+ *          tags: [Auth]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/login'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/login'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /auth/resetCode:
+ *      post:
+ *          tags: [Auth]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/resetCode'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/resetCode'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /auth/checkOtp:
+ *      post:
+ *          tags: [Auth]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkOtp'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkOtp'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
