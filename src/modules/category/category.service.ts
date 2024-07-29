@@ -164,9 +164,10 @@ class categoryService {
         if(type){
             category = await this.categoryModel.find({type: type});
             if (!category) throw NotFound(AuthMessageError.NotFound);
+        }else if(type == ''){
+            category = await this.categoryModel.find({});
         }
-            category = await this.categoryModel.find();
-            if (!category) throw NotFound(AuthMessageError.NotFound);
+            
         
         
         return category;
