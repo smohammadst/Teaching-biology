@@ -167,27 +167,27 @@ class CourseService {
         let result;
         if(categoryId !== 'undefined' && sort == 'latest'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: -1})
+            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({createdAt: -1})
             result =  courses
         }else if(categoryId !== 'undefined' && sort == 'oldest'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: +1})
+            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({createdAt: +1})
             result =  courses
         }else if(categoryId !== 'undefined' && sort == 'popular'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({sale: -1})
+            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({sale: -1})
             result =  courses
         }else if(categoryId !== 'undefined' && sort == 'high'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: -1})
+            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({price: -1})
             result =  courses
         }else if(categoryId !== 'undefined' && sort == 'low'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({price: +1})
+            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({price: +1})
             result =  courses
         }else if(categoryId !== 'undefined'){
             let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category._id}).limit(limit)
+            const courses = await this.courseModel.find({category: category.title}).limit(limit)
             result =  courses
         }else if(categoryId == "undefined" && sort !==  "undefined"){
             let courses;

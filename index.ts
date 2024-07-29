@@ -1,9 +1,9 @@
-import {Server} from './src/server'
+// import {Server} from './src/server'
 
-import * as dot from 'dotenv'
-dot.config()
-const DB_URL = "mongodb://127.0.0.1:27017/shopess";
-new Server(3000);
+// import * as dot from 'dotenv'
+// dot.config()
+// const DB_URL = "mongodb://127.0.0.1:27017/shopess";
+// new Server(3000);
 
 
 /*********************** */

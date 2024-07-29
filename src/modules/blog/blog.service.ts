@@ -90,20 +90,20 @@ class BlogService {
         
         if (categoryId !== 'undefined' && filter == 'latest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
-            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: -1 })
+            const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: -1 })
             result = blogs
             
         } else if (categoryId !== 'undefined' && filter == 'oldest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
-            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: +1 })
+            const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: +1 })
             result = blogs
         } else if(categoryId !== 'undefined' && filter == 'popular'){
             let category = await this.categoryModel.findOne({ _id: categoryId })
-            const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ numberLike: +1 })
+            const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ numberLike: +1 })
             result = blogs
         }else if (categoryId !== 'undefined'  && filter == "undefined") {
             let category = await this.categoryModel.findOne({ _id: categoryId })
-            const blogs = await this.blogModel.find({ category: category._id }).limit(limit)
+            const blogs = await this.blogModel.find({ category: category.title }).limit(limit)
             result = blogs
         } else if (categoryId == "undefined" && filter ){
             let blogs;
