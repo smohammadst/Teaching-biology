@@ -222,7 +222,7 @@
  *                  name: filter
  *                  type: string
  *                  required: false
- *                  description: vorodi latest, oldest
+ *                  description: vorodi latest, oldest, popular
  *          responses:
  *              200:
  *                  description: success

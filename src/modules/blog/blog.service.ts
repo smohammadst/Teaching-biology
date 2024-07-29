@@ -87,24 +87,24 @@ class BlogService {
     async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
         let result: Array<object>;
         
-        if (categoryId !== undefined && filter == 'latest' && limit) {
+        if (categoryId !== 'undefined' && filter == 'latest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: -1 })
             result = blogs
             
-        } else if (categoryId && filter == 'oldest') {
+        } else if (categoryId !== 'undefined' && filter == 'oldest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ createdAt: +1 })
             result = blogs
-        } else if(categoryId && filter == 'popular'){
+        } else if(categoryId !== 'undefined' && filter == 'popular'){
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit).sort({ numberLike: +1 })
             result = blogs
-        }else if (categoryId  && filter == undefined) {
+        }else if (categoryId !== 'undefined'  && filter == "undefined") {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category._id }).limit(limit)
             result = blogs
-        } else if (categoryId == undefined && filter  && limit){
+        } else if (categoryId == "undefined" && filter ){
             let blogs;
             if(filter == 'latest'){
                 blogs = await this.blogModel.find({}).limit(limit).sort({ createdAt: -1 })
@@ -115,7 +115,7 @@ class BlogService {
             }
              
             result = blogs
-        }else {
+        }else if(categoryId !== 'undefined'  && filter == "undefined"){
             const AllBlog = await this.blogModel.find({}).limit(limit)
             if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
             result = AllBlog
