@@ -26,7 +26,6 @@ const blogSchema = new mongoose.Schema<IBlog>({
     comments: { type: [mongoose.Types.ObjectId], ref: "comment", default: [] },
     category: { type: [String], ref: 'category' },
     images: { type: [String] },
-    shortLink: { type: String },
     sortByNumber: { type: Number },
     createdAt: { type: String, default: '' },
     related: { type: [mongoose.Types.ObjectId], default: [] },

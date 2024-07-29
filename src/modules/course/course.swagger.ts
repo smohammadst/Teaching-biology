@@ -48,9 +48,12 @@
  *                      items: 
  *                          type: string
  *                      description: the prerequisitesText of course
- *                  typeCourse: 
+ *                  level: 
  *                      type: string
  *                      description: پیشرفته|متوسط|مقدماتی
+ *                  type: 
+ *                      type: string
+ *                      description: online | ....
  *                  owner:
  *                      type: object
  *                      description: time course

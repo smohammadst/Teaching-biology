@@ -50,8 +50,9 @@ class CourseService {
             prerequisitesText: course.prerequisitesText,
             prerequisites: prerequisitesArray,
             owner: course.owner,
-            typeCourse: course.typeCourse,
-            rating: course.rating
+            level: course.level,
+            rating: course.rating,
+            type: course.type
         })
         return { status: 201, message: 'دوره با موفقیت اضافه شد' }
     }
@@ -96,8 +97,9 @@ class CourseService {
                 prerequisitesText: course.prerequisitesText,
                 prerequisites: prerequisitesArray,
                 owner: course.owner,
-                typeCourse: course.typeCourse,
+                level: course.level,
                 rating: course.rating,
+                type: course.type
 
             }
         })

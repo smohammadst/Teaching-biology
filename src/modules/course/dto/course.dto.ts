@@ -68,7 +68,9 @@ export class CourseDto {
     owner: {name: string, image: string};
 
     @IsString()
-    typeCourse: string
+    level: string
+    @IsString()
+    type: string
 
     @IsObject()
     rating : {rate: number, count: number}

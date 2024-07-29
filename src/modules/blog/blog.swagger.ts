@@ -1,5 +1,4 @@
 
-
 /**
  * @swagger
  *  components:
@@ -29,9 +28,12 @@
  *                  status:
  *                      type: boolean
  *                      description: false or true
- *                  shortLink:
- *                      type: string
- *                      description: short link
+ *                  author:
+ *                      type: object
+ *                      description: name author
+ *                  sortByNumber:
+ *                      type: number
+ *                      description: add bedeh
  *                  images:
  *                      type: array
  *                      items:
@@ -68,30 +70,19 @@
  *                  status:
  *                      type: boolean
  *                      description: false or true
- *                  shortLink:
- *                      type: string
- *                      description: shortttttttt
  *                  author:
  *                      type: object
  *                      description: name author
+ *                  sortByNumber:
+ *                      type: number
+ *                      description: add bedeh
  *                  images:
  *                      type: array
  *                      items:
  *                          type: string
  */
 
-/**
- * @swagger
- *  components:
- *      schemas:
- *          Sort-Blog:
- *              type: object
- *              properties:
- *                  id:
- *                      type: string
- *                  sortByNumber:
- *                      type: number    
-*/
+
 
 /**
  * @swagger
