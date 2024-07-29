@@ -6,15 +6,17 @@ import authRouter from "./modules/auth/auth.router"
 import imagesRouter from "./modules/images/images.router";
 import blogRouter from "./modules/blog/blog.router";
 import zarinpalRouter from "./modules/zarinpal/zarinpal.router"
+import searchRouter from "./modules/search/search.router";
 const router = Router();
 
 export default (): Router => {
     userRouter(router)
     courseRouter(router)
-    categoryRouter(router),
-    authRouter(router),
+    categoryRouter(router)
+    authRouter(router)
     imagesRouter(router)
-    blogRouter(router),
+    blogRouter(router)
     zarinpalRouter(router)
+    searchRouter(router)
     return router;
 };
