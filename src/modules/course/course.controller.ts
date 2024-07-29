@@ -51,11 +51,8 @@ class CourseController {
         try {
             let {categoryId, limit, sort} = req.params
             //if('{categoryId}' == categoryId) categoryId = undefined
-            const resutl = await CourseServices.findAllCourse(categoryId, +limit, sort)
-            return res.status(200).json({
-                statusCode: 200,
-                resutl
-              });
+            const result = await CourseServices.findAllCourse(categoryId, +limit, sort)
+            return res.status(200).json(result);
         } catch (error) {
             next(error)
         }
@@ -64,11 +61,8 @@ class CourseController {
         try {
             const {id} = req.params
 
-            const resutl = await CourseServices.findOneCourse(id)
-            return res.status(200).json({
-                statusCode: 200,
-                resutl
-              });
+            const result = await CourseServices.findOneCourse(id)
+            return res.status(200).json(result);
         } catch (error) {
             next(error)
         }
