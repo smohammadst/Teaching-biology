@@ -86,7 +86,7 @@ class CourseService {
                 prerequisites: course.prerequisites,
                 owner: course.owner,
                 typeCourse: course.typeCourse,
-                rating: course.rating
+                rating: course.rating,
 
             }
         })
@@ -164,7 +164,7 @@ class CourseService {
     }
     //api all course => sort / limit / category
     async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
-        let result: Array<object>;
+        let result;
         if(categoryId !== 'undefined' && sort == 'latest'){
             let category = await this.categortyModel.findOne({_id: categoryId})
             const courses = await this.courseModel.find({category: category._id}).limit(limit).sort({createdAt: -1})

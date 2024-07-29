@@ -24,7 +24,7 @@
  *                      example: متن بلد تستی
  *                  category:
  *                      type: string
- *                      description: the title of parent category
+ *                      description: the title category
  *                  neededTime:
  *                      type: object
  *                      description: time course

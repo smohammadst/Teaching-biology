@@ -50,7 +50,9 @@ class CourseController {
     async findAllCourse(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             let {categoryId, limit, sort} = req.params
-            //if('{categoryId}' == categoryId) categoryId = undefined
+            // if('{categoryId}' == categoryId) categoryId = "undefined"
+            // if('{limit}' == limit) limit = "undefined"
+            // if('{sort}' == sort) sort = "undefined"
             const result = await CourseServices.findAllCourse(categoryId, +limit, sort)
             return res.status(200).json(result);
         } catch (error) {
