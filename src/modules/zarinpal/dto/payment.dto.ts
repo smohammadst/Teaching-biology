@@ -1,4 +1,4 @@
-import { IsArray } from "class-validator";
+import { IsArray, IsString } from "class-validator";
 
 export class PaymentDto {
     @IsArray()
@@ -6,4 +6,14 @@ export class PaymentDto {
         id: string,
         count: number
     }>
+}
+
+export class UpdateDto {
+    @IsArray()
+    listProduct: Array<string>
+}
+
+export class CheckDto {
+    @IsString()
+    code: string
 }

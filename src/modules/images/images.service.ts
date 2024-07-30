@@ -7,14 +7,14 @@ class ImageService {
         private imagesModel = ImagesModel<IImages>
     ) { }
 
-    async createImage(images): Promise<object>{
+    async createImage(images): Promise<object> {
         ///const urlImage = images.map(image => "https://teachingbiology.liara.run" + image)
         console.log(images);
         let result = await this.imagesModel.create({
             images,
             //urlImage
         })
-        return { status: 201, message: "عکس با موفقیت اضافه شد" }
+        return { message: "عکس با موفقیت اضافه شد" }
     }
 }
 

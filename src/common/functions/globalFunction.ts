@@ -3,7 +3,7 @@ import { IUser, UserModel } from "./../../modules/user/model/user.model";
 import { AuthMessageError, NotFoundError } from "../enums/message.enum";
 import { Request, Response, NextFunction } from "express";
 import moment from "moment-jalali"
-import Jwt from "jsonwebtoken";
+import * as Jwt from "jsonwebtoken";
 import { TTokenPayload } from "../types/token.type";
 import { isMongoId } from "class-validator";
 
@@ -31,18 +31,31 @@ function invoiceNumberGenerator(): string {
     );
 }
 
-async function VerifyRefreshToken(token : string) {
-    const verifyUser: TTokenPayload = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY) as TTokenPayload;
-    const user: IUser = await this.userRepository.findOne({ _id: verifyUser.userId }, { _id: 1 })
-    return user._id
+// async function VerifyRefreshToken(token : string) {
+//     const verifyUser: TTokenPayload = Jwt.verify(token, process.env.SECRET_KEY_TOKEN) as TTokenPayload;
+//     const user: IUser = await UserModel.findOne({ _id: verifyUser.userId }, { _id: 1 })
+//     return user._id
+// }
+
+function VerifyRefreshToken(token) {
+    return new Promise((resolve, reject) => {
+        Jwt.verify(token, process.env.SECRET_KEY_TOKEN, async (err, payload) => {
+            if (err)
+                reject(Unauthorized("وارد حساب کاربری خود شوید"));
+            const { userId } = payload || {};
+            const user = await UserModel.findOne({ _id: userId }, { password: 0, otp: 0 });
+            if (!user) reject(Unauthorized("حساب کاربری یافت نشد"));
+            resolve(userId);
+        });
+    });
 }
 
 async function verifyToken(req: Request & { user: string }, res: Response, next: NextFunction) {
     if (!req.headers['authorization']) return next(Unauthorized("دوباره تلاش کنید"));
     const authorization: string = req.headers["authorization"];
     const token: string = authorization.split(" ")[1];
-    const verifyUser: TTokenPayload = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY) as TTokenPayload;
-    const user: IUser = await this.userRepository.findOne({ _id: verifyUser.userId }, { _id: 1 })
+    const verifyUser: TTokenPayload = Jwt.verify(token, process.env.SECRET_KEY_TOKEN) as TTokenPayload;
+    const user: IUser = await UserModel.findOne({ _id: verifyUser.userId }, { _id: 1 })
     if (!user) return Unauthorized("کاربری یافت نشد");
     req.user = user._id
     return next();

@@ -6,7 +6,7 @@ import * as createHttpError from "http-errors";
 import { GlobalMessageError, NotFoundError } from "./../../common/enums/message.enum";
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
-import {statusEnum as statusComment} from './../../common/enums/status.enum'
+import { statusEnum as statusComment } from './../../common/enums/status.enum'
 
 export class CommentService {
     constructor(
@@ -70,14 +70,14 @@ export class CommentService {
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
         const createComment = await this.createSchemaComment(commentDto)
         await existRepository.find.updateOne({ $push: { commentsID: createComment._id } })
-        return { status: 201, message: "نظر شما با موفقیت ثبت گردید" }
+        return { message: "نظر شما با موفقیت ثبت گردید" }
     }
 
     async addAnswer(commentDto: CommentDto): Promise<object> {
         const { method } = commentDto
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
         const createAnswer = await this.createSchemaAnswer(commentDto)
-        return { status: 201, message: "نظر شما با موفقیت ثبت گردید" }
+        return { message: "نظر شما با موفقیت ثبت گردید" }
     }
 
     async removeComment(id: string): Promise<object> {
@@ -87,7 +87,7 @@ export class CommentService {
             if (findAnswer.deletedCount == 0)
                 throw createHttpError.NotFound(NotFoundError.NotFoundComment)
         }
-        return { status: 200, message: 'کامنت با موفقیت حذف گردید' }
+        return { message: 'کامنت با موفقیت حذف گردید' }
     }
     async avrageStar(): Promise<number> {
         const comments = await this.commentRepository.find({ status: statusComment.accept })
@@ -109,11 +109,11 @@ export class CommentService {
             else
                 findAnswer.status = statusComment.reject
             await findAnswer.save()
-            return { status: 200, message: "با موفقیت انجام شد" }
+            return { message: "با موفقیت انجام شد" }
         }
         findComment.status = statusComment.accept
         await findComment.save()
-        return { status: 200, message: "با موفقیت انجام شد" }
+        return { message: "با موفقیت انجام شد" }
     }
     async findComment(id: string): Promise<IComment> {
         const comment = await this.commentRepository.findOne({ _id: id });
@@ -121,8 +121,8 @@ export class CommentService {
         return comment
     }
 
-    async readCommentForAsnswer(id: string, method: TypeEnumComment): Promise<{ status: number, find: IBlog | ICourse }> {
-        let result: { status: number, find: IBlog | ICourse }
+    async readCommentForAsnswer(id: string, method: TypeEnumComment): Promise<{ find: IBlog | ICourse }> {
+        let result: { find: IBlog | ICourse }
         switch (method) {
             case TypeEnumComment.blog:
                 result = await this.populateCommentAndAnswer(this.blogRepository, id)
@@ -134,7 +134,7 @@ export class CommentService {
         return result
     }
 
-    async populateCommentAndAnswer(repository: mongoose.DocumentSetOptions, id: string): Promise<{ status: number, find: IBlog | ICourse }> {
+    async populateCommentAndAnswer(repository: mongoose.DocumentSetOptions, id: string): Promise<{ find: IBlog | ICourse }> {
         let find = await repository.findOne({ _id: id, status: true }).populate(
             {
                 path: "comments",
@@ -145,7 +145,7 @@ export class CommentService {
             select: ["title", "text", "fullName"]
         })
         if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
-        return { status: 200, find }
+        return { find }
     }
 
     async TyepRequest(commentDto: CommentDto): Promise<object> {
@@ -182,6 +182,6 @@ export class CommentService {
                 match: { status: statusComment.reject }
             }).exec()
         if (allComment) return { status: 404, message: "هیچ کامنتی یافت نشد" }
-        return { status: 200, allComment }
+        return { allComment }
     }
 }

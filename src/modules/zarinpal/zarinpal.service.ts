@@ -1,6 +1,6 @@
 import { IUser, UserModel } from "../user/model/user.model";
-import { PaymentDto } from "./dto/payment.dto"
-import { ICourse, CourseModel } from '../course/model/course.model';
+import { CheckDto, PaymentDto, UpdateDto } from "./dto/payment.dto"
+import { ICourse, CourseModel, CodeDiscountModel, ICodeDisCount } from '../course/model/course.model';
 import { Model, ObjectId } from 'mongoose';
 import { IPayment, ISale, PaymentModel, SaleModel } from './model/zarinpal.model';
 import axios from 'axios';
@@ -9,13 +9,15 @@ import { invoiceNumberGenerator } from './../../common/functions/globalFunction'
 import * as moment from "moment-jalali"
 import { Response } from "express";
 import { SpotPlayerService } from "../spotplayer/spotplayer.service";
+import { isMongoId } from "class-validator";
 
 class PaymentService {
     constructor(
-        private courseRepository = CourseModel<ICourse>,
-        private saleRepositoy = SaleModel<ISale>,
-        private paymentRepository = PaymentModel<IPayment>,
-        private userRepository = UserModel<IUser>
+        private readonly courseRepository = CourseModel<ICourse>,
+        private readonly saleRepositoy = SaleModel<ISale>,
+        private readonly paymentRepository = PaymentModel<IPayment>,
+        private readonly userRepository = UserModel<IUser>,
+        private readonly codeRepository = CodeDiscountModel<ICodeDisCount>
     ) { }
     async PaymentGateway(paymentDto: PaymentDto, userID: string): Promise<void> {
         const { bascket } = paymentDto;
@@ -128,9 +130,28 @@ class PaymentService {
                 image: findCourse.images,
                 priceAfterDiscount: findCourse.priceAfterDiscount,
                 count: course[i].count,
-                token:tokens
+                token: tokens
             })
         }
+        return { listCourse }
+    }
+
+    async updateBasket(updateDto: UpdateDto) {
+        const { listProduct } = updateDto
+        let listCourse = []
+        for (var i = 0; i < listProduct.length; i++) {
+            if (!isMongoId(listProduct[i])) delete listProduct[i]
+            const course = await this.courseRepository.findOne({ _id: listProduct[i] }, { price: 1, priceAfterDiscount: 1, title: 1, images: 1 })
+            if (course) listCourse.push(course)
+        }
+        return { listCourse }
+    }
+
+    async checkCodeDiscount(codeDto: CheckDto) {
+        const { code } = codeDto
+        const findCode = await this.codeRepository.findOne({ code })
+        if (!findCode) throw createHttpError.NotFound("کد وارد شده صحیح نمیباشد")
+        return { discount: findCode.discount }
     }
 }
 

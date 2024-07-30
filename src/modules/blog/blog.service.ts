@@ -16,7 +16,7 @@ class BlogService {
         private userRepository = UserModel<IUser>
     ) { }
     async createBlog(blog: BlogDto): Promise<object> {
-        let category = await this.categoryModel.findOne({_id: blog.category})
+        let category = await this.categoryModel.findOne({ _id: blog.category })
         let result = await this.blogModel.create({
             title: blog.title,
             description: blog.description,
@@ -31,7 +31,7 @@ class BlogService {
             author: blog.author
 
         })
-        return { status: 201, message: 'با موفقیت اضافه شد' }
+        return { message: 'با موفقیت اضافه شد' }
     }
     async updateBlog(id: string, blog: BlogDto): Promise<object> {
         await this.findBlog(id)
@@ -50,12 +50,12 @@ class BlogService {
                 author: blog.author
             }
         })
-        return { stauts: 200, message: 'با موفقیت اپدیت شد' }
+        return { message: 'با موفقیت اپدیت شد' }
     }
     async deleteBlog(id: string): Promise<object> {
         await this.findBlog(id)
         let result = await this.blogModel.deleteOne({ _id: id });
-        return { stauts: 200, message: 'با موفقیت حذف شد' }
+        return { message: 'با موفقیت حذف شد' }
     }
     async findBlog(id: string): Promise<IBlog> {
         const blog = await this.blogModel.findOne({ _id: id });
@@ -88,36 +88,36 @@ class BlogService {
     }
     async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
         let result: Array<object>;
-        
+
         if (categoryId !== 'undefined' && filter == 'latest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: -1 })
             result = blogs
-            
+
         } else if (categoryId !== 'undefined' && filter == 'oldest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: +1 })
             result = blogs
-        } else if(categoryId !== 'undefined' && filter == 'popular'){
+        } else if (categoryId !== 'undefined' && filter == 'popular') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ numberLike: +1 })
             result = blogs
-        }else if (categoryId !== 'undefined'  && filter == "undefined") {
+        } else if (categoryId !== 'undefined' && filter == "undefined") {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit)
             result = blogs
-        } else if (categoryId == "undefined" && filter ){
+        } else if (categoryId == "undefined" && filter) {
             let blogs;
-            if(filter == 'latest'){
+            if (filter == 'latest') {
                 blogs = await this.blogModel.find({}).limit(limit).sort({ createdAt: -1 })
-            }else if(filter == 'oldest'){
+            } else if (filter == 'oldest') {
                 blogs = await this.blogModel.find({}).limit(limit).sort({ createdAt: +1 })
-            }else {
-                blogs = await this.blogModel.find({ }).limit(limit).sort({ numberLike: +1 })
+            } else {
+                blogs = await this.blogModel.find({}).limit(limit).sort({ numberLike: +1 })
             }
-             
+
             result = blogs
-        }else if(categoryId !== 'undefined'  && filter == "undefined"){
+        } else if (categoryId !== 'undefined' && filter == "undefined") {
             const AllBlog = await this.blogModel.find({}).limit(limit)
             if (!AllBlog) throw NotFound(AuthMessageError.NotFound)
             result = AllBlog
@@ -152,7 +152,7 @@ class BlogService {
         const updateUser = await this.userRepository.updateOne({ _id: userID }, optionUser)
         if (updateCourse.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
         if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        return { message, status: 200 }
+        return { message }
     }
 }
 

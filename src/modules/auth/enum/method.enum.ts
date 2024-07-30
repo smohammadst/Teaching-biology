@@ -1,5 +1,4 @@
-export enum AuthEnumMethod {
-    email = "email",
-    phone = "phone",
-    id = "id"
+export enum CodeEnumMethod {
+    login = "login",
+    register = "register"
 }

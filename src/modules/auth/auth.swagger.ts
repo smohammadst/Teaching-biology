@@ -2,13 +2,29 @@
  * @swagger
  *  components:
  *      schemas:
+ *          Enum:
+ *              type: string
+ *              items:
+ *                  type: string
+ *                  enum:
+ *                      -   login
+ *                      -   register
+ */
+
+/**
+ * @swagger
+ *  components:
+ *      schemas:
  *          resetCode:
  *              type:   object
  *              required:
  *                  -   phone
+ *                  -   method
  *              properties:
  *                  phone:
  *                      type:   string
+ *                  method:
+ *                      $ref: '#/components/schemas/Enum'
  *          checkOtp:
  *              type:   object
  *              required:
@@ -33,26 +49,30 @@
  *              properties:
  *                  phone:
  *                      type:   string
- *          register:
+ *          registerStepTwo:
  *              type: object
  *              required:
  *                  -   first_name
  *                  -   last_name
- *                  -   phone
  *                  -   email
  *              properties:
  *                  email:
  *                      type: string
  *                      description: شماره همراه کاربر یا ایمیل کاربر
- *                  phone:
- *                      type: number
- *                      description: کد برای اعتبار سنجی
  *                  first_name:
  *                      type: string
  *                      description: نام برای ثبت نام
  *                  last_name: 
  *                      type: string
  *                      description: نام خانوادگی برای ثبت نام
+ *          registerStepOne:
+ *              type: object
+ *              required:
+ *                  -   phone
+ *              properties:
+ *                  phone:
+ *                      type: string
+ *                      description: شماره همراه کاربر یا ایمیل کاربر
  */
 
 /**
@@ -77,7 +97,7 @@
 
 /**
  * @swagger
- *  /auth/register:
+ *  /auth/registerStepOne:
  *      post:
  *          tags: [Auth]
  *          summary: auth
@@ -86,10 +106,30 @@
  *              content:
  *                  application/x-www-form-urlencoded:
  *                      schema:
- *                          $ref: '#/components/schemas/register'
+ *                          $ref: '#/components/schemas/registerStepOne'
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/register'
+ *                          $ref: '#/components/schemas/registerStepOne'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /auth/registerStepTwo:
+ *      post:
+ *          tags: [Auth]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/registerStepTwo'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/registerStepTwo'
  *          responses:
  *              201:
  *                  description: success

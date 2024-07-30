@@ -1,4 +1,5 @@
-import { IsEmail, IsEmpty, IsEnum, IsMobilePhone, IsMongoId, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsEmpty, isEnum, IsEnum, IsMobilePhone, IsMongoId, IsNumber, IsString } from "class-validator";
+import { CodeEnumMethod } from "../enum/method.enum";
 
 export class RegisterDto {
     @IsString()
@@ -16,6 +17,11 @@ export class LoginDto {
     phone: string
 }
 
+export class TokenDto {
+    @IsString()
+    token: string
+}
+
 export class CheckOtp {
     @IsMobilePhone("fa-IR")
     phone: string
@@ -26,4 +32,6 @@ export class CheckOtp {
 export class ResetCodeDto {
     @IsMobilePhone("fa-IR")
     phone: string
+    @IsEnum(CodeEnumMethod)
+    method: CodeEnumMethod
 }
