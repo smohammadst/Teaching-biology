@@ -1,8 +1,8 @@
-import { GlobalMessageError } from "src/common/enums/message.enum";
+import { GlobalMessageError } from "./../../common/enums/message.enum";
 import { TiketDto } from "./dto/tiket.dto";
 import { ITiket, TiketModel } from "./model/tiket.model";
 import { ServiceUnavailable, NotFound } from "http-errors"
-import { validateObjectID } from "src/common/functions/globalFunction";
+import { validateObjectID } from "./../../common/functions/globalFunction";
 class TiketService {
     constructor(
         private readonly tiketRepository = TiketModel<ITiket>

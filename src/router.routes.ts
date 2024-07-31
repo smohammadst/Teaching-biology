@@ -7,6 +7,7 @@ import imagesRouter from "./modules/images/images.router";
 import blogRouter from "./modules/blog/blog.router";
 import zarinpalRouter from "./modules/zarinpal/zarinpal.router"
 import searchRouter from "./modules/search/search.router";
+import ticketRouter from "./modules/tiket/tiket.router";
 const router = Router();
 
 export default (): Router => {
@@ -18,5 +19,6 @@ export default (): Router => {
     blogRouter(router)
     zarinpalRouter(router)
     searchRouter(router)
+    ticketRouter(router)
     return router;
 };

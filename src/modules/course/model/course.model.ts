@@ -85,8 +85,8 @@ interface ICourse extends mongoose.Document {
 
 const courseSchema = new mongoose.Schema<ICourse>({
     title: { type: String },
-    Description: { type: String },
-    shortText: { type: String },
+    Description: { type: String, default: ''},
+    shortText: { type: String, default: ''},
     price: { type: Number },
     discount: { type: Number },
     priceAfterDiscount: { type: Number, default: 0 },

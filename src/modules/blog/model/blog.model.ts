@@ -21,7 +21,7 @@ interface IBlog extends mongoose.Document {
 const blogSchema = new mongoose.Schema<IBlog>({
     title: { type: String },
     description: { type: String },
-    shortText: { type: String },
+    shortText: { type: String, default: ''},
     status: { type: Boolean },
     comments: { type: [mongoose.Types.ObjectId], ref: "comment", default: [] },
     category: { type: [String], ref: 'category' },

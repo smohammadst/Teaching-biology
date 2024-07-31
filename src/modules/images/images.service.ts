@@ -8,13 +8,13 @@ class ImageService {
     ) { }
 
     async createImage(images): Promise<object> {
-        ///const urlImage = images.map(image => "https://teachingbiology.liara.run" + image)
+        const urlImage = images.map(image => "https://teachingbiology.liara.run" + image)
         console.log(images);
         let result = await this.imagesModel.create({
             images,
-            //urlImage
+            urlImage
         })
-        return { message: "عکس با موفقیت اضافه شد" }
+        return { message: "عکس با موفقیت اضافه شد" , urlImage}
     }
 }
 

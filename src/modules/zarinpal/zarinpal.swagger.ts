@@ -9,6 +9,16 @@
  *                      type:   array
  *                      descrption: آرایه ایی از آیدی محصول و تعداد خرید آنّ
  */ 
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          checkCode:
+ *              type: object
+ *              properties:
+ *                  code:
+ *                      type: string
+ */ 
 
 /**
  * @swagger
@@ -25,6 +35,45 @@
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Bascket'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /basket/update:
+ *      post:
+ *          tags: [Bascket]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Bascket'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Bascket'
+ *          responses:
+ *              201:
+ *                  description: success
+ */
+/**
+ * @swagger
+ *  /checkCode:
+ *      post:
+ *          tags: [Bascket]
+ *          summary: auth
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkCode'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkCode'
  *          responses:
  *              201:
  *                  description: success
