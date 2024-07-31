@@ -4,7 +4,6 @@ import { SpotPlayerDto } from "./dto/spotplayer.dto";
 import { DataSpotPlayerModel, IDataSpotPlayer, ISpotPlayer, SpotPlayerModel } from "./model/spotpalyer.model";
 import createHttpError from "http-errors";
 import { AuthService } from "../auth/auth.service";
-import { AuthEnumMethod } from "../auth/enum/method.enum";
 import axios from "axios";
 import { Model } from "mongoose";
 
@@ -17,7 +16,7 @@ class SpotPlayerService {
 
     async requestApiSpotPlayer(spotDto: SpotPlayerDto): Promise<void> {
         const { courseID, userID } = spotDto;
-        const findUser = await AuthService.userExist(AuthEnumMethod.id, userID)
+        const findUser = await AuthService.userExist(null, null, userID)
         const listCourse = await this.validateCoursesID(courseID);
         if (listCourse) throw createHttpError.NotFound("سبد خرید خالی میباشد")
         let dataForRequest = JSON.stringify({
@@ -80,7 +79,7 @@ class SpotPlayerService {
         for (var i = 0; i < courses.length; i++) {
             if (!isMongoId(courses[i])) delete courses[i]
             const course = await this.courseRepository.findOne({ _id: courses[i] })
-            if (course) listCourse.push(course)
+            if (course) listCourse.push(course._id)
         }
         return listCourse
     }

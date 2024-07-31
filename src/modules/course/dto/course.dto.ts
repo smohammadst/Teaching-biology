@@ -5,16 +5,16 @@ import { ObjectId } from "mongoose";
 export class CourseDto {
     @IsString()
     //@IsEmpty()
-    title:string;
+    title: string;
 
     //@IsEmpty()
     @IsString()
     @MinLength(3)
-    Description:string;
+    Description: string;
 
     //@IsEmpty()
     @IsString()
-    shortText:string;
+    shortText: string;
 
     //@IsEmpty()
     @IsNumber()
@@ -45,7 +45,7 @@ export class CourseDto {
 
     //@IsEmpty()
     @IsObject()
-    neededTime: {hour: number, min: number};
+    neededTime: { hour: number, min: number };
 
     //@IsEmpty()
     @IsNumber()
@@ -65,7 +65,7 @@ export class CourseDto {
 
     //@IsEmpty()
     @IsObject()
-    owner: {name: string, image: string};
+    owner: { name: string, image: string };
 
     @IsString()
     level: string
@@ -73,5 +73,12 @@ export class CourseDto {
     type: string
 
     @IsObject()
-    rating : {rate: number, count: number}
+    rating: { rate: number, count: number }
+}
+
+export class CodeDto {
+    @IsString()
+    code: string
+    @IsString()
+    discount: string
 }

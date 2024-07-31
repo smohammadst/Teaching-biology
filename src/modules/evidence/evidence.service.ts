@@ -26,7 +26,7 @@ class EvidenceService {
         if (findEvidence) throw BadRequest("شما قبلا در خواست ارسال کرده ایید منتظر بمانید تا درخواست شما بررسی بشود")
         const addRequest = await this.evidenceRepository.create({ courseID, userID })
         if (!addRequest) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        return { status: 201, message: "در خواست شما با موفقیا ثبت گردید " }
+        return { message: "در خواست شما با موفقیا ثبت گردید " }
     }
 
     async readAllEvidence() {

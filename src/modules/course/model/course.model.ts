@@ -1,6 +1,16 @@
 
 import mongoose, { model, ObjectId } from 'mongoose'
 
+interface ICodeDisCount extends mongoose.Document {
+    code: string,
+    discount: string
+}
+
+const codeSchema = new mongoose.Schema<ICodeDisCount>({
+    code: { type: String, required: true, unique: true, trim: true },
+    discount: { type: String, required: true }
+})
+
 // Episode
 
 interface IEpisode extends mongoose.Document {
@@ -104,8 +114,10 @@ const courseSchema = new mongoose.Schema<ICourse>({
 courseSchema.index({ title: "text", shortText: "text", category: "text" })
 
 const CourseModel = model<ICourse>("course", courseSchema)
-
+const CodeDiscountModel = model<ICodeDisCount>("codeDiscount", codeSchema)
 export {
     ICourse,
     CourseModel,
+    CodeDiscountModel,
+    ICodeDisCount
 }

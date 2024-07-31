@@ -1,23 +1,22 @@
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import { copyObject, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
-import { CourseDto } from "./dto/course.dto";
-import { CourseModel, ICourse } from "./model/course.model";
-import { AuthMessageError } from '../../common/enums/message.enum';
+import { CodeDto, CourseDto } from "./dto/course.dto";
+import { CodeDiscountModel, CourseModel, ICodeDisCount, ICourse } from "./model/course.model";
+import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
 import { CategoryModel, ICategory } from '../category/model/category.model';
 import { IUser, UserModel } from '../user/model/user.model';
 
 
 class CourseService {
     constructor(
-        private courseModel = CourseModel<ICourse>,
-        private categortyModel = CategoryModel<ICategory>,
-        private userRepository = UserModel<IUser>
+        private readonly courseModel = CourseModel<ICourse>,
+        private readonly categortyModel = CategoryModel<ICategory>,
+        private readonly userRepository = UserModel<IUser>,
+        private readonly codeRepository = CodeDiscountModel<ICodeDisCount>
     ) { }
     async createCourse(course: CourseDto): Promise<object> {
-
-
         //let image = course.images.map(e => e.slice(33, e.length))
-        let category = await this.categortyModel.findOne({_id: course.category})
+        let category = await this.categortyModel.findOne({ _id: course.category })
         if (course.discount > 0 && course.discount != 0) {
             const add = (course.discount * course.price) / 100;
             course.priceAfterDiscount = course.price - add;
@@ -27,11 +26,11 @@ class CourseService {
             course.priceAfterDiscount = Math.floor(course.priceAfterDiscount / 10000) * 10000
         }
         const prerequisitesArray = [];
-        for(let i=0 ; i< course.prerequisites.length ; i++){
-            const coursePre = await this.courseModel.find({_id: course.prerequisites[i]})
+        for (let i = 0; i < course.prerequisites.length; i++) {
+            const coursePre = await this.courseModel.find({ _id: course.prerequisites[i] })
             prerequisitesArray.push(coursePre)
         }
-        
+
         let result = await this.courseModel.create({
             title: course.title,
             Description: course.Description,
@@ -54,7 +53,7 @@ class CourseService {
             rating: course.rating,
             type: course.type
         })
-        return { status: 201, message: 'دوره با موفقیت اضافه شد' }
+        return { message: 'دوره با موفقیت اضافه شد' }
     }
 
 
@@ -73,8 +72,8 @@ class CourseService {
             course.priceAfterDiscount = Math.floor(course.priceAfterDiscount / 10000) * 10000
         }
         const prerequisitesArray = [];
-        for(let i=0 ; i< course.prerequisites.length ; i++){
-            const coursePre = await this.courseModel.find({_id: course.prerequisites[i]})
+        for (let i = 0; i < course.prerequisites.length; i++) {
+            const coursePre = await this.courseModel.find({ _id: course.prerequisites[i] })
             prerequisitesArray.push(coursePre)
         }
 
@@ -103,7 +102,7 @@ class CourseService {
 
             }
         })
-        return { staus: 200, message: "دوره با موفقیت اپدیت شد" }
+        return { message: "دوره با موفقیت اپدیت شد" }
     }
 
     //remove Course
@@ -169,60 +168,60 @@ class CourseService {
 
         const result = await this.courseModel.find({}).sort({ createdAt: -1 });
         let latest = [];
-        for (let i = 0; i < result.length ; i++) {
+        for (let i = 0; i < result.length; i++) {
             if (i == 5) break
             latest.push(result[i])
-            
+
         }
         findCourse['latest'] = latest
 
-        
-        const view = await this.courseModel.updateOne({_id: id},{$inc: {'view': 1 }} )
+
+        const view = await this.courseModel.updateOne({ _id: id }, { $inc: { 'view': 1 } })
 
         return findCourse
     }
     //api all course => sort / limit / category
-    async findAllCourse(categoryId:string, limit: number, sort: string): Promise<Object>{
+    async findAllCourse(categoryId: string, limit: number, sort: string): Promise<Object> {
         let result;
-        if(categoryId !== 'undefined' && sort == 'latest'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({createdAt: -1})
-            result =  courses
-        }else if(categoryId !== 'undefined' && sort == 'oldest'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({createdAt: +1})
-            result =  courses
-        }else if(categoryId !== 'undefined' && sort == 'popular'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({sale: -1})
-            result =  courses
-        }else if(categoryId !== 'undefined' && sort == 'high'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({price: -1})
-            result =  courses
-        }else if(categoryId !== 'undefined' && sort == 'low'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit).sort({price: +1})
-            result =  courses
-        }else if(categoryId !== 'undefined'){
-            let category = await this.categortyModel.findOne({_id: categoryId})
-            const courses = await this.courseModel.find({category: category.title}).limit(limit)
-            result =  courses
-        }else if(categoryId == "undefined" && sort !==  "undefined"){
+        if (categoryId !== 'undefined' && sort == 'latest') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit).sort({ createdAt: -1 })
+            result = courses
+        } else if (categoryId !== 'undefined' && sort == 'oldest') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit).sort({ createdAt: +1 })
+            result = courses
+        } else if (categoryId !== 'undefined' && sort == 'popular') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit).sort({ sale: -1 })
+            result = courses
+        } else if (categoryId !== 'undefined' && sort == 'high') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit).sort({ price: -1 })
+            result = courses
+        } else if (categoryId !== 'undefined' && sort == 'low') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit).sort({ price: +1 })
+            result = courses
+        } else if (categoryId !== 'undefined') {
+            let category = await this.categortyModel.findOne({ _id: categoryId })
+            const courses = await this.courseModel.find({ category: category.title }).limit(limit)
+            result = courses
+        } else if (categoryId == "undefined" && sort !== "undefined") {
             let courses;
-            if(sort == 'latest'){
+            if (sort == 'latest') {
                 courses = await this.courseModel.find({}).limit(limit).sort({ createdAt: -1 })
-            }else if(sort == 'oldest'){
+            } else if (sort == 'oldest') {
                 courses = await this.courseModel.find({}).limit(limit).sort({ createdAt: +1 })
-            }else if(sort == 'popular'){
-                 courses = await this.courseModel.find({}).limit(limit).sort({sale: -1})
-            }else if(sort == 'low'){
-                courses = await this.courseModel.find({}).limit(limit).sort({price: +1})
-            }else  if(sort == "high"){
-                courses = await this.courseModel.find({ }).limit(limit).sort({ price: -1 })
+            } else if (sort == 'popular') {
+                courses = await this.courseModel.find({}).limit(limit).sort({ sale: -1 })
+            } else if (sort == 'low') {
+                courses = await this.courseModel.find({}).limit(limit).sort({ price: +1 })
+            } else if (sort == "high") {
+                courses = await this.courseModel.find({}).limit(limit).sort({ price: -1 })
             }
-            result =  courses
-        }else if(categoryId == 'undefined'  && sort == "undefined"){
+            result = courses
+        } else if (categoryId == 'undefined' && sort == "undefined") {
             const AllCourse = await this.courseModel.find({}).limit(limit)
             if (!AllCourse) throw NotFound(AuthMessageError.NotFound)
             result = AllCourse
@@ -231,10 +230,22 @@ class CourseService {
         return result
 
     }
-    async findCategoty(categoryId: string): Promise<ICategory>{
-        let category = await this.categortyModel.findOne({_id: categoryId})
-        if(!category) throw  NotFound(AuthMessageError.NotFound)
+    async findCategoty(categoryId: string): Promise<ICategory> {
+        let category = await this.categortyModel.findOne({ _id: categoryId })
+        if (!category) throw NotFound(AuthMessageError.NotFound)
         return category
+    }
+
+    async createCodeDiscount(codeDto: CodeDto) {
+        const { code, discount } = codeDto;
+        const findCode = await this.codeRepository.findOne({ code })
+        if (findCode) throw BadRequest("کد قبلا وجود داشته است")
+        const create = await this.codeRepository.create({
+            code,
+            discount
+        })
+        if (!create) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+        return { message: "کد با تخفیف ساخته شد" }
     }
 }
 

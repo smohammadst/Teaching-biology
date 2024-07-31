@@ -1,14 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../user/user.service";
 import { AuthService } from "./auth.service";
-import { RegisterDto, LoginDto, CheckOtp, ResetCodeDto } from "./dto/aurh.dto";
+import { RegisterDto, LoginDto, CheckOtp, ResetCodeDto, TokenDto } from "./dto/aurh.dto";
+import { IUser } from "../user/model/user.model";
 
 export class AuthController {
 
-    async register(req: Request, res: Response, next: NextFunction) {
+    async registerStepOne(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { phone } = req.body
+            const result: object = await AuthService.registerStepOne(phone)
+            return res.status(201).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async registerStepTwo(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const body: RegisterDto = req.body
-            const result: object = await AuthService.register(body)
+            const userID = req.user
+            const result: object = await AuthService.registerStepTwo(body, userID._id)
             return res.status(201).json(result)
         } catch (error) {
             next(error)
@@ -46,10 +58,10 @@ export class AuthController {
     }
 
 
-    async refreshToken(req: Request & { user: string }, res: Response, next: NextFunction) {
+    async refreshToken(req: Request, res: Response, next: NextFunction) {
         try {
-            const userID = req.user
-            const refreshToken = await AuthService.refreshToken(userID)
+            const body: TokenDto = req.body
+            const refreshToken = await AuthService.refreshToken(body)
             return res.status(200).json({ refreshToken, statusCode: 200 })
         } catch (error) {
             next(error)

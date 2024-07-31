@@ -50,7 +50,6 @@ class UserService {
 
     async getSoldCourse(userID: string) {
         validateObjectID(userID)
-
     }
 }
 const UserServices = new UserService()
