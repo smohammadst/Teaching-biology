@@ -156,8 +156,14 @@ class CourseService {
         const CategoryCourse = await this.courseModel.find({ category: course.category })
         const findCourse = copyObject(course);
         let relates = [];
-        for (let i = 1; i < CategoryCourse.length; i++) {
-            relates.push(CategoryCourse[i])
+        for (let i = 0; i < CategoryCourse.length; i++) {
+            if(CategoryCourse[i]._id == id){
+                continue
+            }else{
+                relates.push(CategoryCourse[i])
+            }
+                 
+            
         }
         findCourse['related'] = relates
 
