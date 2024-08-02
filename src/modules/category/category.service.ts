@@ -169,10 +169,10 @@ class categoryService {
     async getAllCategory(type: string) {
 
         let category;
-        if (type) {
+        if (type !== 'undefined') {
             category = await this.categoryModel.find({ type: type });
             if (!category) throw NotFound(AuthMessageError.NotFound);
-        } else if (type == '') {
+        } else if (type == 'undefined') {
             category = await this.categoryModel.find({});
         }
         return category;

@@ -131,7 +131,8 @@ class CourseService {
             }
         }
         if (optionCourse) {
-            optionCourse = { $push: { like: userID } }
+            optionCourse = { $push: { like: userID }, $inc: { numberLike: 1 } }
+            // optionCourse = { $push: { like: userID } } 
             optionUser = { $push: { listLikeCourse: userID } }
             message = "دوره ی مد نظر شما به علایق شما اضافه گردید"
         }

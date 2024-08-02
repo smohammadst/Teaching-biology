@@ -10,7 +10,7 @@ class ImageController {
             let images: string[]
             const fileField: any = req.files
             // console.log("files : " + fileField);
-            if (fileField.length > 0) images = fileField.map(file => file.destination.substr(-3) + file.filename)
+            if (fileField.length > 0) images = fileField.map(file => file.destination.substr(-23) +'\\'+ file.filename)
             // console.log(`controller: ${fileField}`);
             const result = await ImageServices.createImage(images)
             return res.status(201).json(result)

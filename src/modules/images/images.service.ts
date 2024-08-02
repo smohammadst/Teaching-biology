@@ -8,8 +8,8 @@ class ImageService {
     ) { }
 
     async createImage(images): Promise<object> {
-        const urlImage = images.map(image => "https://teachingbiology.liara.run" + image)
         console.log(images);
+        const urlImage = images.map(image => "https://teachingbiology.liara.run" + image)
         let result = await this.imagesModel.create({
             images,
             urlImage

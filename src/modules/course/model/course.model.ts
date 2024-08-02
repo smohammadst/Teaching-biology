@@ -77,6 +77,7 @@ interface ICourse extends mongoose.Document {
     sale: number,
     view: number,
     like: ObjectId[],
+    numberLike: number,
     rating: {
         rate: number,
         count: number
@@ -84,7 +85,7 @@ interface ICourse extends mongoose.Document {
 }
 
 const courseSchema = new mongoose.Schema<ICourse>({
-    title: { type: String },
+    title: { type: String , default: ''},
     Description: { type: String, default: ''},
     shortText: { type: String, default: ''},
     price: { type: Number },
@@ -108,6 +109,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
     sale: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
     like: { type: [mongoose.Types.ObjectId], ref: "user" },
+    numberLike: { type: Number, default: 0 },
     rating: { type: Object, default: {} },
 
 })

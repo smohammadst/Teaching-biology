@@ -57,7 +57,7 @@ class CategoryController {
     async getAllCategory(req: Request, res: Response, next: NextFunction): Promise<Response>{
         try {
             let {type} = req?.params 
-            
+            //if('{type}' == type) type = "undefined"
             const result = await categoryServices.getAllCategory(type)
             return res.status(200).json(result)
         } catch (error) {
