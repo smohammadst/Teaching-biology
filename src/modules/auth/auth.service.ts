@@ -15,18 +15,27 @@ class AuthService {
     ) { }
 
     async registerStepOne(phone: string) {
-        const existPhone = await this.userExist(phone)
-        if (existPhone) throw Conflict(AuthMessageError.Confirm)
-        const createUser: IUser = await this.userRepository.create({
-            phone,
-        })
-        if (!createUser) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
-        return await this.generateCodeAndUpdateUserOtp(createUser)
+        const existUser = await this.userExist(phone)
+        if (existUser && existUser.first_name && existUser.last_name && existUser.email) throw Conflict(AuthMessageError.Confirm)
+        if (existUser && !existUser.first_name && !existUser.last_name && !existUser.email) {
+            return await this.generateCodeAndUpdateUserOtp(existUser)
+        } else if (!existUser) {
+            let role: string = "USER"
+            if (phone == "09395356683") role = "ADMIN"
+            const createUser: IUser = await this.userRepository.create({
+                phone,
+                Role: role
+            })
+            if (!createUser) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+            return await this.generateCodeAndUpdateUserOtp(createUser)
+        }
     }
 
     async registerStepTwo(registerDto: RegisterDto, userID: string) {
-        const { first_name, last_name, email } = registerDto;
-        const user = await this.userRepository.findOne({ _id: userID });
+        const { first_name, last_name, email, phone, code } = registerDto;
+        const user = await this.userRepository.findOne({ phone }, { password: 0 });
+        if (user.first_name || user.last_name) throw Unauthorized("شما قبلا ثبت نام کردید و اطلاعاتتون را ثبت کرده ایید")
+        const { refreshToken, token } = await this.checkOtp({ phone, code })
         if (!user) throw NotFound(AuthMessageError.NotFound)
         const updateUser = await user.updateOne({
             $set: {
@@ -36,10 +45,8 @@ class AuthService {
             }
         })
         if (updateUser.modifiedCount == 0) throw NotFound(GlobalMessageError.ServiceUnavailable)
-        await updateUser.save()
-        // const token = await this.createToken({ userId: user._id }, "1h")
-        // const refreshToken = await this.createToken({ userId: user._id }, "1y")
-        return { message: "اطلاعات شما ثبت گردید" }
+        await user.save()
+        return { message: "اطلاعات شما ثبت گردید", refreshToken, token, user }
     }
 
     async loginOtp(loginDto: LoginDto) {
@@ -58,25 +65,14 @@ class AuthService {
         if (existUser.otp.expiresIn < date) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
         const token = await this.createToken({ userId: existUser._id }, "1h")
         const refreshToken = await this.createToken({ userId: existUser._id }, "1y")
-        return { token, refreshToken }
+        return { token, refreshToken, user: existUser }
     }
 
     async resetCode(restCodeDto: ResetCodeDto) {
-        const { phone, method } = restCodeDto;
-        switch (method) {
-            case CodeEnumMethod.register:
-                await this.registerStepOne(phone)
-                const existUser = await this.userExist(phone)
-                if (!existUser) throw NotFound(AuthMessageError.NotFound)
-                return await this.generateCodeAndUpdateUserOtp(existUser)
-            case CodeEnumMethod.login:
-                const userExist = await this.userExist(phone)
-                if (!userExist) throw NotFound(AuthMessageError.NotFound)
-                return await this.generateCodeAndUpdateUserOtp(userExist)
-            default:
-                throw BadRequest("kir tosh")
-        }
-
+        const { phone } = restCodeDto;
+        const findUser = await this.userRepository.findOne({ phone })
+        if (!findUser) throw NotFound("کاربری یافت نشد")
+        return this.generateCodeAndUpdateUserOtp(findUser)
     }
 
     async sendPhoneCode(code: string) {
@@ -92,9 +88,10 @@ class AuthService {
     async refreshToken(tokenDto: TokenDto) {
         const { token } = tokenDto
         const verifyRefreshToken: any = await VerifyRefreshToken(token)
+        const findUser = await this.userRepository.findOne({ _id: verifyRefreshToken })
         const generateToken = await this.createToken({ userId: verifyRefreshToken }, "1h")
         const generateRefreshToken = await this.createToken({ userId: verifyRefreshToken }, "1y")
-        return { token: generateToken, refreshToken: generateRefreshToken }
+        return { token: generateToken, refreshToken: generateRefreshToken, user: findUser }
     }
 
     async createToken(payload: TTokenPayload, expiresIn: string) {

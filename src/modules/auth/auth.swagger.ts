@@ -19,12 +19,9 @@
  *              type:   object
  *              required:
  *                  -   phone
- *                  -   method
  *              properties:
  *                  phone:
  *                      type:   string
- *                  method:
- *                      $ref: '#/components/schemas/Enum'
  *          checkOtp:
  *              type:   object
  *              required:
@@ -55,14 +52,22 @@
  *                  -   first_name
  *                  -   last_name
  *                  -   email
+ *                  -   phone
+ *                  -   code
  *              properties:
  *                  email:
  *                      type: string
- *                      description: شماره همراه کاربر یا ایمیل کاربر
+ *                      description: ایمیل کاربر
+ *                  phone:
+ *                      type: string
+ *                      description: شماره همراه کاربر 
  *                  first_name:
  *                      type: string
  *                      description: نام برای ثبت نام
  *                  last_name: 
+ *                      type: string
+ *                      description: نام خانوادگی برای ثبت نام
+ *                  code: 
  *                      type: string
  *                      description: نام خانوادگی برای ثبت نام
  *          registerStepOne:

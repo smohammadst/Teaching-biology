@@ -16,67 +16,42 @@ export class CommentService {
         private courseRepository = CourseModel<ICourse>
     ) { }
 
-    async createSchemaComment(commentDto: CommentDto): Promise<IComment> {
-        let createComment: IComment
-        if (commentDto.userID) {
-            createComment = await this.commentRepository.create({
-                title: commentDto.title,
-                text: commentDto.text,
-                userID: commentDto.userID,
-                [commentDto.method]: commentDto.ID
-            })
-        } else {
-            createComment = await this.commentRepository.create({
-                title: commentDto.title,
-                text: commentDto.text,
-                [commentDto.method]: commentDto.ID,
-                fullName: commentDto.fullName,
-                email: commentDto.email
-            })
-        }
+    async createSchemaComment(commentDto: CommentDto, userID: string): Promise<IComment> {
+        let createComment: IComment = await this.commentRepository.create({
+            text: commentDto.text,
+            userID: userID,
+            [commentDto.method]: commentDto.ID
+        })
         if (!createComment) throw createHttpError.ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return createComment
     }
 
-    async createSchemaAnswer(commentDto: CommentDto): Promise<IAnswer> {
-        let createAnswer: IAnswer
-        const findComment = await this.findComment(commentDto.parent)
-        if (commentDto.userID) {
-            createAnswer = await this.answerRepository.create({
-                title: commentDto.title,
-                text: commentDto.text,
-                userID: commentDto.userID,
-                [commentDto.method]: commentDto.ID,
-                commentID: commentDto.parent
-            })
-        } else {
-            createAnswer = await this.answerRepository.create({
-                title: commentDto.title,
-                text: commentDto.text,
-                [commentDto.method]: commentDto.ID,
-                fullName: commentDto.fullName,
-                email: commentDto.email,
-                commentID: commentDto.parent
-            })
-        }
+    async createSchemaAnswer(commentDto: CommentDto, userID: string): Promise<IAnswer> {
+        const findComment = await this.findComment(commentDto.parent);
+        let createAnswer: IAnswer = await this.answerRepository.create({
+            text: commentDto.text,
+            userID: userID,
+            [commentDto.method]: commentDto.ID,
+            commentID: commentDto.parent
+        })
         if (!createAnswer) throw createHttpError.ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         await findComment.updateOne({ $push: { answer: createAnswer } })
         await findComment.save()
         return createAnswer
     }
 
-    async addComment(commentDto: CommentDto): Promise<object> {
+    async addComment(commentDto: CommentDto, userID: string): Promise<object> {
         const { method } = commentDto
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
-        const createComment = await this.createSchemaComment(commentDto)
+        const createComment = await this.createSchemaComment(commentDto, userID)
         await existRepository.find.updateOne({ $push: { commentsID: createComment._id } })
         return { message: "نظر شما با موفقیت ثبت گردید" }
     }
 
-    async addAnswer(commentDto: CommentDto): Promise<object> {
+    async addAnswer(commentDto: CommentDto, userID: string): Promise<object> {
         const { method } = commentDto
         const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
-        const createAnswer = await this.createSchemaAnswer(commentDto)
+        const createAnswer = await this.createSchemaAnswer(commentDto, userID)
         return { message: "نظر شما با موفقیت ثبت گردید" }
     }
 
@@ -148,13 +123,13 @@ export class CommentService {
         return { find }
     }
 
-    async TyepRequest(commentDto: CommentDto): Promise<object> {
+    async TyepRequest(commentDto: CommentDto, userID:string): Promise<object> {
         const { snedType } = commentDto;
         switch (snedType) {
             case TypeEnumSned.comment:
-                return await this.addComment(commentDto)
+                return await this.addComment(commentDto, userID)
             case TypeEnumSned.answer:
-                return await this.addAnswer(commentDto)
+                return await this.addAnswer(commentDto, userID)
         }
     }
 

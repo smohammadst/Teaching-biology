@@ -19,7 +19,8 @@ export class AuthController {
     async registerStepTwo(req: Request & { user: IUser }, res: Response, next: NextFunction) {
         try {
             const body: RegisterDto = req.body
-            const userID = req.user
+            // const userID = req.user
+            const userID = { _id: "3134134" }
             const result: object = await AuthService.registerStepTwo(body, userID._id)
             return res.status(201).json(result)
         } catch (error) {

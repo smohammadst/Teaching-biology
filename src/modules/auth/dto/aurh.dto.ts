@@ -10,6 +10,8 @@ export class RegisterDto {
     email: string
     @IsMobilePhone("fa-IR")
     phone: string
+    @IsString()
+    code?: string
 }
 
 export class LoginDto {

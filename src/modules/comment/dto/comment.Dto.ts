@@ -4,12 +4,7 @@ import { TypeEnumComment, TypeEnumSned } from "../enum/typeComment.enum";
 export class CommentDto {
     @IsEmpty()
     @IsMongoId()
-    userID: string
-    @IsEmpty()
-    @IsMongoId()
     ID: string
-    @IsString()
-    title: string
     @IsString()
     text: string
     @IsNumber()
@@ -21,8 +16,4 @@ export class CommentDto {
     @IsMongoId()
     @IsEmpty()
     parent: string
-    @IsEmpty()
-    fullName: string
-    @IsEmail()
-    email: string
 }

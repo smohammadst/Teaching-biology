@@ -29,6 +29,7 @@
  *              required:
  *                  -   text
  *                  -   id
+ *                  
  *              properties:
  *                  text:
  *                      type: string
@@ -46,16 +47,6 @@
  *                      type: string
  *                      description: the title of product
  *                      example: متن بلد تستی
- *                  fullName:
- *                      type: string
- *                      description: the title of product
- *                      example: متن بلد تستی
- *                  email:
- *                      type: string
- *                      description: the title of product
- *                      example: متن بلد تستی
- *                  userID:
- *                      type: string
  * 
  *        remove:
  *              type: object
