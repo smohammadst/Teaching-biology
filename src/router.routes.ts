@@ -9,6 +9,7 @@ import zarinpalRouter from "./modules/zarinpal/zarinpal.router"
 import searchRouter from "./modules/search/search.router";
 import ticketRouter from "./modules/tiket/tiket.router";
 import evidenceRouter from "./modules/evidence/evidence.router";
+import commentRouter from "./modules/comment/comment.router";
 const router = Router();
 
 export default (): Router => {
@@ -22,5 +23,6 @@ export default (): Router => {
     searchRouter(router)
     ticketRouter(router)
     evidenceRouter(router)
+    commentRouter(router)
     return router;
 };
