@@ -1,16 +1,14 @@
 import { Router } from "express";
 import { CommentController } from "./comment.controller";
+import { verifyToken } from "./../../common/functions/globalFunction";
 
-const router = Router()
-
-const commentController = new CommentController()
 
 export default (router: Router) => {
-    router.post("/comment/addComment", commentController.createCommentAndAnswer)
+    router.post("/comment/addComment", verifyToken, CommentController.createCommentAndAnswer)
 
-    router.post("/comment/changeStatus", commentController.changeStatus)
+    router.post("/comment/changeStatus", CommentController.changeStatus)
 
-    router.delete("/comment/deleteComment", commentController.deleteComment)
+    router.delete("/comment/deleteComment", CommentController.deleteComment)
 
-    router.get("/comment/allComment", commentController.readAllComments)
+    router.get("/comment/allComment", CommentController.readAllComments)
 }

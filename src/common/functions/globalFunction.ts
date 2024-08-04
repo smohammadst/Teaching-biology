@@ -50,12 +50,15 @@ function VerifyRefreshToken(token) {
     });
 }
 
-async function verifyToken(req: Request & { user: string }, res: Response, next: NextFunction) {
+async function verifyToken(req: Request & { user: IUser }, res: Response, next: NextFunction) {
     if (!req.headers['authorization']) return next(Unauthorized("دوباره تلاش کنید"));
     const authorization: string = req.headers["authorization"];
-    const token: string = authorization.split(" ")[1];
-    const verifyUser: TTokenPayload = Jwt.verify(token, process.env.SECRET_KEY_TOKEN) as TTokenPayload;
-    const user: IUser = await UserModel.findOne({ _id: verifyUser.userId }, { _id: 1 })
+    console.log(`authorization ${authorization}`);
+    const token = authorization.split(" ")[1];
+    console.log(`token ${token}`);
+    const userId = await VerifyRefreshToken(token)
+    console.log(`userID: ${userId}`);
+    const user: IUser = await UserModel.findOne({ _id: userId }, { _id: 1 })
     if (!user) return Unauthorized("کاربری یافت نشد");
     req.user = user._id
     return next();

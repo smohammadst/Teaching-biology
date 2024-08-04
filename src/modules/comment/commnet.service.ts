@@ -8,7 +8,7 @@ import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
 import { statusEnum as statusComment } from './../../common/enums/status.enum'
 
-export class CommentService {
+class CommentService {
     constructor(
         private commentRepository = CommentModel<IComment>,
         private answerRepository = AnswerModel<IAnswer>,
@@ -42,9 +42,11 @@ export class CommentService {
 
     async addComment(commentDto: CommentDto, userID: string): Promise<object> {
         const { method } = commentDto
-        const existRepository = await this.findBlogOrCourse(commentDto.ID, method)
+        const find = await this.findBlogOrCourse(commentDto.ID, method)
         const createComment = await this.createSchemaComment(commentDto, userID)
-        await existRepository.find.updateOne({ $push: { commentsID: createComment._id } })
+        console.log(find);
+        await find.updateOne({ $push: { commentsID: createComment._id } })
+        await find.save()
         return { message: "نظر شما با موفقیت ثبت گردید" }
     }
 
@@ -113,17 +115,17 @@ export class CommentService {
         let find = await repository.findOne({ _id: id, status: true }).populate(
             {
                 path: "comments",
-                select: ["title", "text", "fullName", "star"]
+                select: ["text", "star"]
             }
         ).populate({
             path: "comments.answer",
-            select: ["title", "text", "fullName"]
+            select: ["text"]
         })
         if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
         return { find }
     }
 
-    async TyepRequest(commentDto: CommentDto, userID:string): Promise<object> {
+    async TyepRequest(commentDto: CommentDto, userID: string): Promise<object> {
         const { snedType } = commentDto;
         switch (snedType) {
             case TypeEnumSned.comment:
@@ -133,19 +135,16 @@ export class CommentService {
         }
     }
 
-    async findBlogOrCourse(id: string, methode: TypeEnumComment): Promise<{
-        type: string, find: IBlog | ICourse
-    }> {
-        let find: ICourse | IBlog
+    async findBlogOrCourse(id: string, methode: TypeEnumComment) {
         switch (methode) {
             case TypeEnumComment.blog:
-                find = await this.blogRepository.findOne({ _id: id })
-                if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
-                return { type: "blog", find }
+                let findBlog = await this.blogRepository.findOne({ _id: id })
+                if (!findBlog) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
+                return findBlog
             case TypeEnumComment.course:
-                find = await this.courseRepository.findOne({ _id: id })
-                if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundCourse)
-                return { type: "course", find }
+                let findCourse = await this.courseRepository.findOne({ _id: id })
+                if (!findCourse) throw createHttpError.NotFound(NotFoundError.NotFoundCourse)
+                return findCourse
         }
     }
 
@@ -160,3 +159,10 @@ export class CommentService {
         return { allComment }
     }
 }
+const commentService = new CommentService()
+
+export {
+    commentService as CommentService
+}
+
+//66ad4e1817b0ffd1b3b09e82 

@@ -11,7 +11,8 @@ class FaqService {
     async createFaq(faq: FaqDto): Promise<object> {
         let result = await this.faqModel.create({
             question: faq.question,
-            answer: faq.answer
+            answer: faq.answer,
+            type: faq.type
         })
         return { message: "سوالات متداول با موفقیت اضافه شد" }
     }

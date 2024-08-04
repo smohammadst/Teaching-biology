@@ -1,4 +1,5 @@
-import { IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
+import { TypeFaq } from "../model/faq.model";
 
 export class FaqDto {
 
@@ -7,4 +8,7 @@ export class FaqDto {
 
     @IsString()
     answer: string;
+
+    @IsEnum(TypeFaq)
+    type: TypeFaq
 }

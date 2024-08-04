@@ -139,10 +139,12 @@ class PaymentService {
     async updateBasket(updateDto: UpdateDto) {
         const { listProduct } = updateDto
         let listCourse = []
-        for (var i = 0; i < listProduct.length; i++) {
-            if (!isMongoId(listProduct[i])) delete listProduct[i]
-            const course = await this.courseRepository.findOne({ _id: listProduct[i] }, { price: 1, priceAfterDiscount: 1, title: 1, images: 1 })
-            if (course) listCourse.push(course)
+        if (listProduct) {
+            for (var i = 0; i < listProduct.length; i++) {
+                if (!isMongoId(listProduct[i])) delete listProduct[i]
+                const course = await this.courseRepository.findOne({ _id: listProduct[i] }, { price: 1, priceAfterDiscount: 1, title: 1, images: 1 })
+                if (course) listCourse.push(course)
+            }
         }
         return { listCourse }
     }
