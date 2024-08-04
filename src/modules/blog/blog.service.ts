@@ -3,10 +3,11 @@ import { BlogDto } from "./dto/blog.dto";
 import { BlogModel, IBlog } from "./model/blog.model";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
-import { copyObject, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
+import { copyObject, like, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
 import { CategoryModel, ICategory } from "../category/model/category.model";
 import { IUser, UserModel } from "../user/model/user.model";
 import { CourseServices } from "../course/course.service";
+import { TypeLike } from "src/common/enums/global.enum";
 
 
 class BlogService {
@@ -124,35 +125,9 @@ class BlogService {
         }
         return result
     }
-
-    async likeCourse(courseID: string, userID: string) {
-        validateObjectID(courseID)
-        validateObjectID(userID)
-        const findUser = await this.userRepository.findOne({ _id: userID })
-        if (!findUser) throw NotFound("کاربری یافت نشد")
-        const findCourse = await CourseServices.findOneCourse(courseID)
-        const listLike = findCourse.like
-        let optionCourse: object
-        let optionUser: object
-        let message: string
-        for (var i = 0; i < listLike.length; i++) {
-            if (listLike[i] === findUser._id) {
-                optionCourse = { $pull: { like: userID } }
-                optionUser = { $pull: { listLikeBlog: userID } }
-                message = "مقاله مد نظر از علایق شما حذف گردید"
-                break
-            }
-        }
-        if (optionCourse) {
-            optionCourse = { $push: { like: userID }, $inc: { numberLike: 1 } }
-            optionUser = { $push: { listLikeCourse: userID } }
-            message = "مقاله مد نظر شما به علایق شما اضافه گردید"
-        }
-        const updateCourse = await this.blogModel.updateOne({ _id: courseID }, optionCourse)
-        const updateUser = await this.userRepository.updateOne({ _id: userID }, optionUser)
-        if (updateCourse.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        return { message }
+    async likeBlog(blogID: string, userID: string) {
+        const result = await like(blogID, userID, TypeLike.blog)
+        return result
     }
 }
 

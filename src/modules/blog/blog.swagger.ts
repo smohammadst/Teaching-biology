@@ -221,3 +221,19 @@
  *              200:
  *                  description: success
  */
+
+/**
+ * @swagger
+ *  /blog/addLike/{id}:
+ *      get:
+ *          tags: [Blog(AdminPanel)]
+ *          summary: get One course
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of course
+ *          responses:
+ *              200:
+ *                  description: success
+ */

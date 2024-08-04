@@ -1,10 +1,11 @@
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
-import { copyObject, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
+import { copyObject, like, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
 import { CodeDto, CourseDto } from "./dto/course.dto";
 import { CodeDiscountModel, CourseModel, ICodeDisCount, ICourse } from "./model/course.model";
 import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
 import { CategoryModel, ICategory } from '../category/model/category.model';
 import { IUser, UserModel } from '../user/model/user.model';
+import { TypeLike } from 'src/common/enums/global.enum';
 
 
 class CourseService {
@@ -113,34 +114,8 @@ class CourseService {
     }
 
     async likeCourse(courseID: string, userID: string) {
-        validateObjectID(courseID)
-        validateObjectID(userID)
-        const findUser = await this.userRepository.findOne({ _id: userID })
-        if (!findUser) throw NotFound("کاربری یافت نشد")
-        const findCourse = await this.findOneCourse(courseID)
-        const listLike = findCourse.like
-        let optionCourse: object
-        let optionUser: object
-        let message: string
-        for (var i = 0; i < listLike.length; i++) {
-            if (listLike[i] === findUser._id) {
-                optionCourse = { $pull: { like: userID } }
-                optionUser = { $pull: { listLikeCourse: userID } }
-                message = "دوره ی مد نظر از علایق شما حذف گردید"
-                break
-            }
-        }
-        if (optionCourse) {
-            optionCourse = { $push: { like: userID }, $inc: { numberLike: 1 } }
-            // optionCourse = { $push: { like: userID } } 
-            optionUser = { $push: { listLikeCourse: userID } }
-            message = "دوره ی مد نظر شما به علایق شما اضافه گردید"
-        }
-        const updateCourse = await this.courseModel.updateOne({ _id: courseID }, optionCourse)
-        const updateUser = await this.userRepository.updateOne({ _id: userID }, optionUser)
-        if (updateCourse.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        if (updateUser.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
-        return { message, status: 200 }
+        const result = await like(courseID , userID, TypeLike.course)
+        return result
     }
     async findCourse(id: string): Promise<ICourse> {
         const course = await this.courseModel.findOne({ _id: id })

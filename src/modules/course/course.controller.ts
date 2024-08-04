@@ -5,6 +5,7 @@ import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from
 import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
 import mongoose, { isValidObjectId } from 'mongoose';
 import { stringify } from "querystring";
+import { IUser } from "../user/model/user.model";
 
 class CourseController {
 
@@ -62,7 +63,6 @@ class CourseController {
     async findOneCourse(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { id } = req.params
-
             const result = await CourseServices.findOneCourse(id)
             return res.status(200).json(result);
         } catch (error) {
@@ -73,6 +73,17 @@ class CourseController {
         try {
             const body: CodeDto = req.body
             const result = await CourseServices.createCodeDiscount(body)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async addLike(req: Request & { user: IUser }, res: Response, next: NextFunction) {
+        try {
+            const userID = req.user
+            const { id } = req.params
+            const result = await CourseServices.likeCourse(id, userID._id)
             return res.status(200).json(result)
         } catch (error) {
             next(error)

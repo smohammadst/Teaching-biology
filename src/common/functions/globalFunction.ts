@@ -6,6 +6,11 @@ import moment from "moment-jalali"
 import * as Jwt from "jsonwebtoken";
 import { TTokenPayload } from "../types/token.type";
 import { isMongoId } from "class-validator";
+import { BlogModel, IBlog } from "src/modules/blog/model/blog.model";
+import { CourseModel, ICourse } from "src/modules/course/model/course.model";
+import mongoose, { Model } from "mongoose";
+import { ServiceUnavailable } from "http-errors"
+import { TypeLike } from "../enums/global.enum";
 
 async function checkRole(req: Request & { user: string }, role: Array<string>) {
     const userID = req?.user
@@ -84,6 +89,35 @@ function validateObjectID(id: string) {
     if (!isMongoId(id)) throw BadRequest("شناسه ی کاربر اشتباه میباشد")
 }
 
+
+
+async function like(ID: string, userID: string, type: TypeLike) {
+    validateObjectID(ID)
+    validateObjectID(userID)
+    const findUser = await UserModel.findOne({ _id: userID })
+    if (!findUser) throw NotFound("کاربری یافت نشد")
+    let findCourseOrBlog: IBlog | ICourse
+    switch (type) {
+        case TypeLike.blog:
+            findCourseOrBlog = await BlogModel.findOne({ _id: ID, like: userID })
+            break;
+        case TypeLike.course:
+            findCourseOrBlog = await CourseModel.findOne({ _id: ID, like: userID })
+            break;
+    }
+    let optionCourseOrBlog: object = findCourseOrBlog
+        ? { $pull: { likes: findUser._id } }
+        : { $push: { likes: findUser._id } };
+    let message: string
+    if (!findCourseOrBlog) {
+        message = "به علاقه مندی شما اضافه کردید";
+    } else message = "از علاقه مندی های شما حذف گردید"
+    const update = await findCourseOrBlog.updateOne({ _id: ID }, optionCourseOrBlog)
+    if (update.modifiedCount == 0) throw ServiceUnavailable("سرور با مشکل مواجه شده است دوباره تلاش کنید")
+    return { message }
+}
+
+
 export {
     invoiceNumberGenerator,
     checkRole,
@@ -92,5 +126,6 @@ export {
     relatedFunc,
     copyObject,
     validateObjectID,
-    VerifyRefreshToken
+    VerifyRefreshToken,
+    like
 }

@@ -4,6 +4,6 @@ import { FaqController } from "./faq.controller";
 const faqController = new FaqController()
 
 export default (router: Router) => {
-    router.post("/create", faqController.create)
-    router.delete("/delete", faqController.delete)
+    router.post("/faq/create", faqController.create)
+    router.delete("/faq/delete", faqController.delete)
 }
