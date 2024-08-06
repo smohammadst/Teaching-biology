@@ -149,3 +149,14 @@
  *              201:
  *                  description: created new Product    
  */
+
+/**
+ * @swagger
+ *  /comment/readByAdmin:
+ *      get:
+ *          tags: [Comment(AdminPanel)]
+ *          summary: change status
+ *          responses:
+ *              200:
+ *                  description: success
+ */

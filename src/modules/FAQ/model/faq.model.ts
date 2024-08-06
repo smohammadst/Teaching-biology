@@ -6,15 +6,17 @@ enum TypeFaq {
 }
 
 interface IFAQ extends mongoose.Document {
+    courseID: ObjectId,
     question: string,
     answer: string,
     type: TypeFaq
 }
 
 const faqSchema = new mongoose.Schema<IFAQ>({
+    courseID: { type: mongoose.Types.ObjectId, default: "" },
     question: { type: String },
     answer: { type: String },
-    type: {type: String , default: TypeFaq.course}
+    type: { type: String, default: TypeFaq.course }
 })
 
 const FaqModel = model<IFAQ>("faq", faqSchema)

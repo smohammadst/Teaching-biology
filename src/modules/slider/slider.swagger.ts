@@ -29,7 +29,7 @@
 
 /**
  * @swagger
- *  /slider/add:
+ *  /slider/addSlider:
  *      post:
  *          tags: [Slider(Admin)]
  *          summary: Slider

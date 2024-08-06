@@ -1,14 +1,13 @@
+import { UserDto } from './../../modules/user/dto/user.dto';
 import { NotFound, BadRequest, Unauthorized } from "http-errors";
 import { IUser, UserModel } from "./../../modules/user/model/user.model";
 import { AuthMessageError, NotFoundError } from "../enums/message.enum";
 import { Request, Response, NextFunction } from "express";
 import moment from "moment-jalali"
 import * as Jwt from "jsonwebtoken";
-import { TTokenPayload } from "../types/token.type";
 import { isMongoId } from "class-validator";
-import { BlogModel, IBlog } from "src/modules/blog/model/blog.model";
-import { CourseModel, ICourse } from "src/modules/course/model/course.model";
-import mongoose, { Model } from "mongoose";
+import { BlogModel, IBlog } from "./../../modules/blog/model/blog.model";
+import { CourseModel, ICourse } from "./../../modules/course/model/course.model";
 import { ServiceUnavailable } from "http-errors"
 import { TypeLike } from "../enums/global.enum";
 
@@ -61,12 +60,17 @@ async function verifyToken(req: Request & { user: IUser }, res: Response, next: 
     console.log(`authorization ${authorization}`);
     const token = authorization.split(" ")[1];
     console.log(`token ${token}`);
-    const userId = await VerifyRefreshToken(token)
-    console.log(`userID: ${userId}`);
-    const user: IUser = await UserModel.findOne({ _id: userId }, { _id: 1 })
-    if (!user) return Unauthorized("کاربری یافت نشد");
-    req.user = user._id
-    return next();
+    if (token) {
+        const userId = await VerifyRefreshToken(token)
+        console.log(`userID: ${userId}`);
+        const user: IUser = await UserModel.findOne({ _id: userId }, { _id: 1 })
+        if (!user) return Unauthorized("کاربری یافت نشد");
+        req.user = user._id
+        return next();
+    } else {
+        throw Unauthorized("لاگین کنید")
+    }
+
 }
 
 async function relatedFunc(model, id: string) {
@@ -88,8 +92,6 @@ function copyObject(object: object) {
 function validateObjectID(id: string) {
     if (!isMongoId(id)) throw BadRequest("شناسه ی کاربر اشتباه میباشد")
 }
-
-
 
 async function like(ID: string, userID: string, type: TypeLike) {
     validateObjectID(ID)
@@ -117,6 +119,14 @@ async function like(ID: string, userID: string, type: TypeLike) {
     return { message }
 }
 
+async function matchLikeUser(user: IUser) {
+    let copyUser = copyObject(user)
+    copyUser["likes"] = { blog: copyUser.listLikeBlog, course: copyUser.listLikeCourse }
+    delete copyUser.listLikeCourse
+    delete copyUser.listLikeBlog
+    return copyUser
+}
+
 
 export {
     invoiceNumberGenerator,
@@ -127,5 +137,6 @@ export {
     copyObject,
     validateObjectID,
     VerifyRefreshToken,
-    like
+    like,
+    matchLikeUser
 }

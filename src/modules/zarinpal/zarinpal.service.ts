@@ -68,6 +68,13 @@ class PaymentService {
                 courseID: listCourse,
                 payment: payment._id
             })
+            for (var i = 0; i < listCourse.length; i++) {
+                const findCourseIDInBouthUser = await this.userRepository.findOne({ _id: user._id }, { bought: listCourse[i].course })
+                if (!findCourseIDInBouthUser) {
+                    await user.updateOne({ $push: { bought: listCourse[i].course } })
+                    await user.save()
+                }
+            }
             return {
                 statusCode: 200,
                 code,

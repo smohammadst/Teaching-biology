@@ -5,7 +5,9 @@ import { CodeDiscountModel, CourseModel, ICodeDisCount, ICourse } from "./model/
 import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
 import { CategoryModel, ICategory } from '../category/model/category.model';
 import { IUser, UserModel } from '../user/model/user.model';
-import { TypeLike } from 'src/common/enums/global.enum';
+import { TypeLike } from './../../common/enums/global.enum';
+import { CommentService } from '../comment/commnet.service';
+import { TypeEnumComment } from '../comment/enum/typeComment.enum';
 
 
 class CourseService {
@@ -130,6 +132,7 @@ class CourseService {
         // find blog related
         const CategoryCourse = await this.courseModel.find({ category: course.category })
         const findCourse = copyObject(course);
+        const comments = await CommentService.readCommentForAsnswer(id, TypeEnumComment.course)
         let relates = [];
         for (let i = 0; i < CategoryCourse.length; i++) {
             if(CategoryCourse[i]._id == id){
@@ -137,11 +140,9 @@ class CourseService {
             }else{
                 relates.push(CategoryCourse[i])
             }
-                 
-            
         }
         findCourse['related'] = relates
-
+        findCourse['comments'] = comments
         const result = await this.courseModel.find({}).sort({ createdAt: -1 });
         let latest = [];
         for (let i = 0; i < result.length; i++) {

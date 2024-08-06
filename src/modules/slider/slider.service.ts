@@ -1,8 +1,8 @@
-import { GlobalMessageError } from "src/common/enums/message.enum";
+import { GlobalMessageError } from "./../../common/enums/message.enum";
 import { SliderDto } from "./dto/slider.dto";
 import { ISlider, SliderModel } from "./model/slider.model";
 import { ServiceUnavailable, NotFound } from "http-errors"
-import { validateObjectID } from "src/common/functions/globalFunction";
+import { validateObjectID } from "./../../common/functions/globalFunction";
 
 class SliderSevice {
     constructor(

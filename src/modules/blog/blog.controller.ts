@@ -3,7 +3,6 @@ import { BlogDto } from "./dto/blog.dto";
 import { BlogServices } from "./blog.service";
 import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
 import mongoose, { ObjectId } from 'mongoose';
-//import { GlobalMessageError } from "src/common/enums/message.enum";
 import { AuthMessageError, GlobalMessageError } from './../../common/enums/message.enum';
 import { IUser } from "../user/model/user.model";
 

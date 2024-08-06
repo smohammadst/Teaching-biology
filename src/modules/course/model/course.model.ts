@@ -81,13 +81,14 @@ interface ICourse extends mongoose.Document {
     rating: {
         rate: number,
         count: number
-    }
+    },
+    faq: Array<ObjectId>
 }
 
 const courseSchema = new mongoose.Schema<ICourse>({
-    title: { type: String , default: ''},
-    Description: { type: String, default: ''},
-    shortText: { type: String, default: ''},
+    title: { type: String, default: '' },
+    Description: { type: String, default: '' },
+    shortText: { type: String, default: '' },
     price: { type: Number },
     discount: { type: Number },
     priceAfterDiscount: { type: Number, default: 0 },
@@ -111,6 +112,7 @@ const courseSchema = new mongoose.Schema<ICourse>({
     like: { type: [mongoose.Types.ObjectId], ref: "user" },
     numberLike: { type: Number, default: 0 },
     rating: { type: Object, default: {} },
+    faq: { type: [mongoose.Types.ObjectId], ref: 'faq', default: [] }
 
 })
 courseSchema.index({ title: "text", shortText: "text", category: "text" })

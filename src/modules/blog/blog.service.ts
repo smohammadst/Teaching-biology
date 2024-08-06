@@ -7,7 +7,9 @@ import { copyObject, like, relatedFunc, validateObjectID } from "../../common/fu
 import { CategoryModel, ICategory } from "../category/model/category.model";
 import { IUser, UserModel } from "../user/model/user.model";
 import { CourseServices } from "../course/course.service";
-import { TypeLike } from "src/common/enums/global.enum";
+import { TypeLike } from "./../../common/enums/global.enum";
+import { CommentService } from "../comment/commnet.service";
+import { TypeEnumComment } from "../comment/enum/typeComment.enum";
 
 
 class BlogService {
@@ -69,12 +71,14 @@ class BlogService {
         if (!blog) throw NotFound(AuthMessageError.NotFound)
         // find blog related
         const CategoryBlog = await this.blogModel.find({ category: blog.category })
+        const comments = await CommentService.readCommentForAsnswer(id, TypeEnumComment.blog)
         const findblog = copyObject(blog);
         let relates = [];
         for (let i = 1; i < CategoryBlog.length; i++) {
             relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
+        findblog['comments'] = comments
         const result = await this.blogModel.find({}).sort({ createdAt: -1 });
         console.log(result);
         let latest = [];
@@ -84,7 +88,6 @@ class BlogService {
         }
         findblog['latest'] = latest
         const view = await this.blogModel.updateOne({ _id: id }, { $inc: { 'view': 1 } })
-
         return findblog
     }
     async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
@@ -94,7 +97,6 @@ class BlogService {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: -1 })
             result = blogs
-
         } else if (categoryId !== 'undefined' && filter == 'oldest') {
             let category = await this.categoryModel.findOne({ _id: categoryId })
             const blogs = await this.blogModel.find({ category: category.title }).limit(limit).sort({ createdAt: +1 })

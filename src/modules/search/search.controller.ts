@@ -23,8 +23,8 @@ class SearchController {
     async all(req: Request, res: Response, next: NextFunction) {
         try {
             const { search } = req.query;
-            const { blog, course } = await SearchService.searchAll(search)
-            return res.status(200).json()
+            const result = await SearchService.searchAll(search)
+            return res.status(200).json(result)
         } catch (error) {
             next(error)
         }

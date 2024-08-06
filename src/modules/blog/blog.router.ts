@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { BlogController } from "./blog.controller";
-import { verifyToken } from "src/common/functions/globalFunction";
+import { verifyToken } from "./../../common/functions/globalFunction";
 
 const blogController = new BlogController()
 

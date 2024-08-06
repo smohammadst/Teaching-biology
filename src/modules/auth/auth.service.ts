@@ -5,7 +5,7 @@ import { AuthMessageError, GlobalMessageError } from './../../common/enums/messa
 import { sign } from "jsonwebtoken";
 import { TTokenPayload } from './../../common/types/token.type';
 import { isEmail, isMobilePhone, isMongoId } from 'class-validator';
-import { randomNumber, VerifyRefreshToken } from './../../common/functions/globalFunction';
+import { matchLikeUser, randomNumber, VerifyRefreshToken } from './../../common/functions/globalFunction';
 import { CodeEnumMethod } from "./enum/method.enum";
 import mongoose, { Model } from "mongoose";
 
@@ -46,7 +46,8 @@ class AuthService {
         })
         if (updateUser.modifiedCount == 0) throw NotFound(GlobalMessageError.ServiceUnavailable)
         await user.save()
-        return { message: "اطلاعات شما ثبت گردید", refreshToken, token, user }
+        const copyUser = await matchLikeUser(user)
+        return { message: "اطلاعات شما ثبت گردید", refreshToken, token, user: copyUser }
     }
 
     async loginOtp(loginDto: LoginDto) {
@@ -65,7 +66,8 @@ class AuthService {
         if (existUser.otp.expiresIn < date) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
         const token = await this.createToken({ userId: existUser._id }, "1h")
         const refreshToken = await this.createToken({ userId: existUser._id }, "1y")
-        return { token, refreshToken, user: existUser }
+        const user = await matchLikeUser(existUser)
+        return { token, refreshToken, user }
     }
 
     async resetCode(restCodeDto: ResetCodeDto) {
@@ -91,7 +93,8 @@ class AuthService {
         const findUser = await this.userRepository.findOne({ _id: verifyRefreshToken })
         const generateToken = await this.createToken({ userId: verifyRefreshToken }, "1h")
         const generateRefreshToken = await this.createToken({ userId: verifyRefreshToken }, "1y")
-        return { token: generateToken, refreshToken: generateRefreshToken, user: findUser }
+        const user = await matchLikeUser(findUser)
+        return { token: generateToken, refreshToken: generateRefreshToken, user }
     }
 
     async createToken(payload: TTokenPayload, expiresIn: string) {

@@ -78,3 +78,19 @@
  *              201:
  *                  description: success
  */
+
+/**
+ * @swagger
+ *  /getAuthority/{authority}:
+ *      get:
+ *          tags: [Bascket]
+ *          summary: change status
+ *          parameters:
+ *              -   in: path
+ *                  name: authority
+ *                  type: string
+ *                  description: objectId of comment or getAuthority
+ *          responses:
+ *              200:
+ *                  description: success
+ */

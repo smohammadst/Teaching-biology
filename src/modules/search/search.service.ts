@@ -7,7 +7,7 @@ class SearchService {
         private readonly blogRepository = BlogModel<IBlog>,
         private readonly courseRepository = CourseModel<ICourse>
     ) { }
-    
+
     async searchBlog(query: string | string[] | any) {
         const search = await this.blogRepository.find({
             title: { $regex: ".*" + query + ".*", $options: "i" },
@@ -31,7 +31,8 @@ class SearchService {
     async searchAll(query: string | string[] | any) {
         const blog = await this.searchBlog(query)
         const course = await this.searchCourse(query)
-        return { blog, course }
+        const list = [blog, course]
+        return list
     }
 }
 

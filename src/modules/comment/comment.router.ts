@@ -10,5 +10,5 @@ export default (router: Router) => {
 
     router.delete("/comment/deleteComment", CommentController.deleteComment)
 
-    router.get("/comment/allComment", CommentController.readAllComments)
+    router.get("/comment/readByAdmin", CommentController.readAllComments)
 }

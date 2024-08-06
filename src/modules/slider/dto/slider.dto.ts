@@ -1,6 +1,9 @@
 import { IsArray, IsEmpty, IsString } from "class-validator";
 
 export class SliderDto {
+    @IsArray()
+    images: Array<string>
+
     @IsEmpty()
     @IsString()
     title: string
@@ -13,6 +16,4 @@ export class SliderDto {
     @IsEmpty()
     @IsString()
     url: string
-    @IsArray()
-    images: Array<string>
 }

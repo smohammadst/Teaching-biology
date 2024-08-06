@@ -10,6 +10,8 @@ import searchRouter from "./modules/search/search.router";
 import ticketRouter from "./modules/tiket/tiket.router";
 import evidenceRouter from "./modules/evidence/evidence.router";
 import commentRouter from "./modules/comment/comment.router";
+import sliderRouter from "./modules/slider/slider.router";
+import faqRouter from "./modules/FAQ/faq.router";
 const router = Router();
 
 export default (): Router => {
@@ -24,5 +26,7 @@ export default (): Router => {
     ticketRouter(router)
     evidenceRouter(router)
     commentRouter(router)
+    sliderRouter(router)
+    faqRouter(router)
     return router;
 };

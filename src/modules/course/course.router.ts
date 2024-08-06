@@ -2,7 +2,7 @@ import { Router } from "express";
 import { CourseController } from "./course.controller";
 import { ChapterController } from "./chapter.controller";
 import { EpisodeController } from "./episode.controller";
-import { verifyToken } from "src/common/functions/globalFunction";
+import { verifyToken } from "./../../common/functions/globalFunction";
 
 
 const courseController = new CourseController()
@@ -26,6 +26,6 @@ export default (router: Router) => {
     router.post("/createEpisode", episodeController.create)
     router.patch("/deleteEpisode/:episodeID", episodeController.delete)
     router.get("/getEpisodesOfChpater/:chapterID", episodeController.getEpisodesOfChpater)
-
-
+    //discount
+    router.post("/code/add", courseController.createCodeDiscount)
 }

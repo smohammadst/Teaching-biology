@@ -2,6 +2,18 @@
  * @swagger
  *  components:
  *      schemas:
+ *        Code:
+ *              type: object
+ *              required:
+ *                  -   code
+ *                  -   discount
+ *              properties:
+ *                  code:
+ *                      type:   string
+ *                      example: ds6hx
+ *                  discount:
+ *                      type:   string
+ *                      example:    20
  *        Course:
  *              type: object
  *              required:
@@ -81,6 +93,29 @@
  *                          type: string
  *                          example: "the best message for that action"
  */
+/**
+ * @swagger
+ *  /code/add:
+ *      post:
+ *          tags: [CodeDiscount]
+ *          summary: create and save course
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Code'
+ *          
+ *          responses:
+ *              200:
+ *                  description: created new code for discount
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/definitions/publicDefinition'
+ * 
+ */
+
 /**
  * @swagger
  *  /createCourse:

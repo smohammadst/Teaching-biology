@@ -35,6 +35,20 @@ class UserService {
         if (!findEvidenceUser) throw NotFound("شما گواهی درخواست نداده ایید")
         return { evidence: findEvidenceUser }
     }
+
+    async bought(userID: string) {
+        validateObjectID(userID);
+        const findUser = await this.userRepository.findOne({ _id: userID })
+        const bought = findUser.bought
+        const listCourse = []
+        for (var i = 1; i < bought.length; i++) {
+            const findCourse = await this.courseRepository.findOne({ _id: bought[i] }, { image: 1, title: 1, price: 1, discount: 1, priceAfterDiscount: 1 })
+            if (findCourse) listCourse.push (findCourse)
+        }
+        if (listCourse.length == 0) throw NotFound("شما محصولی خریداری نکرده ایید")
+        return {listCourse}
+    }
+
     async getLikeCourse(userID: string) {
         validateObjectID(userID)
         const findAllCourseLike = await this.courseRepository.find({ $in: { like: userID } });

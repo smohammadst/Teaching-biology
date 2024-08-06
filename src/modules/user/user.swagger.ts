@@ -57,3 +57,18 @@
  *                          schema: 
  *                              $ref: '#/definitions/publicDefinition'
  */
+
+/**
+ * @swagger
+ *  /user/getBought:
+ *      get:
+ *          tags: [User]
+ *          summary: getAllLikeBlog
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */

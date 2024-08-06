@@ -1,5 +1,6 @@
 import { Model } from "mongoose";
 import { IImages, ImagesModel } from "./model/images.model";
+import createHttpError from "http-errors";
 
 
 class ImageService {
@@ -14,7 +15,17 @@ class ImageService {
             images,
             urlImage
         })
-        return { message: "عکس با موفقیت اضافه شد" , urlImage}
+        return { message: "عکس با موفقیت اضافه شد", urlImage }
+    }
+
+    async getAll() {
+        return await this.imagesModel.find({})
+    }
+
+    async remove(id: string) {
+        const result = await this.imagesModel.deleteOne({ _id: id })
+        if (result.deletedCount == 0) throw createHttpError.NotFound("عکسی یافت نشد")
+        return { message: "عکس با موفقیت حذف گردید" }
     }
 }
 

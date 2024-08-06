@@ -41,6 +41,16 @@ class UserController {
             next(error)
         }
     }
+
+    async getBought(req: Request & { user: IUser }, res: Response, next: NextFunction) {
+        try {
+            const user = req.user
+            const result = await UserService.bought(user._id)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 export {
     UserController
