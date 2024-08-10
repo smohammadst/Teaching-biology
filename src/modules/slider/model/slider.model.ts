@@ -14,6 +14,8 @@ const sliderSchema = new mongoose.Schema<ISlider>({
     description: { type: String },
     images: { type: [String], required: true },
     url: { type: String }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const SliderModel = mongoose.model("slider", sliderSchema)

@@ -10,6 +10,8 @@ const tiketSchema = new mongoose.Schema<ITiket>({
     title: { type: String, required: true },
     desc: { type: String, required: true },
     phone: { type: String, required: true }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const TiketModel = mongoose.model<ITiket>("tiket" , tiketSchema)

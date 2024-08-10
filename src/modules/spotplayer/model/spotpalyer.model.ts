@@ -13,6 +13,8 @@ const dataSpotPlayerSchema = new mongoose.Schema<IDataSpotPlayer>({
     url: { type: String },
     userID: { type: mongoose.Types.ObjectId, ref: "user" },
     idSpotPlayer: { type: String }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 interface ISpotPlayer extends mongoose.Document {
@@ -27,6 +29,8 @@ const spotPlayerSchema = new mongoose.Schema<ISpotPlayer>({
     spotPlayer: { type: [mongoose.Types.ObjectId], ref: "dataspotPlayer" },
     idSP: { type: String, default: '' },
     authority: { type: String, default: '', unique: true }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const DataSpotPlayerModel = mongoose.model<IDataSpotPlayer>("dataspotPlayer", dataSpotPlayerSchema)

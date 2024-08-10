@@ -7,6 +7,7 @@ import { GlobalMessageError, NotFoundError } from "./../../common/enums/message.
 import { BlogModel, IBlog } from "../blog/model/blog.model";
 import { CourseModel, ICourse } from "../course/model/course.model";
 import { statusEnum as statusComment } from './../../common/enums/status.enum'
+import { UserModel } from "../user/model/user.model";
 
 class CommentService {
     constructor(
@@ -17,10 +18,11 @@ class CommentService {
     ) { }
 
     async createSchemaComment(commentDto: CommentDto, userID: string): Promise<IComment> {
+        console.log(commentDto.method + 'ID');
         let createComment: IComment = await this.commentRepository.create({
             text: commentDto.text,
             userID: userID,
-            [commentDto.method]: commentDto.ID
+            [commentDto.method + "ID"]: commentDto.ID
         })
         if (!createComment) throw createHttpError.ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return createComment
@@ -98,31 +100,35 @@ class CommentService {
         return comment
     }
 
-    async readCommentForAsnswer(id: string, method: TypeEnumComment): Promise<{ find: IBlog | ICourse }> {
-        let result: { find: IBlog | ICourse }
+    async readCommentForAsnswer(id: string, method: TypeEnumComment) {
+        let result
         switch (method) {
             case TypeEnumComment.blog:
-                result = await this.populateCommentAndAnswer(this.blogRepository, id)
+                result = await this.populateCommentAndAnswer(id, TypeEnumComment.blog)
                 break
             case TypeEnumComment.course:
-                result = await this.populateCommentAndAnswer(this.courseRepository, id)
+                result = await this.populateCommentAndAnswer(id, TypeEnumComment.course)
                 break
         }
         return result
     }
 
-    async populateCommentAndAnswer(repository: mongoose.DocumentSetOptions, id: string): Promise<{ find: IBlog | ICourse }> {
-        let find = await repository.findOne({ _id: id, status: true }).populate(
-            {
-                path: "comments",
-                select: ["text", "star"]
-            }
-        ).populate({
-            path: "comments.answer",
-            select: ["text"]
-        })
-        if (!find) throw createHttpError.NotFound(NotFoundError.NotFoundBlog)
-        return { find }
+    async populateCommentAndAnswer(id: string, type: TypeEnumComment) {
+        let comment
+        switch (type) {
+            case TypeEnumComment.course:
+                comment = await this.commentRepository.find({ courseID: id }).populate({ path: "answer", model: AnswerModel })
+                    .populate({ path: "userID", model: UserModel, select: { "first_name": 1, "last_name": 1, email: 1 } })
+                    .populate({ path: "courseID", model: CourseModel, select: { "title": 1, "image": 1, "shortText": 1 } }).exec()
+                console.log(`comment course:${comment}`);
+                break
+            case TypeEnumComment.blog:
+                comment = await this.commentRepository.find({ blogID: id }).populate({ path: "answer", model: AnswerModel })
+                    .populate({ path: "userID", model: UserModel, select: { "first_name": 1, "last_name": 1, email: 1 } })
+                    .populate({ path: "blogID", model: BlogModel }).exec()
+                break
+        }
+        return comment
     }
 
     async TyepRequest(commentDto: CommentDto, userID: string): Promise<object> {
@@ -149,13 +155,14 @@ class CommentService {
     }
 
     async readAllCommentsAndAnswerByAdmin() {
-        const allComment = await this.commentRepository.find({ status: statusComment.reject })
+        const allComment = await this.commentRepository.find({})
             .populate({
                 path: "answer",
-                model: "answer",
-                match: { status: statusComment.reject }
-            }).exec()
-        if (allComment) return { status: 404, message: "هیچ کامنتی یافت نشد" }
+                model: AnswerModel,
+            }).populate({ path: "userID", model: UserModel, select: { "first_name": 1, "last_name": 1, email: 1 } })
+            .populate({ path: "courseID", model: CourseModel, select: { "title": 1, "image": 1, "shortText": 1 } })
+            .populate({ path: "blogID", model: BlogModel }).exec()
+        if (!allComment) return { cooments: [], message: "هیچ کامنتی یافت نشد" }
         return { allComment }
     }
 }

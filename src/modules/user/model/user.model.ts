@@ -10,7 +10,6 @@ interface IUser extends mongoose.Document {
     listLikeBlog?: Array<ObjectId>,
     listLikeCourse?: Array<ObjectId>,
     isvalidateMobile?: boolean,
-    isValidateEmail?: boolean,
     Role: Array<string>
 }
 
@@ -21,11 +20,13 @@ const userSchema = new mongoose.Schema<IUser>({
     email: { type: String },
     phone: { type: String },
     otp: { type: Object },
-    bought: { type: [mongoose.Types.ObjectId] },
+    bought: { type: [mongoose.Types.ObjectId] , ref:"course"},
     listLikeBlog: { type: [mongoose.Types.ObjectId], ref: "blog" },
     listLikeCourse: { type: [mongoose.Types.ObjectId], ref: "course" },
     isvalidateMobile: { type: Boolean, default: false },
     Role: { type: [String], default: ["USER"] }
+}, {
+    timestamps: { createdAt: true , updatedAt:true}
 });
 
 const UserModel = mongoose.model<IUser>("user", userSchema)

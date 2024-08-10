@@ -19,7 +19,8 @@ class ImageService {
     }
 
     async getAll() {
-        return await this.imagesModel.find({})
+        const result = await this.imagesModel.find({})
+        return result
     }
 
     async remove(id: string) {

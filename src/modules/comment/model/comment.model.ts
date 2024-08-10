@@ -8,7 +8,7 @@ interface IComment extends mongoose.Document {
     blogID?: ObjectId,
     courseID?: ObjectId,
     text: string,
-    answer?: Array<ObjectId>,
+    answer?: Array<IAnswer>,
     star?: number,
     status: string,
 }
@@ -23,11 +23,13 @@ interface IAnswer extends mongoose.Document {
 const commentSchema = new mongoose.Schema<IComment>({
     userID: { type: mongoose.Types.ObjectId, ref: "user" },
     blogID: { type: mongoose.Types.ObjectId, ref: "blog" },
-    courseID: { type: mongoose.Types.ObjectId, ref: "course" },
+    courseID: { type: mongoose.Types.ObjectId, ref: "course"  },
     text: { type: String, required: true },
     answer: { type: [mongoose.Types.ObjectId], ref: "answer" },
     star: { type: Number, max: 5 },
     status: { type: String, default: statusEnum.pending },
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const answerSchema = new mongoose.Schema<IAnswer>({
@@ -35,6 +37,8 @@ const answerSchema = new mongoose.Schema<IAnswer>({
     commentID: { type: mongoose.Types.ObjectId, ref: "comment" },
     text: { type: String, required: true },
     status: { type: String, default: statusEnum.pending }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const CommentModel = mongoose.model("comment", commentSchema)

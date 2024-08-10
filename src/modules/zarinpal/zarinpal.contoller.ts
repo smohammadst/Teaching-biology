@@ -45,6 +45,15 @@ class PaymentController {
             next(error)
         }
     }
+
+    async getListSoldCourses(req:Request , res:Response , next:NextFunction){
+        try {
+            const result = await PaymentService.getSoldCourse();
+            return res.status(200).json(result)            
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 const paymentController = new PaymentController()

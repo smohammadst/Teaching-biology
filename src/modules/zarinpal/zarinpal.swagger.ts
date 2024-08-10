@@ -8,7 +8,7 @@
  *                  bascket:
  *                      type:   array
  *                      descrption: آرایه ایی از آیدی محصول و تعداد خرید آنّ
- */ 
+ */
 /**
  * @swagger
  *  components:
@@ -18,7 +18,7 @@
  *              properties:
  *                  code:
  *                      type: string
- */ 
+ */
 
 /**
  * @swagger
@@ -90,6 +90,17 @@
  *                  name: authority
  *                  type: string
  *                  description: objectId of comment or getAuthority
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /basket/getAllSold:
+ *      get:
+ *          tags: [Bascket]
+ *          summary: change status
  *          responses:
  *              200:
  *                  description: success

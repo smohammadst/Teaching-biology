@@ -28,4 +28,6 @@ export default (router: Router) => {
     router.get("/getEpisodesOfChpater/:chapterID", episodeController.getEpisodesOfChpater)
     //discount
     router.post("/code/add", courseController.createCodeDiscount)
+    router.get("/code/getAllCode", courseController.getAllCode)
+    router.delete("/code/delete/:id", courseController.deleteCoe)
 }

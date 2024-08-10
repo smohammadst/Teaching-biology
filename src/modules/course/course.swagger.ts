@@ -243,3 +243,30 @@
  *              200:
  *                  description: success
  */
+
+/**
+ * @swagger
+ *  /code/getAllCode:
+ *      get:
+ *          tags: [CodeDiscount]
+ *          summary: get One course
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /code/delete/{id}:
+ *      delete:
+ *          tags: [CodeDiscount]
+ *          summary: get One course
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of course
+ *          responses:
+ *              200:
+ *                  description: success
+ */

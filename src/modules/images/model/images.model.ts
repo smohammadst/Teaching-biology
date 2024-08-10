@@ -7,6 +7,8 @@ interface IImages extends mongoose.Document {
 
 const imagesSchema = new mongoose.Schema<IImages>({
     images: {type: [String]},
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 const ImagesModel = model<IImages>("image", imagesSchema)

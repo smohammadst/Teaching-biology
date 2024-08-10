@@ -51,6 +51,15 @@ class UserController {
             next(error)
         }
     }
+
+    async getAllUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await UserService.getAllUser()
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 export {
     UserController

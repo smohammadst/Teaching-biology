@@ -62,7 +62,7 @@ export class Server {
     }
     private createServer(PORT: number): void {
         this.appServer.listen(PORT, () => console.log(`server is running on port ${PORT}`))
-        const allowedOrigins = ['http://localhost:5173', "https://teachingbiology.liara.run"]
+        const allowedOrigins = ['http://localhost:5173', "https://teachingbiology.liara.run", "https://wincells.com", "https://wincell.liara.run"]
         this.appServer.use(
             cors({
                 origin: function (origin, callback) {

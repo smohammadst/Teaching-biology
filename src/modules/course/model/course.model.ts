@@ -9,6 +9,8 @@ interface ICodeDisCount extends mongoose.Document {
 const codeSchema = new mongoose.Schema<ICodeDisCount>({
     code: { type: String, required: true, unique: true, trim: true },
     discount: { type: String, required: true }
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 // Episode
@@ -25,7 +27,8 @@ interface IEpisode extends mongoose.Document {
 const episodeSchema = new mongoose.Schema<IEpisode>({
     title: { type: String },
     time: { type: Object },
-
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 // Chapter
@@ -44,6 +47,8 @@ const chaptergSchema = new mongoose.Schema<IChapter>({
     time: { type: Object },
     episodes: { type: [episodeSchema], default: [] }
 
+}, {
+    timestamps: { createdAt: true }
 })
 
 
@@ -114,6 +119,8 @@ const courseSchema = new mongoose.Schema<ICourse>({
     rating: { type: Object, default: {} },
     faq: { type: [mongoose.Types.ObjectId], ref: 'faq', default: [] }
 
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 courseSchema.index({ title: "text", shortText: "text", category: "text" })
 

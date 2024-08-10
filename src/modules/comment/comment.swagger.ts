@@ -135,7 +135,7 @@
 
 /**
  * @swagger
- *  /comment/deleteComment:
+ *  /comment/deleteComment/{id}:
  *      delete:
  *          tags: [Comment(AdminPanel)]
  *          summary: create and save comment

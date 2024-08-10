@@ -5,7 +5,7 @@ import { Model, ObjectId } from 'mongoose';
 import { IPayment, ISale, PaymentModel, SaleModel } from './model/zarinpal.model';
 import axios from 'axios';
 import createHttpError from 'http-errors';
-import { invoiceNumberGenerator } from './../../common/functions/globalFunction';
+import { invoiceNumberGenerator, validateObjectID } from './../../common/functions/globalFunction';
 import * as moment from "moment-jalali"
 import { Response } from "express";
 import { SpotPlayerService } from "../spotplayer/spotplayer.service";
@@ -14,7 +14,7 @@ import { isMongoId } from "class-validator";
 class PaymentService {
     constructor(
         private readonly courseRepository = CourseModel<ICourse>,
-        private readonly saleRepositoy = SaleModel<ISale>,
+        private readonly saleRepository = SaleModel<ISale>,
         private readonly paymentRepository = PaymentModel<IPayment>,
         private readonly userRepository = UserModel<IUser>,
         private readonly codeRepository = CodeDiscountModel<ICodeDisCount>
@@ -63,7 +63,7 @@ class PaymentService {
                 verify: false,
                 description
             });
-            const sale = await this.saleRepositoy.create({
+            const sale = await this.saleRepository.create({
                 userID: user._id,
                 courseID: listCourse,
                 payment: payment._id
@@ -85,7 +85,7 @@ class PaymentService {
     async verifyPayment(res: Response, authority: string) {
         const verifyURL = "https://api.zarinpal.com/pg/v4/payment/verify.json";
         const payment = await this.paymentRepository.findOne({ authority });
-        const sale = await this.saleRepositoy.findOne({ payment: payment._id })
+        const sale = await this.saleRepository.findOne({ payment: payment._id })
         if (!payment) throw createHttpError.NotFound("تراکنش مورد انتظار یافت نشد")
         if (payment.verify) throw createHttpError.BadRequest("تراکنش مورد نظر قبلا پرداخت شده است")
         const verifyBody = JSON.stringify({
@@ -126,7 +126,7 @@ class PaymentService {
 
     async getAuthority(authority: string, userID: string) {
         const payment = await this.paymentRepository.findOne({ authority });
-        const sale = await this.saleRepositoy.findOne({ payment: payment._id });
+        const sale = await this.saleRepository.findOne({ payment: payment._id });
         const tokens = await SpotPlayerService.getTokenSpotPlayerUser(userID)
         const course = sale.courseID
         const listCourse = []
@@ -161,6 +161,14 @@ class PaymentService {
         const findCode = await this.codeRepository.findOne({ code })
         if (!findCode) throw createHttpError.NotFound("کد وارد شده صحیح نمیباشد")
         return { discount: findCode.discount }
+    }
+
+    async getSoldCourse() {
+        const listSoldCourses = await this.saleRepository.find({})
+            .populate({ path: "userID", model: UserModel, select: { "first_name": 1, "last_name": 1, "email": 1, "phone": 1 } })
+            .populate({ path: "courseID.course", model: CourseModel, select: { "title": 1, images: 1 } })
+            .populate({ path: "patment", model: PaymentModel, select: { "amount": 1, "paymentData": 1, "invoiceNumber": 1, "authority": 1 } })
+        return listSoldCourses
     }
 }
 

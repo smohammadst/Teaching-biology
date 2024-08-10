@@ -6,12 +6,12 @@ import { AuthMessageError, GlobalMessageError } from '../../common/enums/message
 import mongoose, { isValidObjectId } from 'mongoose';
 import { stringify } from "querystring";
 import { IUser } from "../user/model/user.model";
+import { validateObjectID } from "./../../common/functions/globalFunction";
 
 class CourseController {
 
     async create(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-
             const course: CourseDto = req.body;
             console.log(course);
             const result = await CourseServices.createCourse(course)
@@ -19,7 +19,6 @@ class CourseController {
                 statusCode: 201,
                 message: "ثبت دوره موفقیت امیز بود"
             });
-
         } catch (error) {
             next(error)
         }
@@ -84,6 +83,26 @@ class CourseController {
             const userID = req.user
             const { id } = req.params
             const result = await CourseServices.likeCourse(id, userID._id)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async deleteCoe(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params
+            validateObjectID(id)
+            const result = await CourseServices.deleteCode(id)
+            return res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getAllCode(req: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await CourseServices.getAllCodeDiscount()
             return res.status(200).json(result)
         } catch (error) {
             next(error)

@@ -36,6 +36,8 @@ const blogSchema = new mongoose.Schema<IBlog>({
     numberLike: { type: Number, default: 0 },
     author: {type: Object, default: {}},
 
+}, {
+    timestamps: { createdAt: true, updatedAt:true }
 })
 
 blogSchema.index({ title: "text", shortText: "text", category: "text" })

@@ -64,6 +64,10 @@ class AuthService {
         if (code !== existUser.otp.code) throw Unauthorized(AuthMessageError.UnauthorizedCode)
         const date = Date.now()
         if (existUser.otp.expiresIn < date) throw Unauthorized(AuthMessageError.UnauthorizedExpires)
+        if (!existUser.isvalidateMobile){
+            await existUser.updateOne({ $set: { isvalidateMobile: true } })
+            await existUser.save()
+        } 
         const token = await this.createToken({ userId: existUser._id }, "1h")
         const refreshToken = await this.createToken({ userId: existUser._id }, "1y")
         const user = await matchLikeUser(existUser)

@@ -1,5 +1,5 @@
-import { Conflict, BadRequest, NotFound, Unauthorized, ServiceUnavailable } from 'http-errors';
-import { copyObject, like, relatedFunc, validateObjectID } from "../../common/functions/globalFunction";
+import {  BadRequest, NotFound, ServiceUnavailable } from 'http-errors';
+import { copyObject, like } from "../../common/functions/globalFunction";
 import { CodeDto, CourseDto } from "./dto/course.dto";
 import { CodeDiscountModel, CourseModel, ICodeDisCount, ICourse } from "./model/course.model";
 import { AuthMessageError, GlobalMessageError } from '../../common/enums/message.enum';
@@ -116,7 +116,7 @@ class CourseService {
     }
 
     async likeCourse(courseID: string, userID: string) {
-        const result = await like(courseID , userID, TypeLike.course)
+        const result = await like(courseID, userID, TypeLike.course)
         return result
     }
     async findCourse(id: string): Promise<ICourse> {
@@ -132,17 +132,16 @@ class CourseService {
         // find blog related
         const CategoryCourse = await this.courseModel.find({ category: course.category })
         const findCourse = copyObject(course);
-        const comments = await CommentService.readCommentForAsnswer(id, TypeEnumComment.course)
         let relates = [];
         for (let i = 0; i < CategoryCourse.length; i++) {
-            if(CategoryCourse[i]._id == id){
+            if (CategoryCourse[i]._id == id) {
                 continue
-            }else{
+            } else {
                 relates.push(CategoryCourse[i])
             }
         }
         findCourse['related'] = relates
-        findCourse['comments'] = comments
+        findCourse['comments'] = await CommentService.readCommentForAsnswer(id, TypeEnumComment.course)
         const result = await this.courseModel.find({}).sort({ createdAt: -1 });
         let latest = [];
         for (let i = 0; i < result.length; i++) {
@@ -223,6 +222,17 @@ class CourseService {
         })
         if (!create) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
         return { message: "کد با تخفیف ساخته شد" }
+    }
+
+    async getAllCodeDiscount() {
+        const result = await this.codeRepository.find({})
+        return result
+    }
+
+    async deleteCode(id: string) {
+        const result = await this.codeRepository.deleteOne({ _id: id })
+        if (result.deletedCount == 0) throw ServiceUnavailable(GlobalMessageError.ServiceUnavailable)
+        return { message: "کد تخفیف با موفقیت حذف گردید" }
     }
 }
 

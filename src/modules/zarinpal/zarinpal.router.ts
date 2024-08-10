@@ -6,4 +6,5 @@ export default (router: Router) => {
     router.post("/basket/update", PaymentController.updateBasket)
     router.get("/basket/getInformation", PaymentController.getAuthority)
     router.post("/checkCode", PaymentController.checkCode)
+    router.get("/basket/getAllSold", PaymentController.getListSoldCourses)
 }

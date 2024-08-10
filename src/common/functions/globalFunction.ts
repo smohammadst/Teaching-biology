@@ -90,7 +90,7 @@ function copyObject(object: object) {
 }
 
 function validateObjectID(id: string) {
-    if (!isMongoId(id)) throw BadRequest("شناسه ی کاربر اشتباه میباشد")
+    if (!isMongoId(id)) throw BadRequest("شناسه ی ارسال شده اشتباه میباشد")
 }
 
 async function like(ID: string, userID: string, type: TypeLike) {
@@ -124,6 +124,8 @@ async function matchLikeUser(user: IUser) {
     copyUser["likes"] = { blog: copyUser.listLikeBlog, course: copyUser.listLikeCourse }
     delete copyUser.listLikeCourse
     delete copyUser.listLikeBlog
+    delete copyUser.otp
+    console.log(copyUser);
     return copyUser
 }
 

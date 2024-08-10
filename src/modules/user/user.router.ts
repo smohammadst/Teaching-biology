@@ -10,4 +10,5 @@ export default (router: Router) => {
     router.get("/user/getAllLikeCourse", verifyToken, userController.getLikeCourse)
     router.get("/user/getAllLikeBlog", verifyToken, userController.getLikeBlog)
     router.get("/user/getBought", verifyToken, userController.getBought)
+    router.get("/user/getAllUser", userController.getAllUser)
 }

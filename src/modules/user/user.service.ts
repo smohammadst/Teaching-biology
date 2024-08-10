@@ -6,6 +6,7 @@ import { AnswerModel, CommentModel, IAnswer, IComment } from "../comment/model/c
 import { EvidenceModel, IEvidence } from "../evidence/model/evidence.mode";
 import { CourseModel, ICourse } from "../course/model/course.model";
 import { BlogModel, IBlog } from "../blog/model/blog.model";
+import { ISale, PaymentModel, SaleModel } from "../zarinpal/model/zarinpal.model";
 
 class UserService {
     constructor(
@@ -14,7 +15,8 @@ class UserService {
         private readonly answerRepository = AnswerModel<IAnswer>,
         private readonly evidenceRepository = EvidenceModel<IEvidence>,
         private readonly courseRepository = CourseModel<ICourse>,
-        private readonly blogRepository = BlogModel<IBlog>
+        private readonly blogRepository = BlogModel<IBlog>,
+        private readonly saleRepository = SaleModel<ISale>
     ) { }
 
     async getAllCommentUser(userID: string) {
@@ -30,40 +32,39 @@ class UserService {
         }
     }
     async findEvidenceForUser(userID: string) {
-        validateObjectID(userID);
+        // validateObjectID(userID);
+        console.log(userID);
         const findEvidenceUser = await this.evidenceRepository.find({ userID }).populate("user", "+first_name", "+last_name").populate("course", "+title")
         if (!findEvidenceUser) throw NotFound("شما گواهی درخواست نداده ایید")
         return { evidence: findEvidenceUser }
     }
 
     async bought(userID: string) {
-        validateObjectID(userID);
+        // validateObjectID(userID);
+        console.log(userID);
         const findUser = await this.userRepository.findOne({ _id: userID })
-        const bought = findUser.bought
-        const listCourse = []
-        for (var i = 1; i < bought.length; i++) {
-            const findCourse = await this.courseRepository.findOne({ _id: bought[i] }, { image: 1, title: 1, price: 1, discount: 1, priceAfterDiscount: 1 })
-            if (findCourse) listCourse.push (findCourse)
-        }
-        if (listCourse.length == 0) throw NotFound("شما محصولی خریداری نکرده ایید")
-        return {listCourse}
+            .populate({ path: "bought", model: CourseModel, select: { "title": 1, "images": 1, "shortText": 1, "price": 1 } })
+        return { findUser }
     }
 
     async getLikeCourse(userID: string) {
-        validateObjectID(userID)
+        // validateObjectID(userID)
+        console.log(userID);
         const findAllCourseLike = await this.courseRepository.find({ $in: { like: userID } });
         if (!findAllCourseLike) throw NotFound("لیست علاقه مندی های شما خالی میباشد")
         return { findAllCourseLike }
     }
     async getLikeBlog(userID: string) {
-        validateObjectID(userID)
+        // validateObjectID(userID)
+        console.log(userID);
         const findAllBlogLike = await this.blogRepository.find({ $in: { like: userID } });
         if (!findAllBlogLike) throw NotFound("لیست علاقه مندی های شما خالی میباشد")
         return { findAllBlogLike }
     }
 
-    async getSoldCourse(userID: string) {
-        validateObjectID(userID)
+    async getAllUser() {
+        const result = await this.userRepository.find({})
+        return result
     }
 }
 const UserServices = new UserService()

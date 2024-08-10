@@ -38,6 +38,7 @@ class BlogService {
     }
     async updateBlog(id: string, blog: BlogDto): Promise<object> {
         await this.findBlog(id)
+        let category = await this.categoryModel.findOne({ _id: blog.category })
         let result = await this.blogModel.updateOne({ _id: id }, {
             $set: {
                 title: blog.title,
@@ -48,7 +49,7 @@ class BlogService {
                 shortLink: blog.shortLink,
                 comment: blog.comment,
                 sortByNumber: blog.sortByNumber,
-                category: blog.category,
+                category: category.title,
                 createdAt: new Date(),
                 author: blog.author
             }
@@ -71,14 +72,13 @@ class BlogService {
         if (!blog) throw NotFound(AuthMessageError.NotFound)
         // find blog related
         const CategoryBlog = await this.blogModel.find({ category: blog.category })
-        const comments = await CommentService.readCommentForAsnswer(id, TypeEnumComment.blog)
         const findblog = copyObject(blog);
         let relates = [];
         for (let i = 1; i < CategoryBlog.length; i++) {
             relates.push(CategoryBlog[i])
         }
         findblog['related'] = relates
-        findblog['comments'] = comments
+        findblog['comments'] =  await CommentService.readCommentForAsnswer(id, TypeEnumComment.blog)
         const result = await this.blogModel.find({}).sort({ createdAt: -1 });
         console.log(result);
         let latest = [];
