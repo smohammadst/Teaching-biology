@@ -21,10 +21,13 @@ export class BlogDto {
     @IsNumber()
     sortByNumber: number
     @IsObject()
-    author: {name: string}
+    author: { name: string, desc: string }
+    @IsNumber()
+    timeNeeded: number
+
 }
 
-export class UpdateBlogDto extends BlogDto{
+export class UpdateBlogDto extends BlogDto {
     @IsMongoId()
     id: string
 }

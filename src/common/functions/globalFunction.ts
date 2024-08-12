@@ -10,6 +10,7 @@ import { BlogModel, IBlog } from "./../../modules/blog/model/blog.model";
 import { CourseModel, ICourse } from "./../../modules/course/model/course.model";
 import { ServiceUnavailable } from "http-errors"
 import { TypeLike } from "../enums/global.enum";
+import { CategoryModel } from 'src/modules/category/model/category.model';
 
 async function checkRole(req: Request & { user: string }, role: Array<string>) {
     const userID = req?.user
@@ -129,6 +130,35 @@ async function matchLikeUser(user: IUser) {
     return copyUser
 }
 
+async function filterRsult(categoryID: string, limit: number, filter: string) {
+    let result: Array<IBlog>
+    switch (filter) {
+        case "latest":
+            result = await findBlogAndCategory(categoryID, { createdAt: -1 }, limit)
+            return result
+        case "oldest":
+            result = await findBlogAndCategory(categoryID, { createdAt: +1 }, limit)
+            return result
+        case "popular":
+            result = await findBlogAndCategory(categoryID, { numberLike: +1 }, limit)
+            return result
+        case "undefined":
+            result = await BlogModel.find({}).limit(limit)
+    }
+    return result
+}
+
+async function findBlogAndCategory(categoryID?: string, sort?: { createdAt } | { numberLike }, limit?: number) {
+    let blog: IBlog[]
+    if (categoryID !== "undefind") {
+        const category = await CategoryModel.findOne({ _id: categoryID })
+        blog = await BlogModel.find({ category: category.title }).sort(sort).limit(limit)
+    } else if (categoryID === "undefind") {
+        blog = await BlogModel.find({}).sort(sort).limit(limit)
+    }
+    return blog
+}
+
 
 export {
     invoiceNumberGenerator,
@@ -140,5 +170,6 @@ export {
     validateObjectID,
     VerifyRefreshToken,
     like,
-    matchLikeUser
+    matchLikeUser,
+    filterRsult
 }

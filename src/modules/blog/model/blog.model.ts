@@ -16,13 +16,14 @@ interface IBlog extends mongoose.Document {
     view: number,
     like: ObjectId[],
     numberLike: number,
-    author: {name : string}
+    author: { name: string, desc: string },
+    timeNeeded: number
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
     title: { type: String, default: '' },
-    description: { type: String, default: ''},
-    shortText: { type: String, default: ''},
+    description: { type: String, default: '' },
+    shortText: { type: String, default: '' },
     status: { type: Boolean },
     comments: { type: [mongoose.Types.ObjectId], ref: "comment", default: [] },
     category: { type: [String], ref: 'category' },
@@ -34,10 +35,11 @@ const blogSchema = new mongoose.Schema<IBlog>({
     view: { type: Number, default: 0 },
     like: { type: [mongoose.Types.ObjectId], ref: "user" },
     numberLike: { type: Number, default: 0 },
-    author: {type: Object, default: {}},
+    author: { type: Object, default: {} },
+    timeNeeded: { type: Number, default: 0 }
 
 }, {
-    timestamps: { createdAt: true, updatedAt:true }
+    timestamps: { createdAt: true, updatedAt: true }
 })
 
 blogSchema.index({ title: "text", shortText: "text", category: "text" })

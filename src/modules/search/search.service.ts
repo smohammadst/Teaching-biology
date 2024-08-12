@@ -31,7 +31,7 @@ class SearchService {
     async searchAll(query: string | string[] | any) {
         const blog = await this.searchBlog(query)
         const course = await this.searchCourse(query)
-        const list = [blog, course]
+        const list = {blog, course}
         return list
     }
 }

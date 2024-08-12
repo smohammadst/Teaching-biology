@@ -34,6 +34,9 @@
  *                  sortByNumber:
  *                      type: number
  *                      description: add bedeh
+ *                  timeNeeded:
+ *                      type: number
+ *                      description: add bedeh
  *                  images:
  *                      type: array
  *                      items:
