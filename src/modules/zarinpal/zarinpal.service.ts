@@ -5,7 +5,7 @@ import { Model, ObjectId } from 'mongoose';
 import { IPayment, ISale, PaymentModel, SaleModel } from './model/zarinpal.model';
 import axios from 'axios';
 import createHttpError from 'http-errors';
-import { invoiceNumberGenerator, validateObjectID } from './../../common/functions/globalFunction';
+import { invoiceNumberGenerator } from './../../common/functions/globalFunction';
 import * as moment from "moment-jalali"
 import { Response } from "express";
 import { SpotPlayerService } from "../spotplayer/spotplayer.service";
@@ -22,20 +22,18 @@ class PaymentService {
     async PaymentGateway(paymentDto: PaymentDto, userID: string): Promise<void> {
         const { bascket } = paymentDto;
         let amount: number = 0
-        let listCourse: Array<{ course: ObjectId, count: number }> = []
+        let listCourse: Array<{ course: ObjectId }> = []
         for (let i = 0; i < bascket.length; i++) {
-            const id: string = bascket[i].id;
-            const findCourse: ICourse = await this.courseRepository.findOne({ _id: id });
+            const findCourse: ICourse = await this.courseRepository.findOne({ _id: bascket[i] });
             if (findCourse) {
-                listCourse.push({ course: findCourse._id, count: bascket[i].count });
-                amount += (findCourse.priceAfterDiscount * bascket[i].count);
+                amount += findCourse.priceAfterDiscount;
             }
         }
         const user: IUser = await this.userRepository.findOne({ _id: userID })
         if (!user) throw createHttpError.Unauthorized("کاربری یافت نشد")
         await this.zarinpal(user, listCourse, amount)
     }
-    async zarinpal(user: IUser, listCourse: Array<{ course: ObjectId, count: number }>, amount: number): Promise<object> {
+    async zarinpal(user: IUser, listCourse: Array<{ course: ObjectId }>, amount: number): Promise<object> {
         const zarinpal_request_url =
             "https://api.zarinpal.com/pg/v4/payment/request.json";
         const zarinpalGatewayURL = "https://www.zarinpal.com/pg/StartPay";
@@ -69,9 +67,9 @@ class PaymentService {
                 payment: payment._id
             })
             for (var i = 0; i < listCourse.length; i++) {
-                const findCourseIDInBouthUser = await this.userRepository.findOne({ _id: user._id }, { bought: listCourse[i].course })
+                const findCourseIDInBouthUser = await this.userRepository.findOne({ _id: user._id }, { bought: listCourse[i] })
                 if (!findCourseIDInBouthUser) {
-                    await user.updateOne({ $push: { bought: listCourse[i].course } })
+                    await user.updateOne({ $push: { bought: listCourse[i] } })
                     await user.save()
                 }
             }

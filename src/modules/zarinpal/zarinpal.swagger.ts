@@ -8,6 +8,12 @@
  *                  bascket:
  *                      type:   array
  *                      descrption: آرایه ایی از آیدی محصول و تعداد خرید آنّ
+ *          update:
+ *              type: object
+ *              properties:
+ *                  listProduct:
+ *                      type:   array
+ *                      descrption: آرایه ایی از آیدی محصول و تعداد خرید آنّ
  */
 /**
  * @swagger

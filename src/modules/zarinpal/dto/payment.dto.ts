@@ -1,14 +1,14 @@
-import { IsArray, IsString } from "class-validator";
+import { IsArray, IsEmpty, IsString } from "class-validator";
 
 export class PaymentDto {
     @IsArray()
     bascket: Array<{
-        id: string,
-        count: number
+        id: string
     }>
 }
 
 export class UpdateDto {
+    @IsEmpty()
     @IsArray()
     listProduct: Array<string>
 }

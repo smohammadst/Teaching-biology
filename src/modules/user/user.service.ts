@@ -20,7 +20,7 @@ class UserService {
     ) { }
 
     async getAllCommentUser(userID: string) {
-        validateObjectID(userID)
+        // validateObjectID(userID)
         const findUser = await this.userRepository.findOne({ _id: userID })
         if (!findUser) throw NotFound("کاربری یافت نشد")
         const comment = await this.commentRepository.find({ userID: findUser._id }, { "title": 1, "text": 1, "status": 1 }).populate("user", "+first_name", "+last_name");

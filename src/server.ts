@@ -96,6 +96,7 @@ export class Server {
             const serverError = InternalServerError();
             const statusCodes = error?.status || error?.code || serverError.status;
             const message = error?.message || serverError.message;
+            console.log(`error: ${error}`);
             return res.status(statusCodes).json({
                 statusCodes,
                 message,

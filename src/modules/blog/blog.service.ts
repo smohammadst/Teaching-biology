@@ -93,6 +93,10 @@ class BlogService {
         return findblog
     }
     async findAllBlog(categoryId: string, limit: number, filter: string): Promise<Object> {
+        console.log(`category:${categoryId}
+            limit:${limit}
+            filter:${filter}
+        `);
         let result = await filterRsult(categoryId, limit, filter)
         return result
     }

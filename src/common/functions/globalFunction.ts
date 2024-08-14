@@ -10,7 +10,7 @@ import { BlogModel, IBlog } from "./../../modules/blog/model/blog.model";
 import { CourseModel, ICourse } from "./../../modules/course/model/course.model";
 import { ServiceUnavailable } from "http-errors"
 import { TypeLike } from "../enums/global.enum";
-import { CategoryModel } from 'src/modules/category/model/category.model';
+import { CategoryModel, ICategory } from './../../modules/category/model/category.model';
 
 async function checkRole(req: Request & { user: string }, role: Array<string>) {
     const userID = req?.user
@@ -58,12 +58,12 @@ function VerifyRefreshToken(token) {
 async function verifyToken(req: Request & { user: IUser }, res: Response, next: NextFunction) {
     if (!req.headers['authorization']) return next(Unauthorized("دوباره تلاش کنید"));
     const authorization: string = req.headers["authorization"];
-    console.log(`authorization ${authorization}`);
+    // console.log(`authorization ${authorization}`);
     const token = authorization.split(" ")[1];
-    console.log(`token ${token}`);
+    // console.log(`token ${token}`);
     if (token) {
         const userId = await VerifyRefreshToken(token)
-        console.log(`userID: ${userId}`);
+        // console.log(`userID: ${userId}`);
         const user: IUser = await UserModel.findOne({ _id: userId }, { _id: 1 })
         if (!user) return Unauthorized("کاربری یافت نشد");
         req.user = user._id
@@ -143,17 +143,17 @@ async function filterRsult(categoryID: string, limit: number, filter: string) {
             result = await findBlogAndCategory(categoryID, { numberLike: +1 }, limit)
             return result
         case "undefined":
-            result = await BlogModel.find({}).limit(limit)
+            result = await BlogModel.find({})
     }
     return result
 }
 
 async function findBlogAndCategory(categoryID?: string, sort?: { createdAt } | { numberLike }, limit?: number) {
     let blog: IBlog[]
-    if (categoryID !== "undefind") {
+    if (categoryID !== "undefined") {
         const category = await CategoryModel.findOne({ _id: categoryID })
         blog = await BlogModel.find({ category: category.title }).sort(sort).limit(limit)
-    } else if (categoryID === "undefind") {
+    } else if (categoryID === "undefined") {
         blog = await BlogModel.find({}).sort(sort).limit(limit)
     }
     return blog
